@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Quire3D</string>
     <string name="close_button">Close</string>
+    <string name="select_file">Import</string>
 </resources>

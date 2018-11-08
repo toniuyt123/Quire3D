@@ -23,7 +23,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.FrameLayout;
+import android.widget.Button;
+import android.content.Intent;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+import android.view.View;
 
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
@@ -46,12 +50,14 @@ public class ViroActivity extends Activity {
     private static final String TAG = ViroActivity.class.getSimpleName();
     protected ViroView mainView;
     private AssetManager mAssetManager;
+    private Scene scene;
+    private Node selectedNode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FrameLayout layout = (FrameLayout) findViewById(R.id.frameLayout);
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.relativeLayout);
         mainView = new ViroViewScene(this, new ViroViewScene.StartupListener() {
             @Override
             public void onSuccess() {
@@ -65,21 +71,32 @@ public class ViroActivity extends Activity {
         });
 
         layout.addView(mainView, 1080, 1920);
+
+        Button button = (Button) findViewById(R.id.SelectFile);
+        button.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseFile();
+            }
+        });
+
     }
 
     private void createWorld() {
-        // Create a new Scene and get its root Node
-        Scene scene = new Scene();
+        scene = new Scene();
         Node rootNode = scene.getRootNode();
 
         Geometry cube = new Box(1f,1f,1f);
         Material boxMaterial = new Material();
         boxMaterial.setDiffuseColor(Color.WHITE);
-        boxMaterial.setLightingModel(Material.LightingModel.PHONG);
+        boxMaterial.setLightingModel(Material.LightingModel.LAMBERT);
         cube.setMaterials(Arrays.asList(boxMaterial));
 
+        Node cubeNode = new Node();
+        cubeNode.setGeometry(cube);
+
         Spotlight spotlight = new Spotlight();
-        spotlight.setPosition(new Vector(0, -0.25f, 5));
+        spotlight.setPosition(new Vector(-1f, 4f, 3));
         spotlight.setDirection(new Vector(0, 0, -1));
         spotlight.setAttenuationStartDistance(5);
         spotlight.setAttenuationEndDistance(10);
@@ -89,37 +106,14 @@ public class ViroActivity extends Activity {
         spotlight.setIntensity(800);
 
         AmbientLight ambient = new AmbientLight();
-        ambient.setColor(Color.WHITE);
-        ambient.setIntensity(150);
+        ambient.setColor(Color.RED);
+        ambient.setIntensity(200);
 
         Node lightNode = new Node();
         lightNode.addLight(spotlight);
         lightNode.addLight(ambient);
-
-        Node cubeNode = new Node();
-        cubeNode.setGeometry(cube);
-        //cubeNode.setRotation(new Quaternion((float)Math.PI / 4f, 0, (float)Math.PI / 4f));
-        // Display the scene
-
         Node cameraNode = new Node();
         OrbitCamera camera = new OrbitCamera(cameraNode, mainView);
-
-        cubeNode.setDragListener(new DragListener() {
-            @Override
-            public void onDrag(int i, Node node, Vector world, Vector local) {
-                node.setPosition(local);
-            }
-        });
-
-        cubeNode.setGesturePinchListener(new GesturePinchListener() {
-            @Override
-            public void onPinch(int i, Node node, float v, PinchState pinchState) {
-                if(pinchState == PinchState.PINCH_MOVE) {
-                    Vector currentScale = node.getScaleRealtime();
-                    node.setScale(new Vector(currentScale.x * v, currentScale.y * v, currentScale.z * v));
-                }
-            }
-        });
 
         Geometry grid = new Quad(5, 5);
         Material gridTexture = new Material();
@@ -138,6 +132,11 @@ public class ViroActivity extends Activity {
         mainView.setPointOfView(cameraNode);
         mainView.setScene(scene);
     }
+
+    public void makeNodeSelectable(Node node) {
+
+    }
+
 
     private Bitmap bitmapFromAsset(String assetName) {
         if (mAssetManager == null) {
@@ -178,4 +177,25 @@ public class ViroActivity extends Activity {
         super.onStop();
         mainView.onActivityStopped(this);
     }
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void chooseFile() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        try {
+            startActivityForResult(
+                    Intent.createChooser(intent, "Select a File to Upload"),
+                    1);
+
+        } catch (android.content.ActivityNotFoundException ex) {
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(this, "Please install a File Manager.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }
