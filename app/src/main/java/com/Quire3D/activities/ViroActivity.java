@@ -21,6 +21,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -28,17 +29,19 @@ import android.content.Intent;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.view.View;
-
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
 
 import com.viro.core.*;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
 import com.Quire3D.classes.OrbitCamera;
+import com.Quire3D.classes.Handles;
 
 /**
  * A sample Android activity for creating 3D scenes in a View.
@@ -51,7 +54,6 @@ public class ViroActivity extends Activity {
     protected ViroView mainView;
     private AssetManager mAssetManager;
     private Scene scene;
-    private Node selectedNode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +96,18 @@ public class ViroActivity extends Activity {
 
         Node cubeNode = new Node();
         cubeNode.setGeometry(cube);
+        cubeNode.setClickListener(new ClickListener() {
+            @Override
+            public void onClick(int i, Node node, Vector vector) {
+                makeNodeSelectable(node);
+            }
+
+            @Override
+            public void onClickState(int i, Node node, ClickState clickState, Vector vector) {
+
+            }
+        });
+
 
         Spotlight spotlight = new Spotlight();
         spotlight.setPosition(new Vector(-1f, 4f, 3));
@@ -134,7 +148,8 @@ public class ViroActivity extends Activity {
     }
 
     public void makeNodeSelectable(Node node) {
-
+        Handles handles = new Handles(getView(), "file:///android_asset/translate_handle.obj");
+        handles.setParent(node);
     }
 
 
@@ -182,6 +197,11 @@ public class ViroActivity extends Activity {
         return scene;
     }
 
+    public ViroView getView() {
+        return mainView;
+    }
+
+
     public void chooseFile() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
@@ -195,6 +215,28 @@ public class ViroActivity extends Activity {
             // Potentially direct the user to the Market with a Dialog
             Toast.makeText(this, "Please install a File Manager.",
                     Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Uri uri = data.getData();
+        String text = uri.getPath();
+        if(uri != null) {
+            try {
+                File f = new File(text);
+                FileInputStream is = new FileInputStream(f); // Fails on this line
+                Log.i("fileName: ", "hoi");
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                is.close();
+                text = new String(buffer);
+                Log.i("fileName: ", text);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 
