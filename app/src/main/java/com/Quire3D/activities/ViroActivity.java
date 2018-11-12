@@ -23,6 +23,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Button;
 import android.content.Intent;
@@ -34,10 +35,13 @@ import com.viro.core.Node;
 
 import com.viro.core.*;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 
 import com.Quire3D.classes.OrbitCamera;
@@ -221,23 +225,23 @@ public class ViroActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Uri uri = data.getData();
-        String text = uri.getPath();
-        if(uri != null) {
-            try {
-                File f = new File(text);
-                FileInputStream is = new FileInputStream(f); // Fails on this line
-                Log.i("fileName: ", "hoi");
-                int size = is.available();
-                byte[] buffer = new byte[size];
-                is.read(buffer);
-                is.close();
-                text = new String(buffer);
-                Log.i("fileName: ", text);
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+        StringBuilder text = new StringBuilder();
+
+        try {
+            InputStream is = getContentResolver().openInputStream(uri);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
             }
+            br.close();
         }
+        catch (IOException e) {
+            Log.d("improtError", "file not found");
+        }
+        Log.i("textFile", "text is: " + text.toString());
     }
 
 }
