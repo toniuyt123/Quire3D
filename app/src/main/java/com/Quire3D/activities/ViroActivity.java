@@ -18,12 +18,14 @@ package com.Quire3D.activities;
 
 import android.app.Activity;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Button;
 import android.content.Intent;
@@ -76,7 +78,12 @@ public class ViroActivity extends Activity {
             }
         });
 
-        layout.addView(mainView, 1080, 1920);
+        int[] resolution = getScreenResolution();
+        Log.i("resolution", "width: " + Integer.toString(resolution[0]) + "height: " + Integer.toString(resolution[1]));
+        layout.addView(mainView, resolution[0], resolution[1]);
+        mainView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
         Button button = (Button) findViewById(R.id.SelectFile);
         button.setOnClickListener(new Button.OnClickListener() {
@@ -152,8 +159,7 @@ public class ViroActivity extends Activity {
     }
 
     public void makeNodeSelectable(Node node) {
-        Handles handles = new Handles(getView(), "file:///android_asset/translate_handle.obj");
-        handles.setParent(node);
+        Handles handles = new Handles(getView(), "file:///android_asset/translate_handle.obj", node);
     }
 
 
@@ -241,7 +247,23 @@ public class ViroActivity extends Activity {
         catch (IOException e) {
             Log.d("improtError", "file not found");
         }
-        Log.i("textFile", "text is: " + text.toString());
     }
 
+    private int[] getScreenResolution() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int[] resolution = {displayMetrics.widthPixels, displayMetrics.heightPixels};
+
+        Resources resources = getView().getContext().getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            resolution[0] += resources.getDimensionPixelSize(resourceId);
+        }
+        /*resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            resolution[1] += resources.getDimensionPixelSize(resourceId);
+        }*/
+
+        return resolution;
+    }
 }

@@ -5,6 +5,8 @@ import android.util.Log;
 import android.graphics.Color;
 
 import com.viro.core.AsyncObject3DListener;
+import com.viro.core.ClickListener;
+import com.viro.core.ClickState;
 import com.viro.core.DragListener;
 import com.viro.core.Material;
 import com.viro.core.Node;
@@ -21,25 +23,21 @@ public class Handles {
     private Object3D yHandle;
     private Object3D zHandle;
 
-    public Handles(ViroView view, String handleAssetPath) {
+    public Handles(ViroView view, String handleAssetPath, Node parent) {
         handleRoot = new Node();
         xHandle = new Object3D();
         yHandle = new Object3D();
         zHandle = new Object3D();
-
-        setDragListeners(xHandle, new Vector(0f, 1f, 0f), new Vector(1f, 0f, 0f));
-        setDragListeners(yHandle, new Vector(0f, 0f, 1f), new Vector(0f, 1f, 0f));
-        setDragListeners(zHandle, new Vector(0f, 1f, 0f), new Vector(0f, 0f, 1f));
-
+        this.parent = parent;
+        this.parent.addChildNode(handleRoot);
 
         initHandle(xHandle, view, handleAssetPath, new Vector(0f, 0f, -Math.PI / 2), Color.RED);
         initHandle(yHandle, view, handleAssetPath, new Vector(0f, 0f, 0), Color.GREEN);
         initHandle(zHandle, view, handleAssetPath, new Vector(-Math.PI / 2, 0, 0), Color.BLUE);
-    }
 
-    public void setParent(Node node) {
-        this.parent = node;
-        parent.addChildNode(handleRoot);
+        setDragListeners(xHandle, new Vector(0f, 1f, 0f), new Vector(1f, 0f, 0f));
+        setDragListeners(yHandle, new Vector(0f, 0f, 1f), new Vector(0f, 1f, 0f));
+        setDragListeners(zHandle, new Vector(0f, 1f, 0f), new Vector(0f, 0f, 1f));
     }
 
     private void initHandle(final Object3D handle, ViroView view, String handleAssetPath, final Vector rotation, final int color) {
@@ -85,6 +83,23 @@ public class Handles {
                 node.setPosition(new Vector(0f, 0f, 0f));
             }
         });
+
+        handle.setClickListener(new ClickListener() {
+            @Override
+            public void onClick(int i, Node node, Vector vector) {
+
+            }
+
+            @Override
+            public void onClickState(int i, Node node, ClickState clickState, Vector vector) {
+                if(clickState.equals(ClickState.CLICK_UP)) {
+                    node.setPosition(new Vector(0f, 0f, 0f));
+                }
+            }
+        });
     }
 
+    public Node getHandleRoot() {
+        return handleRoot;
+    }
 }
