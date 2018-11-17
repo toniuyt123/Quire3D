@@ -32,6 +32,8 @@ import android.content.Intent;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.view.View;
+
+import com.Quire3D.classes.OBJObject;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
 
@@ -247,6 +249,11 @@ public class ViroActivity extends Activity {
         catch (IOException e) {
             Log.d("improtError", "file not found");
         }
+
+        Log.i("fileName", uri.toString());
+        OBJObject imported = new OBJObject(text.toString());
+        //imported.setName();
+        getScene().getRootNode().addChildNode(imported);
     }
 
     private int[] getScreenResolution() {
