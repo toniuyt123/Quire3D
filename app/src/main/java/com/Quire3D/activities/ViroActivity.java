@@ -40,9 +40,6 @@ import com.viro.core.Node;
 import com.viro.core.*;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -61,7 +58,7 @@ public class ViroActivity extends Activity {
     private static final String TAG = ViroActivity.class.getSimpleName();
     protected ViroView mainView;
     private AssetManager mAssetManager;
-    private Scene scene;
+    private static Scene scene;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,7 +202,7 @@ public class ViroActivity extends Activity {
         mainView.onActivityStopped(this);
     }
 
-    public Scene getScene() {
+    public static Scene getScene() {
         return scene;
     }
 
@@ -271,6 +268,7 @@ public class ViroActivity extends Activity {
             resolution[1] += resources.getDimensionPixelSize(resourceId);
         }*/
 
+        resolution[0] -= 500;
         return resolution;
     }
 }

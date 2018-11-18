@@ -2,6 +2,7 @@ package com.Quire3D.classes;
 
 import android.util.Log;
 
+import com.Quire3D.activities.ViroActivity;
 import com.viro.core.Object3D;
 
 import java.util.ArrayList;
@@ -11,9 +12,9 @@ import java.util.Scanner;
 
 import com.viro.core.Submesh;
 import com.viro.core.Vector;
+import com.viro.core.ViroContext;
 
 public class OBJObject extends Object3D {
-    private Object3D model = new Object3D();
     private List<Vector> normals = new ArrayList<>();
     private List<Vector> textureCoords = new ArrayList<>();
     private List<Vector> vertices = new ArrayList<>();
@@ -41,10 +42,10 @@ public class OBJObject extends Object3D {
             }
         }
         scanner.close();
-
-        getGeometry().setNormals(normals);
-        getGeometry().setTextureCoordinates(textureCoords);
-        getGeometry().setVertices(vertices);
+        
+        //getGeometry().setNormals(normals);
+        //getGeometry().setTextureCoordinates(textureCoords);
+        //getGeometry().setVertices(vertices);
     }
 
     private void addEntryTo(String line, List list) {
@@ -66,10 +67,6 @@ public class OBJObject extends Object3D {
     public OBJObject(List<Vector> normals, List<Vector> vertices) {
         this.normals = normals;
         this.vertices = vertices;
-    }
-
-    public Object3D getModel() {
-        return model;
     }
 
     public List<Vector> getNormals() {
