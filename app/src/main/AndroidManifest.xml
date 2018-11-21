@@ -11,7 +11,7 @@
         android:icon="@mipmap/viro_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
         <meta-data
             android:name="com.viromedia.API_KEY"
             android:value="7882E1FF-7C1E-4751-9C16-3F6AEBD7AF76" />

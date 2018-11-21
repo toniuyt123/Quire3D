@@ -59,6 +59,7 @@ public class Handles {
         });
 
         handleRoot.addChildNode(handle);
+        handleRoot.setName("Handles");
     }
 
 

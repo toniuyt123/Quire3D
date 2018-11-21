@@ -1,5 +1,6 @@
 package com.Quire3D.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
@@ -12,10 +13,14 @@ import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.virosample.R;
 import com.viro.core.Box;
 import com.viro.core.Geometry;
+import com.viro.core.Material;
 import com.viro.core.Node;
-import com.viro.core.ViroView;
 
-public class CreatePrimitiveFrag extends Fragment implements View.OnClickListener {
+import java.util.Arrays;
+
+public class CreatePrimitiveFragment extends Fragment implements View.OnClickListener {
+    private Material defaultMat;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -24,15 +29,16 @@ public class CreatePrimitiveFrag extends Fragment implements View.OnClickListene
         ImageButton createCube = view.findViewById(R.id.createCube);
         createCube.setOnClickListener(this);
 
-        view.bringToFront();
         return view;
     }
 
-    public void createCube() {
-        Geometry cube = new Box(1f,1f,1f);
-        Node cubeNode = new Node();
-        cubeNode.setGeometry(cube);
-        ViroActivity.getScene().getRootNode().addChildNode(cubeNode);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        defaultMat = new Material();
+        defaultMat.setDiffuseColor(Color.WHITE);
+        defaultMat.setLightingModel(Material.LightingModel.LAMBERT);
+
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -42,5 +48,15 @@ public class CreatePrimitiveFrag extends Fragment implements View.OnClickListene
                 createCube();
                 break;
         }
+    }
+
+    public void createCube() {
+        Geometry cube = new Box(1f,1f,1f);
+        cube.setMaterials(Arrays.asList(defaultMat));
+        Node cubeNode = new Node();
+        cubeNode.setGeometry(cube);
+        ViroActivity.makeNodeSelectable(cubeNode);
+
+        ViroActivity.getScene().getRootNode().addChildNode(cubeNode);
     }
 }

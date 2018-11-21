@@ -17,6 +17,7 @@
 package com.Quire3D.activities;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -34,6 +35,7 @@ import android.widget.Toast;
 import android.view.View;
 
 import com.Quire3D.classes.OBJObject;
+import com.Quire3D.fragments.CreatePrimitiveFragment;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
 
@@ -56,45 +58,36 @@ import com.Quire3D.classes.Handles;
 public class ViroActivity extends Activity {
 
     private static final String TAG = ViroActivity.class.getSimpleName();
-    protected ViroView mainView;
+    protected static ViroView mainView;
     private AssetManager mAssetManager;
     private static Scene scene;
+    private static Node selectedNode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RelativeLayout layout = (RelativeLayout) findViewById(R.id.relativeLayout);
-        mainView = new ViroViewScene(this, new ViroViewScene.StartupListener() {
-            @Override
-            public void onSuccess() {
-                createWorld();
-            }
-
-            @Override
-            public void onFailure(ViroViewScene.StartupError error, String errorMessage) {
-                Log.e("fail", "Scene load failed");
-            }
-        });
+        //RelativeLayout layout = findViewById(R.id.relativeLayout);
+        mainView = findViewById(R.id.SceneView);
+        createWorld(mainView);
 
         int[] resolution = getScreenResolution();
         Log.i("resolution", "width: " + Integer.toString(resolution[0]) + "height: " + Integer.toString(resolution[1]));
-        layout.addView(mainView, resolution[0], resolution[1]);
+        //layout.addView(mainView, resolution[0], resolution[1]);
         mainView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
-        Button button = (Button) findViewById(R.id.SelectFile);
+        Button button = findViewById(R.id.SelectFile);
         button.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chooseFile();
             }
         });
-
     }
 
-    private void createWorld() {
+    private void createWorld(ViroView view) {
         scene = new Scene();
         Node rootNode = scene.getRootNode();
 
@@ -106,17 +99,7 @@ public class ViroActivity extends Activity {
 
         Node cubeNode = new Node();
         cubeNode.setGeometry(cube);
-        cubeNode.setClickListener(new ClickListener() {
-            @Override
-            public void onClick(int i, Node node, Vector vector) {
-                makeNodeSelectable(node);
-            }
-
-            @Override
-            public void onClickState(int i, Node node, ClickState clickState, Vector vector) {
-
-            }
-        });
+        makeNodeSelectable(cubeNode);
 
 
         Spotlight spotlight = new Spotlight();
@@ -153,12 +136,32 @@ public class ViroActivity extends Activity {
         rootNode.addChildNode(cameraNode);
         rootNode.addChildNode(gridNode);
 
-        mainView.setPointOfView(cameraNode);
-        mainView.setScene(scene);
+        view.setPointOfView(cameraNode);
+        view.setScene(scene);
     }
 
-    public void makeNodeSelectable(Node node) {
-        Handles handles = new Handles(getView(), "file:///android_asset/translate_handle.obj", node);
+    public static void makeNodeSelectable(Node node) {
+        if(selectedNode != null) {
+            for(Node n: selectedNode.getChildNodes()) {
+                if(n.getName().equals("Handles")) {
+                    Log.i("handles", "found");
+                    n.dispose();
+                    break;
+                }
+            }
+        }
+        node.setClickListener(new ClickListener() {
+            @Override
+            public void onClick(int i, Node node, Vector vector) {
+                Handles handles = new Handles(getView(), "file:///android_asset/translate_handle.obj", node);
+                selectedNode = node;
+            }
+
+            @Override
+            public void onClickState(int i, Node node, ClickState clickState, Vector vector) {
+
+            }
+        });
     }
 
 
@@ -206,7 +209,7 @@ public class ViroActivity extends Activity {
         return scene;
     }
 
-    public ViroView getView() {
+    public static ViroView getView() {
         return mainView;
     }
 
@@ -263,12 +266,6 @@ public class ViroActivity extends Activity {
         if (resourceId > 0) {
             resolution[0] += resources.getDimensionPixelSize(resourceId);
         }
-        /*resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            resolution[1] += resources.getDimensionPixelSize(resourceId);
-        }*/
-
-        resolution[0] -= 500;
         return resolution;
     }
 }
