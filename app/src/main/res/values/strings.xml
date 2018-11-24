@@ -5,4 +5,12 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="createCube">Create cube</string>
+    <string name="createQuad">Create quad</string>
+    <string name="createSphere">Create sphere</string>
+    <string name="position">Position:</string>
+    <string name="scale">Scale:</string>
+    <string name="rotation">Rotation:</string>
+    <string name="floatZero">.00000</string>
+    <string name="Undo">Undo</string>
+    <string name="Redo">Redo</string>
 </resources>

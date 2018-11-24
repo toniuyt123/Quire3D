@@ -13,31 +13,35 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="142dp"
-        android:layout_marginBottom="0dp"></com.viro.core.ViroViewScene>
-
-    <Button
-        android:id="@+id/Close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/close_button" />
-
-    <Button
-        android:id="@+id/SelectFile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="96dp"
-        android:layout_marginTop="0dp"
-        android:text="@string/select_file" />
+        android:layout_marginBottom="0dp" />
 
     <fragment
         android:id="@+id/createPrimitiveFragment"
         android:name="com.Quire3D.fragments.CreatePrimitiveFragment"
         android:layout_width="144dp"
-        android:layout_height="101dp"
+        android:layout_height="198dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="310dp"
+        android:layout_marginTop="0dp"
         android:layout_marginEnd="0dp" />
+
+    <fragment
+        android:id="@+id/objectParamsFragment"
+        android:name="com.Quire3D.fragments.ObjectParamsFragment"
+        android:layout_width="143dp"
+        android:layout_height="187dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="224dp"
+        android:layout_marginEnd="0dp" />
+
+    <fragment
+        android:id="@+id/topMenuFragment"
+        android:name="com.Quire3D.fragments.TopMenuFragment"
+        android:layout_width="539dp"
+        android:layout_height="43dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="142dp" />
 </RelativeLayout>

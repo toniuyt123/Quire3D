@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import com.viro.core.Box;
 import com.viro.core.Geometry;
 import com.viro.core.Material;
 import com.viro.core.Node;
+import com.viro.core.Quad;
+import com.viro.core.Sphere;
 
 import java.util.Arrays;
 
@@ -28,6 +31,10 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
 
         ImageButton createCube = view.findViewById(R.id.createCube);
         createCube.setOnClickListener(this);
+        ImageButton createSphere = view.findViewById(R.id.createSphere);
+        createSphere.setOnClickListener(this);
+        ImageButton createQuad = view.findViewById(R.id.createQuad);
+        createQuad.setOnClickListener(this);
 
         return view;
     }
@@ -47,16 +54,44 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
             case R.id.createCube:
                 createCube();
                 break;
+            case R.id.createSphere:
+                createSphere();
+                break;
+            case R.id.createQuad:
+                createQuad();
+                break;
         }
     }
 
     public void createCube() {
         Geometry cube = new Box(1f,1f,1f);
         cube.setMaterials(Arrays.asList(defaultMat));
-        Node cubeNode = new Node();
-        cubeNode.setGeometry(cube);
-        ViroActivity.makeNodeSelectable(cubeNode);
+        addToScene(cube, "Cube");
+    }
 
-        ViroActivity.getScene().getRootNode().addChildNode(cubeNode);
+    public void createSphere() {
+        Geometry sphere = new Sphere(1f);
+        sphere.setMaterials(Arrays.asList(defaultMat));
+        addToScene(sphere, "Sphere");
+    }
+
+    public void createQuad() {
+        Geometry quad = new Quad(1f, 1f);
+        Material quadMat = new Material();
+        quadMat.setDiffuseColor(Color.WHITE);
+        quadMat.setLightingModel(Material.LightingModel.LAMBERT);
+        quadMat.setCullMode(Material.CullMode.NONE);
+
+        quad.setMaterials(Arrays.asList(quadMat));
+        addToScene(quad, "Quad");
+    }
+
+    private void addToScene(Geometry geometry, String name) {
+        Node n = new Node();
+        n.setGeometry(geometry);
+        n.setName(name);
+
+        ViroActivity.makeNodeSelectable(n);
+        ViroActivity.getScene().getRootNode().addChildNode(n);
     }
 }

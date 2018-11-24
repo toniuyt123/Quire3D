@@ -17,7 +17,6 @@
 package com.Quire3D.activities;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -25,17 +24,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Button;
 import android.content.Intent;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.view.View;
 
 import com.Quire3D.classes.OBJObject;
-import com.Quire3D.fragments.CreatePrimitiveFragment;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
 
@@ -50,11 +46,6 @@ import java.util.Arrays;
 import com.Quire3D.classes.OrbitCamera;
 import com.Quire3D.classes.Handles;
 
-/**
- * A sample Android activity for creating 3D scenes in a View.
- * <p>
- * Extend and override onRendererStart() to start building your 3D scenes.
- */
 public class ViroActivity extends Activity {
 
     private static final String TAG = ViroActivity.class.getSimpleName();
@@ -67,24 +58,15 @@ public class ViroActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //RelativeLayout layout = findViewById(R.id.relativeLayout);
         mainView = findViewById(R.id.SceneView);
         createWorld(mainView);
 
         int[] resolution = getScreenResolution();
         Log.i("resolution", "width: " + Integer.toString(resolution[0]) + "height: " + Integer.toString(resolution[1]));
-        //layout.addView(mainView, resolution[0], resolution[1]);
         mainView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
-        Button button = findViewById(R.id.SelectFile);
-        button.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseFile();
-            }
-        });
     }
 
     private void createWorld(ViroView view) {
@@ -93,7 +75,7 @@ public class ViroActivity extends Activity {
 
         Geometry cube = new Box(1f,1f,1f);
         Material boxMaterial = new Material();
-        boxMaterial.setDiffuseColor(Color.WHITE);
+        boxMaterial.setDiffuseColor(Color.GRAY);
         boxMaterial.setLightingModel(Material.LightingModel.LAMBERT);
         cube.setMaterials(Arrays.asList(boxMaterial));
 
@@ -113,7 +95,7 @@ public class ViroActivity extends Activity {
         spotlight.setIntensity(800);
 
         AmbientLight ambient = new AmbientLight();
-        ambient.setColor(Color.RED);
+        ambient.setColor(Color.GRAY);
         ambient.setIntensity(200);
 
         Node lightNode = new Node();
@@ -141,20 +123,22 @@ public class ViroActivity extends Activity {
     }
 
     public static void makeNodeSelectable(Node node) {
-        if(selectedNode != null) {
-            for(Node n: selectedNode.getChildNodes()) {
-                if(n.getName().equals("Handles")) {
-                    Log.i("handles", "found");
-                    n.dispose();
-                    break;
-                }
-            }
-        }
         node.setClickListener(new ClickListener() {
             @Override
             public void onClick(int i, Node node, Vector vector) {
-                Handles handles = new Handles(getView(), "file:///android_asset/translate_handle.obj", node);
-                selectedNode = node;
+                if(selectedNode != node) {
+                    if(selectedNode != null) {
+                        for(Node n: selectedNode.getChildNodes()) {
+                            if(n.getName().equals("Handles")) {
+                                Log.i("handles", "namereni");
+                                n.dispose();
+                                break;
+                            }
+                        }
+                    }
+                    Handles handles = new Handles(getView(), "file:///android_asset/translate_handle.obj", node);
+                    selectedNode = node;
+                }
             }
 
             @Override
@@ -224,7 +208,6 @@ public class ViroActivity extends Activity {
                     1);
 
         } catch (android.content.ActivityNotFoundException ex) {
-            // Potentially direct the user to the Market with a Dialog
             Toast.makeText(this, "Please install a File Manager.",
                     Toast.LENGTH_SHORT).show();
         }
@@ -235,22 +218,24 @@ public class ViroActivity extends Activity {
         Uri uri = data.getData();
         StringBuilder text = new StringBuilder();
 
-        try {
-            InputStream is = getContentResolver().openInputStream(uri);
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            String line;
+        if(uri != null)
+        {
+            try {
+                InputStream is = getContentResolver().openInputStream(uri);
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                String line;
 
-            while ((line = br.readLine()) != null) {
-                text.append(line);
-                text.append('\n');
+                while ((line = br.readLine()) != null) {
+                    text.append(line);
+                    text.append('\n');
+                }
+                br.close();
             }
-            br.close();
-        }
-        catch (IOException e) {
-            Log.d("improtError", "file not found");
+            catch (IOException e) {
+                Log.d("improtError", "file not found");
+            }
         }
 
-        Log.i("fileName", uri.toString());
         OBJObject imported = new OBJObject(text.toString());
         //imported.setName();
         getScene().getRootNode().addChildNode(imported);

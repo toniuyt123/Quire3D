@@ -1,9 +1,9 @@
 package com.Quire3D.classes;
 
+import android.app.Fragment;
 import android.net.Uri;
 import android.util.Log;
 import android.graphics.Color;
-
 import com.viro.core.AsyncObject3DListener;
 import com.viro.core.ClickListener;
 import com.viro.core.ClickState;
@@ -19,15 +19,13 @@ import java.util.Arrays;
 public class Handles {
     private Node parent;
     private Node handleRoot;
-    private Object3D xHandle;
-    private Object3D yHandle;
-    private Object3D zHandle;
+    private Fragment paramsFrag;
 
     public Handles(ViroView view, String handleAssetPath, Node parent) {
         handleRoot = new Node();
-        xHandle = new Object3D();
-        yHandle = new Object3D();
-        zHandle = new Object3D();
+        Object3D xHandle = new Object3D();
+        Object3D yHandle = new Object3D();
+        Object3D zHandle = new Object3D();
         this.parent = parent;
         this.parent.addChildNode(handleRoot);
 
@@ -64,6 +62,7 @@ public class Handles {
 
 
     private void setDragListeners(Node handle, Vector planeNormal, final Vector lineToDrag) {
+
         handle.setDragType(Node.DragType.FIXED_TO_PLANE);
         handle.setDragPlanePoint(new Vector(0f, 0f, 0f));
         handle.setDragPlaneNormal(planeNormal);
@@ -95,6 +94,10 @@ public class Handles {
             public void onClickState(int i, Node node, ClickState clickState, Vector vector) {
                 if(clickState.equals(ClickState.CLICK_UP)) {
                     node.setPosition(new Vector(0f, 0f, 0f));
+                } else if(clickState.equals(ClickState.CLICK_DOWN)) {
+                    ActionsController.getInstance().addAction(new Action<>(
+                            parent, "p", Arrays.asList(node.getPositionRealtime())
+                    ));
                 }
             }
         });

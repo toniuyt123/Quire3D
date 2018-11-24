@@ -14,4 +14,18 @@
         android:contentDescription="@string/createCube"
         android:src="@android:drawable/arrow_up_float" />
 
+    <ImageButton
+        android:id="@+id/createSphere"
+        android:layout_width="416dp"
+        android:layout_height="49dp"
+        android:contentDescription="@string/createSphere"
+        android:src="@android:drawable/arrow_up_float" />
+
+    <ImageButton
+        android:id="@+id/createQuad"
+        android:layout_width="416dp"
+        android:layout_height="49dp"
+        android:contentDescription="@string/createQuad"
+        android:src="@android:drawable/arrow_up_float" />
+
 </LinearLayout>

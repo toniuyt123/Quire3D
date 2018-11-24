@@ -108,7 +108,7 @@ public class OrbitCamera {
     }
 
 
-    public void setCameraPosition(Vector cameraPosition, Vector lookAtPosition){
+    private void setCameraPosition(Vector cameraPosition, Vector lookAtPosition){
         Vector dirVector = lookAtPosition.subtract(cameraPosition);
         Vector dirVectorNorm = lookAtPosition.subtract(cameraPosition).normalize();
         Vector globalforward = new Vector(0,0,-1);
