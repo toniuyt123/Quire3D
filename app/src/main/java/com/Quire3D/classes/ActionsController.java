@@ -1,11 +1,13 @@
 package com.Quire3D.classes;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class ActionsController {
     private static final ActionsController Instance = new ActionsController();
     private static ArrayList<Action> actions = new ArrayList<>();
-    private static int index = 0;
+    private static int index = -1;
 
     public static ActionsController getInstance() {
         return Instance;
@@ -15,26 +17,26 @@ public class ActionsController {
     }
 
     public void addAction(Action action) {
-        if(index == actions.size()) {
+        if(index == actions.size() - 1) {
             actions.add(action);
             index++;
         } else {
-            actions = (ArrayList) actions.subList(0, index);
+            actions.subList(index + 1, actions.size()).clear();
             addAction(action);
         }
     }
 
     public void undo() {
         if(index > 0) {
-            actions.get(index - 1).execute();
             index--;
+            actions.get(index).execute();
         }
     }
 
     public void redo() {
-        if(index < actions.size()) {
-            actions.get(index + 1).execute();
+        if(index < actions.size() - 1) {
             index++;
+            actions.get(index).execute();
         }
     }
 }

@@ -94,9 +94,9 @@ public class Handles {
             public void onClickState(int i, Node node, ClickState clickState, Vector vector) {
                 if(clickState.equals(ClickState.CLICK_UP)) {
                     node.setPosition(new Vector(0f, 0f, 0f));
-                } else if(clickState.equals(ClickState.CLICK_DOWN)) {
+
                     ActionsController.getInstance().addAction(new Action<>(
-                            parent, "p", Arrays.asList(node.getPositionRealtime())
+                            parent, "p", Arrays.asList(parent.getPositionRealtime())
                     ));
                 }
             }

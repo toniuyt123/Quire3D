@@ -1,5 +1,7 @@
 package com.Quire3D.classes;
 
+import android.util.Log;
+
 import com.viro.core.Node;
 import com.viro.core.Vector;
 

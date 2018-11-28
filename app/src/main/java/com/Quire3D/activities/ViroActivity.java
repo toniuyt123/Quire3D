@@ -31,6 +31,8 @@ import android.content.Intent;
 import android.widget.Toast;
 import android.view.View;
 
+import com.Quire3D.classes.Action;
+import com.Quire3D.classes.ActionsController;
 import com.Quire3D.classes.OBJObject;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
@@ -82,7 +84,9 @@ public class ViroActivity extends Activity {
         Node cubeNode = new Node();
         cubeNode.setGeometry(cube);
         makeNodeSelectable(cubeNode);
-
+        ActionsController.getInstance().addAction(new Action<>(
+                cubeNode, "p", Arrays.asList(cubeNode.getPositionRealtime())
+        ));
 
         Spotlight spotlight = new Spotlight();
         spotlight.setPosition(new Vector(-1f, 4f, 3));
