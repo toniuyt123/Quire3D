@@ -4,10 +4,9 @@ import android.app.Fragment;
 import android.net.Uri;
 import android.util.Log;
 import android.graphics.Color;
+
+import com.Quire3D.fragments.ObjectParamsFragment;
 import com.viro.core.AsyncObject3DListener;
-import com.viro.core.ClickListener;
-import com.viro.core.ClickState;
-import com.viro.core.DragListener;
 import com.viro.core.Material;
 import com.viro.core.Node;
 import com.viro.core.Object3D;
@@ -17,25 +16,32 @@ import com.viro.core.ViroView;
 import java.util.Arrays;
 
 public class Handles {
-    private Node parent;
+    protected Node parent;
     private Node handleRoot;
-    private Fragment paramsFrag;
+    protected ObjectParamsFragment paramsFrag;
 
-    public Handles(ViroView view, String handleAssetPath, Node parent) {
+    public Handles(ViroView view, String handleAssetPath, Node parent, Fragment paramsFrag) {
         handleRoot = new Node();
+        handleRoot.setName("Handles");
         Object3D xHandle = new Object3D();
+        xHandle.setName("x");
         Object3D yHandle = new Object3D();
+        yHandle.setName("y");
         Object3D zHandle = new Object3D();
+        zHandle.setName("z");
         this.parent = parent;
         this.parent.addChildNode(handleRoot);
+        this.paramsFrag = (ObjectParamsFragment) paramsFrag;
 
         initHandle(xHandle, view, handleAssetPath, new Vector(0f, 0f, -Math.PI / 2), Color.RED);
         initHandle(yHandle, view, handleAssetPath, new Vector(0f, 0f, 0), Color.GREEN);
         initHandle(zHandle, view, handleAssetPath, new Vector(-Math.PI / 2, 0, 0), Color.BLUE);
 
-        setDragListeners(xHandle, new Vector(0f, 1f, 0f), new Vector(1f, 0f, 0f));
-        setDragListeners(yHandle, new Vector(0f, 0f, 1f), new Vector(0f, 1f, 0f));
-        setDragListeners(zHandle, new Vector(0f, 1f, 0f), new Vector(0f, 0f, 1f));
+        //setDragListeners(xHandle, new Vector(0f, 1f, 0f), new Vector(1f, 0f, 0f));
+        //setDragListeners(yHandle, new Vector(0f, 0f, 1f), new Vector(0f, 1f, 0f));
+        //setDragListeners(zHandle, new Vector(0f, 1f, 0f), new Vector(0f, 0f, 1f));
+
+
     }
 
     private void initHandle(final Object3D handle, ViroView view, String handleAssetPath, final Vector rotation, final int color) {
@@ -57,51 +63,8 @@ public class Handles {
         });
 
         handleRoot.addChildNode(handle);
-        handleRoot.setName("Handles");
     }
 
-
-    private void setDragListeners(Node handle, Vector planeNormal, final Vector lineToDrag) {
-
-        handle.setDragType(Node.DragType.FIXED_TO_PLANE);
-        handle.setDragPlanePoint(new Vector(0f, 0f, 0f));
-        handle.setDragPlaneNormal(planeNormal);
-        handle.setDragListener(new DragListener() {
-            @Override
-            public void onDrag(int i, Node node, Vector local, Vector world) {
-                Vector oldPos = parent.getPositionRealtime();
-                Vector newPos;
-                if(lineToDrag.x == 1f) {
-                    newPos = new Vector(world.x, oldPos.y, oldPos.z);
-                } else if(lineToDrag.y == 1f) {
-                    newPos = new Vector(oldPos.x, world.y, oldPos.z);
-                } else {
-                    newPos = new Vector(oldPos.x, oldPos.y, world.z);
-                }
-                parent.setPosition(newPos);
-
-                node.setPosition(new Vector(0f, 0f, 0f));
-            }
-        });
-
-        handle.setClickListener(new ClickListener() {
-            @Override
-            public void onClick(int i, Node node, Vector vector) {
-
-            }
-
-            @Override
-            public void onClickState(int i, Node node, ClickState clickState, Vector vector) {
-                if(clickState.equals(ClickState.CLICK_UP)) {
-                    node.setPosition(new Vector(0f, 0f, 0f));
-
-                    ActionsController.getInstance().addAction(new Action<>(
-                            parent, "p", Arrays.asList(parent.getPositionRealtime())
-                    ));
-                }
-            }
-        });
-    }
 
     public Node getHandleRoot() {
         return handleRoot;

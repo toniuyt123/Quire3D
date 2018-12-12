@@ -17,6 +17,7 @@
 package com.Quire3D.activities;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -26,14 +27,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.widget.Button;
 import android.content.Intent;
 import android.widget.Toast;
 import android.view.View;
 
-import com.Quire3D.classes.Action;
 import com.Quire3D.classes.ActionsController;
 import com.Quire3D.classes.OBJObject;
+import com.Quire3D.classes.ScaleHandles;
+import com.Quire3D.classes.actions.TranslateAction;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
 
@@ -47,6 +48,7 @@ import java.util.Arrays;
 
 import com.Quire3D.classes.OrbitCamera;
 import com.Quire3D.classes.Handles;
+import com.Quire3D.classes.TranslateHandles;
 
 public class ViroActivity extends Activity {
 
@@ -55,6 +57,7 @@ public class ViroActivity extends Activity {
     private AssetManager mAssetManager;
     private static Scene scene;
     private static Node selectedNode;
+    private Fragment paramsFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,7 @@ public class ViroActivity extends Activity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
+        this.paramsFrag = getFragmentManager().findFragmentById(R.id.objectParamsFragment);
     }
 
     private void createWorld(ViroView view) {
@@ -84,9 +88,7 @@ public class ViroActivity extends Activity {
         Node cubeNode = new Node();
         cubeNode.setGeometry(cube);
         makeNodeSelectable(cubeNode);
-        ActionsController.getInstance().addAction(new Action<>(
-                cubeNode, "p", Arrays.asList(cubeNode.getPositionRealtime())
-        ));
+        ActionsController.getInstance().addAction(new TranslateAction(cubeNode, cubeNode.getPositionRealtime() ));
 
         Spotlight spotlight = new Spotlight();
         spotlight.setPosition(new Vector(-1f, 4f, 3));
@@ -126,7 +128,7 @@ public class ViroActivity extends Activity {
         view.setScene(scene);
     }
 
-    public static void makeNodeSelectable(Node node) {
+    public void makeNodeSelectable(Node node) {
         node.setClickListener(new ClickListener() {
             @Override
             public void onClick(int i, Node node, Vector vector) {
@@ -140,7 +142,7 @@ public class ViroActivity extends Activity {
                             }
                         }
                     }
-                    Handles handles = new Handles(getView(), "file:///android_asset/translate_handle.obj", node);
+                    Handles handles = new ScaleHandles(getView(), node, paramsFrag);
                     selectedNode = node;
                 }
             }

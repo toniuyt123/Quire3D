@@ -22,8 +22,6 @@ import com.viro.core.Sphere;
 import java.util.Arrays;
 
 public class CreatePrimitiveFragment extends Fragment implements View.OnClickListener {
-    private Material defaultMat;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,10 +39,6 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        defaultMat = new Material();
-        defaultMat.setDiffuseColor(Color.WHITE);
-        defaultMat.setLightingModel(Material.LightingModel.LAMBERT);
-
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -65,21 +59,19 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
 
     public void createCube() {
         Geometry cube = new Box(1f,1f,1f);
-        cube.setMaterials(Arrays.asList(defaultMat));
+        cube.setMaterials(Arrays.asList(makeDefaultMat()));
         addToScene(cube, "Cube");
     }
 
     public void createSphere() {
         Geometry sphere = new Sphere(1f);
-        sphere.setMaterials(Arrays.asList(defaultMat));
+        sphere.setMaterials(Arrays.asList(makeDefaultMat()));
         addToScene(sphere, "Sphere");
     }
 
     public void createQuad() {
         Geometry quad = new Quad(1f, 1f);
-        Material quadMat = new Material();
-        quadMat.setDiffuseColor(Color.WHITE);
-        quadMat.setLightingModel(Material.LightingModel.LAMBERT);
+        Material quadMat = makeDefaultMat();
         quadMat.setCullMode(Material.CullMode.NONE);
 
         quad.setMaterials(Arrays.asList(quadMat));
@@ -91,7 +83,15 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         n.setGeometry(geometry);
         n.setName(name);
 
-        ViroActivity.makeNodeSelectable(n);
+        //ViroActivity.makeNodeSelectable(n);
         ViroActivity.getScene().getRootNode().addChildNode(n);
+    }
+
+    private Material makeDefaultMat() {
+        Material defaultMat = new Material();
+        defaultMat.setDiffuseColor(Color.WHITE);
+        defaultMat.setLightingModel(Material.LightingModel.LAMBERT);
+
+        return defaultMat;
     }
 }

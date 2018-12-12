@@ -18,7 +18,9 @@ public class OrbitCamera {
     private float thetaAngleStart;
     private float phiAngleStart;
     private int[] mOldTouchPos;
+    private float[] panOldPos;
     private Vector lookAt;
+    private boolean locked;
 
     public OrbitCamera(Node cameraNode, ViroView view, float radiusConst, float thetaAngleStart, float phiAngleStart) {
         this.radiusConst = radiusConst;
@@ -26,6 +28,7 @@ public class OrbitCamera {
         this.phiAngleStart = phiAngleStart;
         this.view = view;
         this.lookAt = new Vector(0f, 0f, 0f);
+        this.locked = false;
 
         Camera camera = new Camera();
         this.cameraNode = cameraNode;
@@ -41,6 +44,7 @@ public class OrbitCamera {
         this.phiAngleStart = 90f;
         this.view = view;
         this.lookAt = new Vector(0f, 0f, 0f);
+        this.locked = false;
 
         Camera camera = new Camera();
         this.cameraNode = cameraNode;
@@ -54,59 +58,80 @@ public class OrbitCamera {
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                int x = (int)event.getX();
-                int y = (int)event.getY();
-                int[] newTouchPos = {x, y};
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        mOldTouchPos = newTouchPos;
-                    case MotionEvent.ACTION_MOVE:
-                        // Determine normalized dx and dy from touch positions.
-                        float dx = newTouchPos[0] - mOldTouchPos[0];
-                        float dy = newTouchPos[1] - mOldTouchPos[1];
+            if(!locked)
+            {
+                int pointerCount = event.getPointerCount();
+                if(pointerCount == 1) {
+                    int x = (int)event.getX();
+                    int y = (int)event.getY();
+                    int[] newTouchPos = {x, y};
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            mOldTouchPos = newTouchPos;
+                        case MotionEvent.ACTION_MOVE:
+                            // Determine normalized dx and dy from touch positions.
+                            float dx = newTouchPos[0] - mOldTouchPos[0];
+                            float dy = newTouchPos[1] - mOldTouchPos[1];
 
-                        // Normalized Coordinates (use Android's get screen width / height here to replace numbers).
-                        float normalizedFingerMovedX = ((float)-dx)/1080;
-                        float normalizedFingerMovedY = ((float)-dy)/1920;
+                            // Normalized Coordinates (use Android's get screen width / height here to replace numbers).
+                            float normalizedFingerMovedX = ((float)-dx)/1080;
+                            float normalizedFingerMovedY = ((float)-dy)/1920;
 
-                        // Normalize touch dx into an angle dTheta.
-                        float rateOfChangeTheta = 30; // Change this to any speed you'd like.
-                        lastKnownDeltaTheta = normalizedFingerMovedX * rateOfChangeTheta;
-                        double theta = thetaAngleStart + lastKnownDeltaTheta;
+                            // Normalize touch dx into an angle dTheta.
+                            float rateOfChangeTheta = 30; // Change this to any speed you'd like.
+                            lastKnownDeltaTheta = normalizedFingerMovedX * rateOfChangeTheta;
+                            double theta = thetaAngleStart + lastKnownDeltaTheta;
 
-                        // Normalize touch dy into an angle dPhi .
-                        float rateOfChangePhi = 30; // Change this to any speed you'd like.
-                        lastKnownDeltaPhi = normalizedFingerMovedY * rateOfChangePhi;
-                        double phi = phiAngleStart + lastKnownDeltaPhi;
+                            // Normalize touch dy into an angle dPhi .
+                            float rateOfChangePhi = 30; // Change this to any speed you'd like.
+                            lastKnownDeltaPhi = normalizedFingerMovedY * rateOfChangePhi;
+                            double phi = phiAngleStart + lastKnownDeltaPhi;
 
-                        // Determine if values should be clamped and clamp them.
-                        // Note that lastKnown delta + phi datas are still saved above irregardless of clamp.
-                        // Consider saving them after the fact if needed.
-                        double clampedTheta = theta % 360;
-                        if (theta < 0){
-                            clampedTheta = 360  + theta;
-                        }
-                        double clampedPhi = phi % 360;
-                        if (phi < 0){
-                            clampedPhi = 0;
-                        }
+                            // Determine if values should be clamped and clamp them.
+                            // Note that lastKnown delta + phi datas are still saved above irregardless of clamp.
+                            // Consider saving them after the fact if needed.
+                            double clampedTheta = theta % 360;
+                            if (theta < 0){
+                                clampedTheta = 360  + theta;
+                            }
+                            double clampedPhi = phi % 360;
+                            if (phi < 0){
+                                clampedPhi = 0;
+                            }
 
-                        // Parametrize the camera's location onto a sphere based on current phi and theta values.
-                        double camZ = radiusConst * Math.cos(Math.toRadians(clampedTheta)) * Math.sin(Math.toRadians(clampedPhi));
-                        double camX = radiusConst * Math.sin(Math.toRadians(clampedTheta)) * Math.sin(Math.toRadians(clampedPhi));
-                        double camY = radiusConst * Math.cos(Math.toRadians(clampedPhi));
-                        setCameraPosition(new Vector(camX, camY, camZ), lookAt);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        thetaAngleStart = thetaAngleStart + lastKnownDeltaTheta;
-                        phiAngleStart = phiAngleStart + lastKnownDeltaPhi;
+                            // Parametrize the camera's location onto a sphere based on current phi and theta values.
+                            double camZ = radiusConst * Math.cos(Math.toRadians(clampedTheta)) * Math.sin(Math.toRadians(clampedPhi));
+                            double camX = radiusConst * Math.sin(Math.toRadians(clampedTheta)) * Math.sin(Math.toRadians(clampedPhi));
+                            double camY = radiusConst * Math.cos(Math.toRadians(clampedPhi));
+                            setCameraPosition(new Vector(camX, camY, camZ), lookAt);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            thetaAngleStart = thetaAngleStart + lastKnownDeltaTheta;
+                            phiAngleStart = phiAngleStart + lastKnownDeltaPhi;
+                    }
+                } else if(pointerCount == 2) {
+                    float x = ((int)event.getX(0) + (int)event.getX(1)) / 2f;
+                    float y = ((int)event.getY(0) + (int)event.getY(0)) / 2f;
+                    float[] newTouchPos = {x, y};
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            getPanMoviingPlane();
+                            panOldPos = newTouchPos;
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+
+
+                            break;
+                    }
                 }
+            }
 
-                return false;
+            return false;
             }
         });
     }
 
+    private void getPanMoviingPlane() {}
 
     private void setCameraPosition(Vector cameraPosition, Vector lookAtPosition){
         Vector dirVector = lookAtPosition.subtract(cameraPosition);
@@ -128,5 +153,9 @@ public class OrbitCamera {
         Quaternion quartEuler = new Quaternion((float)phi, (float)theta, 0);
         cameraNode.setRotation(quartEuler);
         cameraNode.setPosition(cameraPosition);
+    }
+
+    public void toggleLock() {
+        this.locked = !this.locked;
     }
 }

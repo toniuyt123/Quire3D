@@ -3,6 +3,7 @@ package com.Quire3D.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import android.widget.EditText;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
 import com.viro.core.Vector;
+
+import java.util.Locale;
 
 
 public class ObjectParamsFragment extends Fragment{
@@ -38,11 +41,29 @@ public class ObjectParamsFragment extends Fragment{
         return view;
     }
 
-    public void updatePositionText(Node node) {
+    public void updatePositionText(Node node, char axis) {
         Vector pos = node.getPositionRealtime();
 
-        xPos.setText(String.format("%.3f", pos.x));
-        yPos.setText(String.format("%.3f", pos.x));
-        zPos.setText(String.format("%.3f", pos.x));
+        switch (axis) {
+            case 'x':
+                xPos.setText(String.format(Locale.US, "%.3f", pos.x)); break;
+            case 'y':
+                yPos.setText(String.format(Locale.US, "%.3f", pos.y)); break;
+            case 'z':
+                zPos.setText(String.format(Locale.US, "%.3f", pos.z)); break;
+        }
+    }
+
+    public void updateScaleText(Node node, char axis) {
+        Vector scale = node.getPositionRealtime();
+
+        switch (axis) {
+            case 'x':
+                xScale.setText(String.format(Locale.US, "%.3f", scale.x)); break;
+            case 'y':
+                yScale.setText(String.format(Locale.US, "%.3f", scale.y)); break;
+            case 'z':
+                zScale.setText(String.format(Locale.US, "%.3f", scale.z)); break;
+        }
     }
 }

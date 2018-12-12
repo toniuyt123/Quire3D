@@ -1,6 +1,6 @@
 package com.Quire3D.classes;
 
-import android.util.Log;
+import com.Quire3D.classes.actions.Action;
 
 import java.util.ArrayList;
 
@@ -29,14 +29,14 @@ public class ActionsController {
     public void undo() {
         if(index > 0) {
             index--;
-            actions.get(index).execute();
+            actions.get(index).execute(true);
         }
     }
 
     public void redo() {
         if(index < actions.size() - 1) {
             index++;
-            actions.get(index).execute();
+            actions.get(index).execute(false);
         }
     }
 }
