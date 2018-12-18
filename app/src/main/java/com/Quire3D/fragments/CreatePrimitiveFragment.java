@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.Quire3D.activities.ViroActivity;
+import com.Quire3D.classes.ActionsController;
+import com.Quire3D.classes.actions.CreateAction;
+import com.Quire3D.classes.actions.TranslateAction;
 import com.Quire3D.virosample.R;
 import com.viro.core.Box;
 import com.viro.core.Geometry;
@@ -18,6 +21,7 @@ import com.viro.core.Material;
 import com.viro.core.Node;
 import com.viro.core.Quad;
 import com.viro.core.Sphere;
+import com.viro.core.Vector;
 
 import java.util.Arrays;
 
@@ -60,7 +64,7 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
     public void createCube() {
         Geometry cube = new Box(1f,1f,1f);
         cube.setMaterials(Arrays.asList(makeDefaultMat()));
-        addToScene(cube, "Cube");
+        addToScene(cube, "Cubec");
     }
 
     public void createSphere() {
@@ -78,13 +82,16 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         addToScene(quad, "Quad");
     }
 
-    private void addToScene(Geometry geometry, String name) {
+    public static void addToScene(Geometry geometry, String name) {
         Node n = new Node();
         n.setGeometry(geometry);
         n.setName(name);
 
-        //ViroActivity.makeNodeSelectable(n);
+        ViroActivity.makeNodeSelectable(n);
         ViroActivity.getScene().getRootNode().addChildNode(n);
+
+        ActionsController.getInstance().addAction(new CreateAction(n, geometry, name));
+        ActionsController.getInstance().addAction(new TranslateAction(n, new Vector()));
     }
 
     private Material makeDefaultMat() {

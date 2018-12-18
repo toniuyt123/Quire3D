@@ -128,7 +128,7 @@ public class ViroActivity extends Activity {
         view.setScene(scene);
     }
 
-    public void makeNodeSelectable(Node node) {
+    public static void makeNodeSelectable(Node node) {
         node.setClickListener(new ClickListener() {
             @Override
             public void onClick(int i, Node node, Vector vector) {
@@ -136,13 +136,12 @@ public class ViroActivity extends Activity {
                     if(selectedNode != null) {
                         for(Node n: selectedNode.getChildNodes()) {
                             if(n.getName().equals("Handles")) {
-                                Log.i("handles", "namereni");
-                                n.dispose();
+                                n.disposeAll(true);
                                 break;
                             }
                         }
                     }
-                    Handles handles = new ScaleHandles(getView(), node, paramsFrag);
+                    Handles handles = new TranslateHandles(getView(), node);
                     selectedNode = node;
                 }
             }
@@ -153,7 +152,6 @@ public class ViroActivity extends Activity {
             }
         });
     }
-
 
     private Bitmap bitmapFromAsset(String assetName) {
         if (mAssetManager == null) {
@@ -228,6 +226,7 @@ public class ViroActivity extends Activity {
         {
             try {
                 InputStream is = getContentResolver().openInputStream(uri);
+                assert is != null;
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 String line;
 
@@ -238,7 +237,7 @@ public class ViroActivity extends Activity {
                 br.close();
             }
             catch (IOException e) {
-                Log.d("improtError", "file not found");
+                Log.d("importError", "file not found");
             }
         }
 

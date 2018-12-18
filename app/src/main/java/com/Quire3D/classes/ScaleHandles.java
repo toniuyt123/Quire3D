@@ -15,8 +15,8 @@ import java.util.List;
 
 public class ScaleHandles extends Handles {
 
-    public ScaleHandles(ViroView view, Node parent, Fragment paramsFragment)  {
-        super(view, "file:///android_asset/scale_handle.obj", parent, paramsFragment);
+    public ScaleHandles(ViroView view, Node parent/*, Fragment paramsFragment*/)  {
+        super(view, "file:///android_asset/scale_handle.obj", parent/*, paramsFragment*/);
         List<Node> handles = getHandleRoot().getChildNodes();
         setDragListeners(handles.get(0), new Vector(0f, 1f, 0f), new Vector(1f, 0f, 0f));
         setDragListeners(handles.get(1), new Vector(0f, 0f, 1f), new Vector(0f, 1f, 0f));

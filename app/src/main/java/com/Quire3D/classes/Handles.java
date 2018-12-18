@@ -20,7 +20,7 @@ public class Handles {
     private Node handleRoot;
     protected ObjectParamsFragment paramsFrag;
 
-    public Handles(ViroView view, String handleAssetPath, Node parent, Fragment paramsFrag) {
+    public Handles(ViroView view, String handleAssetPath, Node parent/*, Fragment paramsFrag*/) {
         handleRoot = new Node();
         handleRoot.setName("Handles");
         Object3D xHandle = new Object3D();
@@ -31,16 +31,11 @@ public class Handles {
         zHandle.setName("z");
         this.parent = parent;
         this.parent.addChildNode(handleRoot);
-        this.paramsFrag = (ObjectParamsFragment) paramsFrag;
+        //this.paramsFrag = (ObjectParamsFragment) paramsFrag;
 
         initHandle(xHandle, view, handleAssetPath, new Vector(0f, 0f, -Math.PI / 2), Color.RED);
         initHandle(yHandle, view, handleAssetPath, new Vector(0f, 0f, 0), Color.GREEN);
         initHandle(zHandle, view, handleAssetPath, new Vector(-Math.PI / 2, 0, 0), Color.BLUE);
-
-        //setDragListeners(xHandle, new Vector(0f, 1f, 0f), new Vector(1f, 0f, 0f));
-        //setDragListeners(yHandle, new Vector(0f, 0f, 1f), new Vector(0f, 1f, 0f));
-        //setDragListeners(zHandle, new Vector(0f, 1f, 0f), new Vector(0f, 0f, 1f));
-
 
     }
 
