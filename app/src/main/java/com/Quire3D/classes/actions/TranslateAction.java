@@ -4,15 +4,21 @@ import com.viro.core.Node;
 import com.viro.core.Vector;
 
 public class TranslateAction extends Action {
-    private Vector location;
+    private Vector prevPosition;
+    private Vector newPosition;
 
-    public TranslateAction(Node node, Vector location) {
+    public TranslateAction(Node node, Vector prevPosition, Vector newPosition) {
         super(node, "translate");
-        this.location = location;
+        this.prevPosition = prevPosition;
+        this.newPosition = newPosition;
     }
 
     @Override
     public void execute(boolean isUndo) {
-        node.setPosition(location);
+        if(isUndo) {
+            node.setPosition(prevPosition);
+        } else {
+            node.setPosition(newPosition);
+        }
     }
 }

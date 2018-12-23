@@ -4,16 +4,20 @@ import com.viro.core.Node;
 
 public abstract class Action<T> {
     protected Node node;
-    private String action;
+    private String name;
 
-    public Action(Node node, String action) {
+    public Action(Node node, String name) {
         this.node = node;
-        this.action = action;
+        this.name = name;
     }
 
     public abstract void execute(boolean isUndo);
 
     public void execute() {
         execute(true);
+    }
+
+    public String getName() {
+        return name;
     }
 }

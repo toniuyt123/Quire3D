@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import android.widget.ImageButton;
 import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.classes.ActionsController;
 import com.Quire3D.classes.actions.CreateAction;
-import com.Quire3D.classes.actions.TranslateAction;
 import com.Quire3D.virosample.R;
 import com.viro.core.Box;
 import com.viro.core.Geometry;
@@ -21,7 +19,6 @@ import com.viro.core.Material;
 import com.viro.core.Node;
 import com.viro.core.Quad;
 import com.viro.core.Sphere;
-import com.viro.core.Vector;
 
 import java.util.Arrays;
 
@@ -48,41 +45,50 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
+        Geometry obj = new Geometry();
+        String name = "";
         switch (view.getId()) {
             case R.id.createCube:
-                createCube();
+                obj = createCube();
+                name = "cube";
                 break;
             case R.id.createSphere:
-                createSphere();
+                obj = createSphere();
+                name = "sphere";
                 break;
             case R.id.createQuad:
-                createQuad();
+                obj = createQuad();
+                name = "quad";
                 break;
         }
+        addToScene(obj, name, true);
     }
 
-    public void createCube() {
+    public static Geometry createCube() {
         Geometry cube = new Box(1f,1f,1f);
         cube.setMaterials(Arrays.asList(makeDefaultMat()));
-        addToScene(cube, "Cubec");
+
+        return cube;
     }
 
-    public void createSphere() {
+    public static Geometry createSphere() {
         Geometry sphere = new Sphere(1f);
         sphere.setMaterials(Arrays.asList(makeDefaultMat()));
-        addToScene(sphere, "Sphere");
+
+        return sphere;
     }
 
-    public void createQuad() {
+    public static Geometry createQuad() {
         Geometry quad = new Quad(1f, 1f);
         Material quadMat = makeDefaultMat();
         quadMat.setCullMode(Material.CullMode.NONE);
 
         quad.setMaterials(Arrays.asList(quadMat));
-        addToScene(quad, "Quad");
+
+        return quad;
     }
 
-    public static void addToScene(Geometry geometry, String name) {
+    public static void addToScene(Geometry geometry, String name, boolean recordAction) {
         Node n = new Node();
         n.setGeometry(geometry);
         n.setName(name);
@@ -90,11 +96,14 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         ViroActivity.makeNodeSelectable(n);
         ViroActivity.getScene().getRootNode().addChildNode(n);
 
-        ActionsController.getInstance().addAction(new CreateAction(n, geometry, name));
-        ActionsController.getInstance().addAction(new TranslateAction(n, new Vector()));
+        if(recordAction) {
+            ActionsController.getInstance().addAction(new CreateAction(n, name));
+        }
+
+        HierarchyFragment.updateHierarchy();
     }
 
-    private Material makeDefaultMat() {
+    private static Material makeDefaultMat() {
         Material defaultMat = new Material();
         defaultMat.setDiffuseColor(Color.WHITE);
         defaultMat.setLightingModel(Material.LightingModel.LAMBERT);

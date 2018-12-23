@@ -31,10 +31,8 @@ import android.content.Intent;
 import android.widget.Toast;
 import android.view.View;
 
-import com.Quire3D.classes.ActionsController;
 import com.Quire3D.classes.OBJObject;
-import com.Quire3D.classes.ScaleHandles;
-import com.Quire3D.classes.actions.TranslateAction;
+import com.Quire3D.fragments.HierarchyFragment;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
 
@@ -51,8 +49,6 @@ import com.Quire3D.classes.Handles;
 import com.Quire3D.classes.TranslateHandles;
 
 public class ViroActivity extends Activity {
-
-    private static final String TAG = ViroActivity.class.getSimpleName();
     protected static ViroView mainView;
     private AssetManager mAssetManager;
     private static Scene scene;
@@ -88,7 +84,6 @@ public class ViroActivity extends Activity {
         Node cubeNode = new Node();
         cubeNode.setGeometry(cube);
         makeNodeSelectable(cubeNode);
-        ActionsController.getInstance().addAction(new TranslateAction(cubeNode, cubeNode.getPositionRealtime() ));
 
         Spotlight spotlight = new Spotlight();
         spotlight.setPosition(new Vector(-1f, 4f, 3));
@@ -119,6 +114,10 @@ public class ViroActivity extends Activity {
         gridNode.setGeometry(grid);
         gridNode.setRotation(new Quaternion(-(float)Math.PI / 2f, 0f, 0f));
 
+        cubeNode.setName("Cube");
+        lightNode.setName("Light");
+        cameraNode.setName("Camera");
+        gridNode.setName("floor_grid");
         rootNode.addChildNode(cubeNode);
         rootNode.addChildNode(lightNode);
         rootNode.addChildNode(cameraNode);
@@ -126,6 +125,8 @@ public class ViroActivity extends Activity {
 
         view.setPointOfView(cameraNode);
         view.setScene(scene);
+
+        HierarchyFragment.updateHierarchy();
     }
 
     public static void makeNodeSelectable(Node node) {

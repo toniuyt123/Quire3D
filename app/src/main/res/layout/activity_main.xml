@@ -12,17 +12,19 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
-        android:layout_marginEnd="142dp"
-        android:layout_marginBottom="0dp" />
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp" >
+
+    </com.viro.core.ViroViewScene>
 
     <fragment
         android:id="@+id/createPrimitiveFragment"
         android:name="com.Quire3D.fragments.CreatePrimitiveFragment"
-        android:layout_width="139dp"
-        android:layout_height="176dp"
+        android:layout_width="145dp"
+        android:layout_height="105dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="54dp"
+        android:layout_marginTop="125dp"
         android:layout_marginEnd="0dp" />
 
     <fragment
@@ -44,4 +46,15 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="142dp" />
+
+    <fragment
+        android:id="@+id/hierarchyFragment"
+        android:name="com.Quire3D.fragments.HierarchyFragment"
+        android:layout_width="147dp"
+        android:layout_height="125dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-147dp"
+        android:layout_marginTop="0dp"
+        android:layout_toEndOf="@+id/SceneView" />
+
 </RelativeLayout>

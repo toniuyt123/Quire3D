@@ -49,6 +49,8 @@ public class TranslateHandles extends Handles {
         });
 
         handle.setClickListener(new ClickListener() {
+            private Vector oldPos;
+
             @Override
             public void onClick(int i, Node node, Vector vector) {
 
@@ -56,10 +58,11 @@ public class TranslateHandles extends Handles {
 
             @Override
             public void onClickState(int i, Node node, ClickState clickState, Vector vector) {
-                if(clickState.equals(ClickState.CLICK_UP)) {
+                if(clickState.equals(ClickState.CLICK_DOWN)) {
+                    oldPos = parent.getPositionRealtime();
+                }else if(clickState.equals(ClickState.CLICK_UP)) {
                     node.setPosition(new Vector(0f, 0f, 0f));
-                    Log.i("suck", "action added" + parent.getPositionRealtime() + parent.getName());
-                    ActionsController.getInstance().addAction(new TranslateAction(parent, parent.getPositionRealtime()));
+                    ActionsController.getInstance().addAction(new TranslateAction(parent, oldPos, parent.getPositionRealtime()));
                 }
             }
         });
