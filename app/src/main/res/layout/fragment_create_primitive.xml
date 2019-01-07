@@ -10,22 +10,29 @@
     <ImageButton
         android:id="@+id/createCube"
         android:layout_width="416dp"
-        android:layout_height="49dp"
+        android:layout_height="wrap_content"
         android:contentDescription="@string/createCube"
         android:src="@android:drawable/arrow_up_float" />
 
     <ImageButton
         android:id="@+id/createSphere"
         android:layout_width="416dp"
-        android:layout_height="49dp"
+        android:layout_height="19dp"
         android:contentDescription="@string/createSphere"
         android:src="@android:drawable/arrow_up_float" />
 
     <ImageButton
         android:id="@+id/createQuad"
         android:layout_width="416dp"
-        android:layout_height="49dp"
+        android:layout_height="20dp"
         android:contentDescription="@string/createQuad"
+        android:src="@android:drawable/arrow_up_float" />
+
+    <ImageButton
+        android:id="@+id/delete"
+        android:layout_width="416dp"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/delnode"
         android:src="@android:drawable/arrow_up_float" />
 
 </LinearLayout>

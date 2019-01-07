@@ -23,25 +23,20 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.content.Intent;
-import android.widget.Toast;
 import android.view.View;
 
-import com.Quire3D.classes.OBJObject;
 import com.Quire3D.fragments.HierarchyFragment;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
 
 import com.viro.core.*;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.Quire3D.classes.OrbitCamera;
@@ -123,6 +118,17 @@ public class ViroActivity extends Activity {
         rootNode.addChildNode(cameraNode);
         rootNode.addChildNode(gridNode);
 
+        cubeNode.getGeometry().setVertices(new ArrayList<Vector>(Arrays.asList(
+                new Vector(0f,0f,0f),
+                new Vector(1f,0f,0f),
+                new Vector(0f,1f,0f),
+                new Vector(0f,0f,1f),
+                new Vector(1f,1f,0f),
+                new Vector(0f,1f,1f),
+                new Vector(1f,0f,1f),
+                new Vector(1f,1f,1f)
+        )));
+
         view.setPointOfView(cameraNode);
         view.setScene(scene);
 
@@ -202,51 +208,6 @@ public class ViroActivity extends Activity {
         return mainView;
     }
 
-
-    public void chooseFile() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        try {
-            startActivityForResult(
-                    Intent.createChooser(intent, "Select a File to Upload"),
-                    1);
-
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(this, "Please install a File Manager.",
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Uri uri = data.getData();
-        StringBuilder text = new StringBuilder();
-
-        if(uri != null)
-        {
-            try {
-                InputStream is = getContentResolver().openInputStream(uri);
-                assert is != null;
-                BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                String line;
-
-                while ((line = br.readLine()) != null) {
-                    text.append(line);
-                    text.append('\n');
-                }
-                br.close();
-            }
-            catch (IOException e) {
-                Log.d("importError", "file not found");
-            }
-        }
-
-        OBJObject imported = new OBJObject(text.toString());
-        //imported.setName();
-        getScene().getRootNode().addChildNode(imported);
-    }
-
     private int[] getScreenResolution() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -258,5 +219,9 @@ public class ViroActivity extends Activity {
             resolution[0] += resources.getDimensionPixelSize(resourceId);
         }
         return resolution;
+    }
+
+    public static Node getSelectedNode() {
+        return selectedNode;
     }
 }

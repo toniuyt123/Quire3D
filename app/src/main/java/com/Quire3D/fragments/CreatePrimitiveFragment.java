@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,8 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         createSphere.setOnClickListener(this);
         ImageButton createQuad = view.findViewById(R.id.createQuad);
         createQuad.setOnClickListener(this);
+        ImageButton deletebutton = view.findViewById(R.id.delete);
+        deletebutton.setOnClickListener(this);
 
         return view;
     }
@@ -59,6 +62,12 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
             case R.id.createQuad:
                 obj = createQuad();
                 name = "quad";
+                break;
+            case R.id.delete:
+                Node selected = ViroActivity.getSelectedNode();
+                if(selected != null) {
+                    selected.disposeAll(true);
+                }
                 break;
         }
         addToScene(obj, name, true);
@@ -100,7 +109,7 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
             ActionsController.getInstance().addAction(new CreateAction(n, name));
         }
 
-        HierarchyFragment.updateHierarchy();
+        HierarchyFragment.addToHierarchy(n, 0);
     }
 
     private static Material makeDefaultMat() {

@@ -16,12 +16,12 @@ import com.viro.core.Node;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class HierarchyFragment extends Fragment implements View.OnClickListener {
-    private static LinearLayout hierarchy;
     private static final ArrayList<String> hidden = new ArrayList<>(Arrays.asList("Handles", "floor_grid"));
-    private static Node root;
+    private static LinearLayout hierarchy;
 
     @Nullable
     @Override
@@ -29,7 +29,6 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
         final View view = inflater.inflate(R.layout.fragment_hierarchy, container, false);
 
         hierarchy = view.findViewById(R.id.Hierarchy);
-        root = ViroActivity.getScene().getRootNode();
         return view;
     }
 
@@ -43,32 +42,52 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
     }
 
     public static void updateHierarchy() {
-        Context context = ViroActivity.getView().getContext();
-
-        expandChildren(context, root, 0);
+        expandChildren(ViroActivity.getScene().getRootNode(), 0);
     }
 
-    private static void expandChildren(Context context, Node node, int level) {
+    private static void expandChildren(Node node, int level) {
         for(Node n : node.getChildNodes()){
             if(!hidden.contains(n.getName())) {
-                TextView name = new TextView(context);
-                String tabs = new String(new char[level]).replace("\0", "->");
-
-                name.setText(String.format("%S%s%s", "| ", tabs, n.getName()));
-                hierarchy.addView(name);
+                addToHierarchy(n, level);
                 if(n.getChildNodes().size() > 0) {
-                    expandChildren(context, n, level++);
+                    expandChildren(n, level + 1);
                 }
             }
         }
     }
 
     private static Node getNodeByName(String name) {
-        for(Node n : root.getChildNodes()){
+        for(Node n : ViroActivity.getScene().getRootNode().getChildNodes()){
             if(n.getName().equals(name)){
                 return n;
             }
         }
         return null;
+    }
+
+    public static void addToHierarchy(Node node, int level){
+        TextView name = new TextView(ViroActivity.getView().getContext());
+        String tabs = new String(new char[level]).replace("\0", "->");
+
+        name.setText(String.format("%S%s%s", "| ", tabs, node.getName()));
+        hierarchy.addView(name);
+    }
+
+    public static ArrayList<Node> getExportableObjects(Node root) {
+        ArrayList<Node> objects = new ArrayList<Node>();
+        for(Node n : root.getChildNodes()){
+            if(!hidden.contains(n.getName())) {
+
+                if(n.getGeometry() != null){
+                    objects.add(n);
+                }
+                if(n.getChildNodes().size() > 0) {
+                    ArrayList<Node> childs = new ArrayList<Node>(getExportableObjects(n));
+                    objects.addAll(childs);
+                }
+            }
+        }
+
+        return objects;
     }
 }

@@ -13,4 +13,6 @@
     <string name="floatZero">.00000</string>
     <string name="Undo">Undo</string>
     <string name="Redo">Redo</string>
+    <string name="Export">Export</string>
+    <string name="delnode">Delete</string>
 </resources>
