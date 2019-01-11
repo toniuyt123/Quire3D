@@ -1,9 +1,9 @@
 package com.Quire3D.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +16,15 @@ import com.viro.core.Node;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class HierarchyFragment extends Fragment implements View.OnClickListener {
     private static final ArrayList<String> hidden = new ArrayList<>(Arrays.asList("Handles", "floor_grid"));
     private static LinearLayout hierarchy;
+    private static HashMap<TextView, Node> nodes = new HashMap<>();
+
 
     @Nullable
     @Override
@@ -57,9 +60,9 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
     }
 
     private static Node getNodeByName(String name) {
-        for(Node n : ViroActivity.getScene().getRootNode().getChildNodes()){
-            if(n.getName().equals(name)){
-                return n;
+        for(TextView t: nodes.keySet()){
+            if(t.getText().equals(name)) {
+                return nodes.get(t);
             }
         }
         return null;
@@ -71,10 +74,24 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
 
         name.setText(String.format("%S%s%s", "| ", tabs, node.getName()));
         hierarchy.addView(name);
+
+        nodes.put(name, node);
+    }
+
+    public static void removeFromHierarchy(Node node) {
+        for(Map.Entry entry: nodes.entrySet()){
+            Node n = (Node)entry.getValue();
+            if(entry.getValue().equals(node)){
+                TextView key = (TextView) entry.getKey();
+                hierarchy.removeView(key);
+                nodes.remove(key);
+                return;
+            }
+        }
     }
 
     public static ArrayList<Node> getExportableObjects(Node root) {
-        ArrayList<Node> objects = new ArrayList<Node>();
+        /*ArrayList<Node> objects = new ArrayList<Node>();
         for(Node n : root.getChildNodes()){
             if(!hidden.contains(n.getName())) {
 
@@ -88,6 +105,7 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
             }
         }
 
-        return objects;
+        return objects;*/
+        return new ArrayList<>(nodes.values());
     }
 }

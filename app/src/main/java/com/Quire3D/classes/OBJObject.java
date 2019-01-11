@@ -1,14 +1,14 @@
 package com.Quire3D.classes;
 
-import android.util.Log;
-
 import com.Quire3D.activities.ViroActivity;
+import com.Quire3D.fragments.CreatePrimitiveFragment;
 import com.Quire3D.fragments.HierarchyFragment;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedParallelScanList;
 import com.viro.core.Geometry;
+import com.viro.core.Material;
 import com.viro.core.Node;
 import com.viro.core.Object3D;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,8 +21,8 @@ public class OBJObject extends Object3D {
     private List<Vector> normals = new ArrayList<>();
     private List<Vector> textureCoords = new ArrayList<>();
     private List<Vector> vertices = new ArrayList<>();
-    private List<Integer> triangleIndeces = new ArrayList<Integer>();
-    private List<Submesh> submeshes;
+    private List<Integer> triangleIndeces = new ArrayList<>();
+    //private List<Submesh> submeshes;
 
     public OBJObject(String textFile) {
         Scanner scanner = new Scanner(textFile);
@@ -44,7 +44,7 @@ public class OBJObject extends Object3D {
                     String[] faces = line.split("\\s+");
                     for (int i = 1; i <= faces.length - 1; i++) {
                         triangleIndeces.add(
-                                Integer.parseInt(faces[i].split("/")[0]));
+                                Integer.parseInt(faces[i].split("/")[0]) - 1);
                     }
 
                     break;
@@ -55,15 +55,21 @@ public class OBJObject extends Object3D {
         }
         scanner.close();
 
-        /*setGeometry(new Geometry());
-        getGeometry().setVertices(vertices);
-        Submesh sub = new Submesh();
-        sub.setTriangleIndices(triangleIndeces);
-        ArrayList<Submesh> subs = new ArrayList<>();
-        subs.add(sub);
-        getGeometry().setNormals(normals);
-         getGeometry().setTextureCoordinates(textureCoords);
-        getGeometry().setSubmeshes(subs);*/
+        Submesh.SubmeshBuilder builder = new Submesh.SubmeshBuilder();
+        builder.triangleIndices(triangleIndeces);
+        Submesh mesh = builder.build();
+
+        Geometry.GeometryBuilder gbuilder = new Geometry.GeometryBuilder();
+        gbuilder.submeshes(Arrays.asList(mesh));
+        gbuilder.materials(Arrays.asList(
+                CreatePrimitiveFragment.makeDefaultMat()
+        ));
+
+        Geometry geometry = gbuilder.build();
+        geometry.setVertices(vertices);
+        geometry.setNormals(normals);
+
+        setGeometry(geometry);
     }
 
     private void addEntryTo(List list, String line) {
@@ -97,6 +103,10 @@ public class OBJObject extends Object3D {
 
     public List<Vector> getVertices() {
         return vertices;
+    }
+
+    public List<Integer> getTriangleIndeces() {
+        return triangleIndeces;
     }
 
     public static void exportOBJ() {

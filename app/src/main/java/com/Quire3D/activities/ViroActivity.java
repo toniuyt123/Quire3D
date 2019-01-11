@@ -36,6 +36,7 @@ import com.viro.core.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -117,17 +118,6 @@ public class ViroActivity extends Activity {
         rootNode.addChildNode(lightNode);
         rootNode.addChildNode(cameraNode);
         rootNode.addChildNode(gridNode);
-
-        cubeNode.getGeometry().setVertices(new ArrayList<Vector>(Arrays.asList(
-                new Vector(0f,0f,0f),
-                new Vector(1f,0f,0f),
-                new Vector(0f,1f,0f),
-                new Vector(0f,0f,1f),
-                new Vector(1f,1f,0f),
-                new Vector(0f,1f,1f),
-                new Vector(1f,0f,1f),
-                new Vector(1f,1f,1f)
-        )));
 
         view.setPointOfView(cameraNode);
         view.setScene(scene);

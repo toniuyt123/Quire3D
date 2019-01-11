@@ -65,10 +65,11 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
                 break;
             case R.id.delete:
                 Node selected = ViroActivity.getSelectedNode();
+                HierarchyFragment.removeFromHierarchy(selected);
                 if(selected != null) {
                     selected.disposeAll(true);
                 }
-                break;
+                return;
         }
         addToScene(obj, name, true);
     }
@@ -112,7 +113,7 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         HierarchyFragment.addToHierarchy(n, 0);
     }
 
-    private static Material makeDefaultMat() {
+    public static Material makeDefaultMat() {
         Material defaultMat = new Material();
         defaultMat.setDiffuseColor(Color.WHITE);
         defaultMat.setLightingModel(Material.LightingModel.LAMBERT);
