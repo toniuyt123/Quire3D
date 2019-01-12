@@ -22,6 +22,7 @@ public class OBJObject extends Object3D {
     private List<Vector> textureCoords = new ArrayList<>();
     private List<Vector> vertices = new ArrayList<>();
     private List<Integer> triangleIndeces = new ArrayList<>();
+    private List<Integer> normalIndeces = new ArrayList<>();
     //private List<Submesh> submeshes;
 
     public OBJObject(String textFile) {
@@ -43,8 +44,12 @@ public class OBJObject extends Object3D {
                 case "f ":
                     String[] faces = line.split("\\s+");
                     for (int i = 1; i <= faces.length - 1; i++) {
+                        String[] indeces = faces[i].split("/");
                         triangleIndeces.add(
-                                Integer.parseInt(faces[i].split("/")[0]) - 1);
+                                Integer.parseInt(indeces[0]) - 1);
+
+                        normalIndeces.add(
+                                Integer.parseInt(indeces[indeces.length - 1]) - 1);
                     }
 
                     break;

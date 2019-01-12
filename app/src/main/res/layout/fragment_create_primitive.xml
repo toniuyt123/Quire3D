@@ -1,38 +1,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#666666"
     tools:context="com.Quire3D.fragments.CreatePrimitiveFragment">
 
 
-    <ImageButton
+    <Button
         android:id="@+id/createCube"
-        android:layout_width="416dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/createCube"
-        android:src="@android:drawable/arrow_up_float" />
+        android:layout_weight="0.25"
+        android:text="@string/Cube"
+        android:textSize="12sp"
+        android:padding="0dp"/>
 
-    <ImageButton
+    <Button
         android:id="@+id/createSphere"
-        android:layout_width="416dp"
-        android:layout_height="19dp"
-        android:contentDescription="@string/createSphere"
-        android:src="@android:drawable/arrow_up_float" />
-
-    <ImageButton
-        android:id="@+id/createQuad"
-        android:layout_width="416dp"
-        android:layout_height="20dp"
-        android:contentDescription="@string/createQuad"
-        android:src="@android:drawable/arrow_up_float" />
-
-    <ImageButton
-        android:id="@+id/delete"
-        android:layout_width="416dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/delnode"
-        android:src="@android:drawable/arrow_up_float" />
+        android:layout_weight="0.25"
+        android:text="@string/Sphere"
+        android:textSize="12sp"
+        android:padding="0dp"/>
+
+    <Button
+        android:id="@+id/createQuad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25"
+        android:text="@string/Quad"
+        android:textSize="12sp"
+        android:padding="0dp"/>
+
+    <Button
+        android:id="@+id/delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25"
+        android:text="@string/Delete"
+        android:textSize="12sp"
+        android:padding="0dp"/>
 
 </LinearLayout>

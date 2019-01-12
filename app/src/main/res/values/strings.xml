@@ -4,9 +4,9 @@
     <string name="select_file">Import</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="createCube">Create cube</string>
-    <string name="createQuad">Create quad</string>
-    <string name="createSphere">Create sphere</string>
+    <string name="Cube">Cube</string>
+    <string name="Quad">Quad</string>
+    <string name="Sphere">Sphere</string>
     <string name="position">Position:</string>
     <string name="scale">Scale:</string>
     <string name="rotation">Rotation:</string>
@@ -14,5 +14,5 @@
     <string name="Undo">Undo</string>
     <string name="Redo">Redo</string>
     <string name="Export">Export</string>
-    <string name="delnode">Delete</string>
+    <string name="Delete">Delete</string>
 </resources>

@@ -4,11 +4,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 
 import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.classes.ActionsController;
@@ -29,13 +28,13 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_create_primitive, container, false);
 
-        ImageButton createCube = view.findViewById(R.id.createCube);
+        Button createCube = view.findViewById(R.id.createCube);
         createCube.setOnClickListener(this);
-        ImageButton createSphere = view.findViewById(R.id.createSphere);
+        Button createSphere = view.findViewById(R.id.createSphere);
         createSphere.setOnClickListener(this);
-        ImageButton createQuad = view.findViewById(R.id.createQuad);
+        Button createQuad = view.findViewById(R.id.createQuad);
         createQuad.setOnClickListener(this);
-        ImageButton deletebutton = view.findViewById(R.id.delete);
+        Button deletebutton = view.findViewById(R.id.delete);
         deletebutton.setOnClickListener(this);
 
         return view;

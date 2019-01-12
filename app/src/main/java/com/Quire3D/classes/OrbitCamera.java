@@ -40,8 +40,8 @@ public class OrbitCamera {
 
     public OrbitCamera(Node cameraNode, ViroView view) {
         this.radiusConst = 3f;
-        this.thetaAngleStart = 0f;
-        this.phiAngleStart = 90f;
+        this.thetaAngleStart = 45f;
+        this.phiAngleStart = 45f;
         this.view = view;
         this.lookAt = new Vector(0f, 0f, 0f);
         this.locked = false;
@@ -49,7 +49,9 @@ public class OrbitCamera {
         Camera camera = new Camera();
         this.cameraNode = cameraNode;
         this.cameraNode.setCamera(camera);
-        setCameraPosition(new Vector(0f, 0f, this.radiusConst), new Vector(0f,0f,0f));
+
+        Vector startPos = getPositionFromAngles(this.thetaAngleStart, this.phiAngleStart);
+        setCameraPosition(startPos, lookAt);
 
         setListener();
     }
@@ -99,11 +101,9 @@ public class OrbitCamera {
                                 clampedPhi = 0;
                             }
 
-                            // Parametrize the camera's location onto a sphere based on current phi and theta values.
-                            double camZ = radiusConst * Math.cos(Math.toRadians(clampedTheta)) * Math.sin(Math.toRadians(clampedPhi));
-                            double camX = radiusConst * Math.sin(Math.toRadians(clampedTheta)) * Math.sin(Math.toRadians(clampedPhi));
-                            double camY = radiusConst * Math.cos(Math.toRadians(clampedPhi));
-                            setCameraPosition(new Vector(camX, camY, camZ), lookAt);
+
+                            Vector cameraPos = getPositionFromAngles(clampedTheta, clampedPhi);
+                            setCameraPosition(cameraPos, lookAt);
                             break;
                         case MotionEvent.ACTION_UP:
                             thetaAngleStart = thetaAngleStart + lastKnownDeltaTheta;
@@ -153,6 +153,15 @@ public class OrbitCamera {
         Quaternion quartEuler = new Quaternion((float)phi, (float)theta, 0);
         cameraNode.setRotation(quartEuler);
         cameraNode.setPosition(cameraPosition);
+    }
+
+    // Parametrize the camera's location onto a sphere based on current phi and theta values.
+    private Vector getPositionFromAngles(double theta, double phi) {
+        double camZ = radiusConst * Math.cos(Math.toRadians(theta)) * Math.sin(Math.toRadians(phi));
+        double camX = radiusConst * Math.sin(Math.toRadians(theta)) * Math.sin(Math.toRadians(phi));
+        double camY = radiusConst * Math.cos(Math.toRadians(phi));
+
+        return new Vector(camX, camY, camZ);
     }
 
     public void toggleLock() {
