@@ -3,7 +3,6 @@ package com.Quire3D.classes;
 import android.app.Fragment;
 import android.util.Log;
 
-import com.Quire3D.classes.actions.TranslateAction;
 import com.viro.core.ClickListener;
 import com.viro.core.ClickState;
 import com.viro.core.DragListener;

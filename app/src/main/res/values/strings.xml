@@ -10,9 +10,13 @@
     <string name="position">Position:</string>
     <string name="scale">Scale:</string>
     <string name="rotation">Rotation:</string>
-    <string name="floatZero">.00000</string>
+    <string name="floatZero">0.0000</string>
+    <string name="floatOne">1.0000</string>
     <string name="Undo">Undo</string>
     <string name="Redo">Redo</string>
     <string name="Export">Export</string>
     <string name="Delete">Delete</string>
+    <string name="Translate">Translate</string>
+    <string name="Scale">Scale</string>
+    <string name="Rotate">Rotate</string>
 </resources>

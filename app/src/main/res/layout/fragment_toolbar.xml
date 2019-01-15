@@ -1,0 +1,33 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#666666"
+    tools:context="com.Quire3D.fragments.ToolbarFragment">
+
+
+    <ImageButton
+        android:id="@+id/Translate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:contentDescription="@string/Translate"
+        android:src="@mipmap/viro_launcher" />
+
+    <ImageButton
+        android:id="@+id/Scale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:contentDescription="@string/Scale"
+        android:src="@android:drawable/btn_star_big_on" />
+
+    <ImageButton
+        android:id="@+id/Rotate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:contentDescription="@string/Rotate"
+        android:src="@mipmap/ic_launcher" />
+</LinearLayout>

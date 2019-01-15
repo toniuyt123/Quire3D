@@ -28,6 +28,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
+import com.Quire3D.classes.ScaleHandles;
 import com.Quire3D.fragments.HierarchyFragment;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
@@ -138,7 +139,7 @@ public class ViroActivity extends Activity {
                             }
                         }
                     }
-                    Handles handles = new TranslateHandles(getView(), node);
+                    Handles handles = new ScaleHandles(getView(), node);
                     selectedNode = node;
                 }
             }

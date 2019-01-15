@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/relativeLayout">
+    android:id="@+id/relativeLayout"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <com.viro.core.ViroViewScene
         android:id="@+id/SceneView"
@@ -27,7 +28,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="124dp"
-        android:layout_marginEnd="0dp" />
+        android:layout_marginEnd="0dp"
+        tools:layout="@layout/fragment_create_primitive"/>
 
     <fragment
         android:id="@+id/objectParamsFragment"
@@ -37,7 +39,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="227dp"
-        android:layout_marginEnd="0dp" />
+        android:layout_marginEnd="0dp"
+        tools:layout="@layout/fragment_object_params"/>
 
     <fragment
         android:id="@+id/topMenuFragment"
@@ -47,7 +50,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="0dp"
-        android:layout_marginEnd="150dp" />
+        android:layout_marginEnd="150dp"
+        tools:layout="@layout/fragment_top_menu"/>
 
     <fragment
         android:id="@+id/hierarchyFragment"
@@ -55,6 +59,18 @@
         android:layout_width="150dp"
         android:layout_height="125dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        tools:layout="@layout/fragment_hierarchy"/>
+
+    <fragment
+        android:id="@+id/toolbarFragment"
+        android:name="com.Quire3D.fragments.ToolbarFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="150dp"
+        tools:layout="@layout/fragment_toolbar" />
 
 </RelativeLayout>
