@@ -1,8 +1,11 @@
 package com.Quire3D.classes;
 
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
+import com.Quire3D.activities.ViroActivity;
 import com.viro.core.Camera;
 import com.viro.core.Node;
 import com.viro.core.Quaternion;
@@ -18,7 +21,6 @@ public class OrbitCamera {
     private float thetaAngleStart;
     private float phiAngleStart;
     private int[] mOldTouchPos;
-    private float[] panOldPos;
     private Vector lookAt;
     private boolean locked;
 
@@ -57,6 +59,8 @@ public class OrbitCamera {
     }
 
     private void setListener() {
+        final ScaleGestureDetector zoomListener = new ScaleGestureDetector(ViroActivity.getView().getContext(), new cameraZoomListener());
+
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -89,20 +93,9 @@ public class OrbitCamera {
                             lastKnownDeltaPhi = normalizedFingerMovedY * rateOfChangePhi;
                             double phi = phiAngleStart + lastKnownDeltaPhi;
 
-                            // Determine if values should be clamped and clamp them.
-                            // Note that lastKnown delta + phi datas are still saved above irregardless of clamp.
-                            // Consider saving them after the fact if needed.
-                            double clampedTheta = theta % 360;
-                            if (theta < 0){
-                                clampedTheta = 360  + theta;
-                            }
-                            double clampedPhi = phi % 360;
-                            if (phi < 0){
-                                clampedPhi = 0;
-                            }
 
-
-                            Vector cameraPos = getPositionFromAngles(clampedTheta, clampedPhi);
+                            double[] clampedAngles = clampAngles(theta, phi);
+                            Vector cameraPos = getPositionFromAngles(clampedAngles[0], clampedAngles[1]);
                             setCameraPosition(cameraPos, lookAt);
                             break;
                         case MotionEvent.ACTION_UP:
@@ -110,19 +103,7 @@ public class OrbitCamera {
                             phiAngleStart = phiAngleStart + lastKnownDeltaPhi;
                     }
                 } else if(pointerCount == 2) {
-                    float x = ((int)event.getX(0) + (int)event.getX(1)) / 2f;
-                    float y = ((int)event.getY(0) + (int)event.getY(0)) / 2f;
-                    float[] newTouchPos = {x, y};
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            getPanMoviingPlane();
-                            panOldPos = newTouchPos;
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-
-
-                            break;
-                    }
+                    zoomListener.onTouchEvent(event);
                 }
             }
 
@@ -130,8 +111,6 @@ public class OrbitCamera {
             }
         });
     }
-
-    private void getPanMoviingPlane() {}
 
     private void setCameraPosition(Vector cameraPosition, Vector lookAtPosition){
         Vector dirVector = lookAtPosition.subtract(cameraPosition);
@@ -164,7 +143,39 @@ public class OrbitCamera {
         return new Vector(camX, camY, camZ);
     }
 
+    // Determine if values should be clamped and clamp them.
+    // Note that lastKnown delta + phi datas are still saved above irregardless of clamp.
+    // Consider saving them after the fact if needed.
+    private double[] clampAngles(double theta, double phi) {
+        double clampedTheta = theta % 360;
+        if (theta < 0){
+            clampedTheta = 360  + theta;
+        }
+        double clampedPhi = phi % 360;
+        if (phi < 0){
+            clampedPhi = 0;
+        }
+
+        return new double[]{clampedTheta, clampedPhi};
+    }
+
+
     public void toggleLock() {
         this.locked = !this.locked;
+    }
+
+    class cameraZoomListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            radiusConst *= 2 - detector.getScaleFactor();
+
+            double[] clampedAgnles = clampAngles(thetaAngleStart + lastKnownDeltaTheta, phiAngleStart + lastKnownDeltaPhi);
+            Vector newPos = getPositionFromAngles(clampedAgnles[0], clampedAgnles[1]);
+            setCameraPosition(newPos, lookAt);
+
+            Log.i("pinch", newPos.toString());
+
+            return true;
+        }
     }
 }

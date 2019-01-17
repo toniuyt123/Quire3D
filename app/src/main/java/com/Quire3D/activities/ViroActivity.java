@@ -37,8 +37,6 @@ import com.viro.core.*;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.Quire3D.classes.OrbitCamera;
@@ -51,6 +49,8 @@ public class ViroActivity extends Activity {
     private static Scene scene;
     private static Node selectedNode;
     private Fragment paramsFrag;
+    private static char defaultHandle = 't';
+    private static Handles activeHandles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +139,14 @@ public class ViroActivity extends Activity {
                             }
                         }
                     }
-                    Handles handles = new ScaleHandles(getView(), node);
+
+                    if (defaultHandle == 't') {
+                        activeHandles = new TranslateHandles(getView(), node);
+                    } else if(defaultHandle == 's') {
+                        activeHandles = new ScaleHandles(getView(), node);
+                    } else {
+
+                    }
                     selectedNode = node;
                 }
             }
@@ -214,5 +221,16 @@ public class ViroActivity extends Activity {
 
     public static Node getSelectedNode() {
         return selectedNode;
+    }
+
+    public static void setDefaultHandle(char defaultHandle) {
+        ViroActivity.defaultHandle = defaultHandle;
+    }
+
+    public static void changeHandles(Handles newHandles) {
+        if(activeHandles != null) {
+            activeHandles.getHandleRoot().disposeAll(true);
+            activeHandles = newHandles;
+        }
     }
 }
