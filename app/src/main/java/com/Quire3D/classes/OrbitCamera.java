@@ -1,6 +1,8 @@
 package com.Quire3D.classes;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -59,7 +61,8 @@ public class OrbitCamera {
     }
 
     private void setListener() {
-        final ScaleGestureDetector zoomListener = new ScaleGestureDetector(ViroActivity.getView().getContext(), new cameraZoomListener());
+        Context context = ViroActivity.getView().getContext();
+        final ScaleGestureDetector zoomListener = new ScaleGestureDetector(context, new cameraZoomListener());
 
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -160,20 +163,41 @@ public class OrbitCamera {
     }
 
 
-    public void toggleLock() {
+    public void lock() {
         this.locked = !this.locked;
     }
 
     class cameraZoomListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        private double theta, phi;
+        private boolean hasSelected = true;
+        private Node activeHandles;
+
+        @Override
+        public boolean onScaleBegin(ScaleGestureDetector detector) {
+            try {
+                double[] clampedAgnles = clampAngles(thetaAngleStart + lastKnownDeltaTheta, phiAngleStart + lastKnownDeltaPhi);
+                theta = clampedAgnles[0];
+                phi = clampedAgnles[1];
+
+                activeHandles = ViroActivity.getActiveHandles().getHandleRoot();
+                hasSelected = true;
+            } catch(NullPointerException e) {
+                hasSelected = false;
+            }
+
+            return true;
+        }
+
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-            radiusConst *= 2 - detector.getScaleFactor();
-
-            double[] clampedAgnles = clampAngles(thetaAngleStart + lastKnownDeltaTheta, phiAngleStart + lastKnownDeltaPhi);
-            Vector newPos = getPositionFromAngles(clampedAgnles[0], clampedAgnles[1]);
+            float scaleFactor = 2 - detector.getScaleFactor();
+            radiusConst *= scaleFactor;
+            Vector newPos = getPositionFromAngles(theta, phi);
             setCameraPosition(newPos, lookAt);
 
-            Log.i("pinch", newPos.toString());
+            if(hasSelected) {
+                activeHandles.setScale(activeHandles.getScaleRealtime().scale(scaleFactor));
+            }
 
             return true;
         }

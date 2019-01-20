@@ -4,11 +4,9 @@ import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.fragments.CreatePrimitiveFragment;
 import com.Quire3D.fragments.HierarchyFragment;
 import com.viro.core.Geometry;
-import com.viro.core.Material;
 import com.viro.core.Node;
 import com.viro.core.Object3D;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,7 +75,7 @@ public class OBJObject extends Object3D {
         setGeometry(geometry);
     }
 
-    private void addEntryTo(List list, String line) {
+    private void addEntryTo(List<Vector> list, String line) {
         String[] entry = line.split("\\s+");
         list.add(new Vector(
                 Float.parseFloat(entry[1]),
@@ -121,7 +119,7 @@ public class OBJObject extends Object3D {
         output.append("#Quire3D v0.1 OBJ File.\n#Powered by ViroCore\n");
 
         for(Node n: nodes){
-            output.append("o " + n.getName());
+            output.append("o ").append(n.getName());
 
 
         }

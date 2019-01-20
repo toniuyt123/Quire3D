@@ -1,0 +1,40 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#666666"
+    android:weightSum="3"
+    tools:context="com.Quire3D.fragments.SwitchViewFragment">
+
+
+    <ImageButton
+        android:id="@+id/ObjectParams"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:contentDescription="@string/Params"
+        android:src="@mipmap/arrow"
+        android:scaleType="fitCenter"
+        android:background="#D6D7D7"/>
+
+    <ImageButton
+        android:id="@+id/Materials"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:contentDescription="@string/Materials"
+        android:src="@mipmap/square"
+        android:scaleType="fitCenter"
+        android:background="#D6D7D7"/>
+
+    <ImageButton
+        android:id="@+id/Other"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:contentDescription="@string/Misc"
+        android:src="@mipmap/arc"
+        android:scaleType="fitCenter"
+        android:background="#D6D7D7"/>
+</LinearLayout>

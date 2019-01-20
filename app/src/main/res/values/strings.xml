@@ -19,4 +19,7 @@
     <string name="Translate">Translate</string>
     <string name="Scale">Scale</string>
     <string name="Rotate">Rotate</string>
+    <string name="Params">Params</string>
+    <string name="Materials">Materials</string>
+    <string name="Misc">Misc</string>
 </resources>

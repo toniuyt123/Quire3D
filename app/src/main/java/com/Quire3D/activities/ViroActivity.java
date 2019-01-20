@@ -233,4 +233,12 @@ public class ViroActivity extends Activity {
             activeHandles = newHandles;
         }
     }
+
+    public static Handles getActiveHandles() {
+        return activeHandles;
+    }
+
+    public static void setActiveHandles(Handles handles) {
+        activeHandles = handles;
+    }
 }

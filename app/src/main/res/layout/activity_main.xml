@@ -27,20 +27,9 @@
         android:layout_height="105dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="124dp"
+        android:layout_marginTop="107dp"
         android:layout_marginEnd="0dp"
-        tools:layout="@layout/fragment_create_primitive"/>
-
-    <fragment
-        android:id="@+id/objectParamsFragment"
-        android:name="com.Quire3D.fragments.ObjectParamsFragment"
-        android:layout_width="150dp"
-        android:layout_height="184dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="227dp"
-        android:layout_marginEnd="0dp"
-        tools:layout="@layout/fragment_object_params"/>
+        tools:layout="@layout/fragment_create_primitive" />
 
     <fragment
         android:id="@+id/topMenuFragment"
@@ -57,10 +46,11 @@
         android:id="@+id/hierarchyFragment"
         android:name="com.Quire3D.fragments.HierarchyFragment"
         android:layout_width="150dp"
-        android:layout_height="125dp"
+        android:layout_height="107dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        tools:layout="@layout/fragment_hierarchy"/>
+        android:layout_marginEnd="0dp"
+        tools:layout="@layout/fragment_hierarchy" />
 
     <fragment
         android:id="@+id/toolbarFragment"
@@ -72,5 +62,32 @@
         android:layout_marginTop="45dp"
         android:layout_marginEnd="150dp"
         tools:layout="@layout/fragment_toolbar" />
+
+    <fragment
+        android:id="@+id/switchViewFragment"
+        android:name="com.Quire3D.fragments.SwitchViewFragment"
+        android:layout_width="150dp"
+        android:layout_height="18dp"
+        android:layout_alignBottom="@+id/objectViewContainer"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="130dp"
+        tools:layout="@layout/fragment_switch_view" />
+
+    <FrameLayout
+        android:id="@+id/objectViewContainer"
+        android:layout_width="150dp"
+        android:layout_height="185dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="227dp"
+        android:layout_marginEnd="0dp">
+
+        <fragment
+            android:id="@+id/objectParamsFragment"
+            android:name="com.Quire3D.fragments.ObjectParamsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_object_params" />
+    </FrameLayout>
 
 </RelativeLayout>

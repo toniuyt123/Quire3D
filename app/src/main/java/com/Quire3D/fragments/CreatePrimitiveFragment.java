@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,7 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
                 HierarchyFragment.removeFromHierarchy(selected);
                 if(selected != null) {
                     selected.disposeAll(true);
+                    ViroActivity.setActiveHandles(null);
                 }
                 return;
         }
