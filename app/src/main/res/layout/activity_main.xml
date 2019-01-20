@@ -87,7 +87,7 @@
             android:name="com.Quire3D.fragments.ObjectParamsFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout="@layout/fragment_object_params" />
+            tools:layout="@layout/fragment_materials" />
     </FrameLayout>
 
 </RelativeLayout>

@@ -22,4 +22,5 @@
     <string name="Params">Params</string>
     <string name="Materials">Materials</string>
     <string name="Misc">Misc</string>
+    <string name="Color">#FFFFFF</string>
 </resources>

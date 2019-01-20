@@ -54,7 +54,5 @@ public class SwitchViewFragment extends Fragment implements View.OnClickListener
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.replace(oldFragId, newFrag).addToBackStack(null);
         transaction.commit();
-
-        currentFragmentId = newFrag.getId();
     }
 }
