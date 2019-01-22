@@ -23,7 +23,7 @@ public class ActionsController {
             actions.add(action);
             index++;
         } else {
-            actions.subList(index + 1, actions.size()).clear();
+            actions.subList(index, actions.size()).clear();
             addAction(action);
         }
     }

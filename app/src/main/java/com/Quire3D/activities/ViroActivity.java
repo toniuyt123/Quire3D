@@ -18,6 +18,8 @@ package com.Quire3D.activities;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -30,6 +32,7 @@ import android.view.View;
 
 import com.Quire3D.classes.ScaleHandles;
 import com.Quire3D.fragments.HierarchyFragment;
+import com.Quire3D.fragments.ObjectParamsFragment;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
 
@@ -48,7 +51,6 @@ public class ViroActivity extends Activity {
     private AssetManager mAssetManager;
     private static Scene scene;
     private static Node selectedNode;
-    private Fragment paramsFrag;
     private static char defaultHandle = 't';
     private static Handles activeHandles;
 
@@ -65,7 +67,11 @@ public class ViroActivity extends Activity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
-        this.paramsFrag = getFragmentManager().findFragmentById(R.id.objectParamsFragment);
+        //getFragmentManager().findFragmentById(R.id.objectParamsFragment);
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.objectViewContainer, new ObjectParamsFragment()).addToBackStack(null);
+        transaction.commit();
     }
 
     private void createWorld(ViroView view) {

@@ -77,7 +77,7 @@ public class MaterialsFragment extends Fragment implements View.OnClickListener 
                             Node selected = ViroActivity.getSelectedNode();
                             Material material = selected.getGeometry().getMaterials().get(0);
                             ActionsController.getInstance().addAction(new ChangeColorAction(selected, material.getDiffuseColor(), color));
-                            
+
                             material.setDiffuseColor(color);
                         } catch (NullPointerException e) {
                             e.getMessage();
