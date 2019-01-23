@@ -1,11 +1,10 @@
 package com.Quire3D.classes;
 
-import android.app.Fragment;
 import android.net.Uri;
 import android.util.Log;
 import android.graphics.Color;
 
-import com.Quire3D.fragments.ObjectParamsFragment;
+import com.Quire3D.fragments.PositionalDataFragment;
 import com.viro.core.AsyncObject3DListener;
 import com.viro.core.Material;
 import com.viro.core.Node;
@@ -18,7 +17,7 @@ import java.util.Arrays;
 public class Handles {
     protected Node parent;
     private Node handleRoot;
-    protected ObjectParamsFragment paramsFrag;
+    protected PositionalDataFragment paramsFrag;
 
     public Handles(ViroView view, String handleAssetPath, Node parent/*, Fragment paramsFrag*/) {
         handleRoot = new Node();
@@ -31,7 +30,7 @@ public class Handles {
         zHandle.setName("z");
         this.parent = parent;
         this.parent.addChildNode(handleRoot);
-        //this.paramsFrag = (ObjectParamsFragment) paramsFrag;
+        //this.paramsFrag = (PositionalDataFragment) paramsFrag;
 
         initHandle(xHandle, view, handleAssetPath, new Vector(0f, 0f, -Math.PI / 2), Color.RED);
         initHandle(yHandle, view, handleAssetPath, new Vector(0f, 0f, 0), Color.GREEN);
@@ -45,8 +44,6 @@ public class Handles {
                 Log.w("viro", "Failed to load the model");
             }
             public void onObject3DLoaded(Object3D object, Object3D.Type type){
-                Log.i("viro", "Successfully loaded the model!");
-
                 Material handleMaterial = new Material();
                 handleMaterial.setBlendMode(Material.BlendMode.NONE);
                 handleMaterial.setLightingModel(Material.LightingModel.CONSTANT);

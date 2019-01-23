@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#666666">
+
+    <TableRow
+        android:id="@+id/Header"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/Position"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:text="@string/position"
+            android:textAllCaps="false"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/Scale"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:text="@string/scale"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/Rotation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:text="@string/rotation"
+            android:textSize="12sp" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/xValues"
+        android:layout_width="121dp"
+        android:layout_height="32dp">
+
+        <EditText
+            android:id="@+id/xPosition"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:ems="10"
+            android:hint="@string/floatZero"
+            android:inputType="numberDecimal|numberSigned"
+            android:textSize="12sp"
+            android:imeOptions="actionDone"/>
+
+        <EditText
+            android:id="@+id/xScale"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:ems="10"
+            android:hint="@string/floatOne"
+            android:inputType="numberDecimal|numberSigned"
+            android:textSize="12sp"
+            android:imeOptions="actionDone"/>
+
+        <EditText
+            android:id="@+id/xRotation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:ems="10"
+            android:hint="@string/floatZero"
+            android:inputType="numberDecimal|numberSigned"
+            android:textSize="12sp"
+            android:imeOptions="actionDone"/>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/yValues"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/yPosition"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:ems="10"
+            android:hint="@string/floatZero"
+            android:inputType="numberDecimal|numberSigned"
+            android:textSize="12sp"
+            android:imeOptions="actionDone"/>
+
+        <EditText
+            android:id="@+id/yScale"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:ems="10"
+            android:hint="@string/floatOne"
+            android:inputType="numberDecimal|numberSigned"
+            android:textSize="12sp"
+            android:imeOptions="actionDone"/>
+
+        <EditText
+            android:id="@+id/yRotation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:ems="10"
+            android:hint="@string/floatZero"
+            android:inputType="numberDecimal|numberSigned"
+            android:textSize="12sp"
+            android:imeOptions="actionDone"/>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/zValues"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <EditText
+            android:id="@+id/zPosition"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:ems="10"
+            android:hint="@string/floatZero"
+            android:inputType="numberDecimal|numberSigned"
+            android:textSize="12sp"
+            android:imeOptions="actionDone"/>
+
+        <EditText
+            android:id="@+id/zScale"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:ems="10"
+            android:hint="@string/floatOne"
+            android:inputType="numberDecimal|numberSigned"
+            android:textSize="12sp"
+            android:imeOptions="actionDone"/>
+
+        <EditText
+            android:id="@+id/zRotation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:ems="10"
+            android:hint="@string/floatZero"
+            android:inputType="numberDecimal|numberSigned"
+            android:textSize="12sp"
+            android:imeOptions="actionDone"/>
+    </TableRow>
+</TableLayout>

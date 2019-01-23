@@ -7,20 +7,22 @@ import com.viro.core.Vector;
 public class ChangeColorAction extends Action {
     private int prevColor;
     private int newColor;
+    private Material mat;
 
     public ChangeColorAction(Node node, int prevColor, int newColor) {
-        super(node, "translate");
+        super(node);
         this.prevColor = prevColor;
         this.newColor = newColor;
+        this.mat = node.getGeometry().getMaterials().get(0);
     }
 
     @Override
-    public void execute(boolean isUndo) {
-        Material mat = node.getGeometry().getMaterials().get(0);
-        if(isUndo) {
-            mat.setDiffuseColor(prevColor);
-        } else {
-            mat.setDiffuseColor(newColor);
-        }
+    public void executeUndo() {
+        mat.setDiffuseColor(prevColor);
+    }
+
+    @Override
+    public void executeRedo() {
+        mat.setDiffuseColor(newColor);
     }
 }

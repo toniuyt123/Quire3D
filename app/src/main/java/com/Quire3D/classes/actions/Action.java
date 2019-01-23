@@ -2,22 +2,14 @@ package com.Quire3D.classes.actions;
 
 import com.viro.core.Node;
 
-public abstract class Action<T> {
+public abstract class Action {
     protected Node node;
-    private String name;
 
-    public Action(Node node, String name) {
+    Action(Node node) {
         this.node = node;
-        this.name = name;
     }
 
-    public abstract void execute(boolean isUndo);
+    public abstract void executeUndo();
+    public abstract void executeRedo();
 
-    public void execute() {
-        execute(true);
-    }
-
-    public String getName() {
-        return name;
-    }
 }

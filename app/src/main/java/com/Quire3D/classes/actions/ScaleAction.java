@@ -8,17 +8,18 @@ public class ScaleAction extends Action {
     private Vector newScale;
 
     public ScaleAction(Node node, Vector prevPosition, Vector newPosition) {
-        super(node, "translate");
+        super(node);
         this.prevScale = prevPosition;
         this.newScale = newPosition;
     }
 
     @Override
-    public void execute(boolean isUndo) {
-        if(isUndo) {
-            node.setScale(prevScale);
-        } else {
-            node.setScale(newScale);
-        }
+    public void executeUndo() {
+        node.setScale(prevScale);
+    }
+
+    @Override
+    public void executeRedo() {
+        node.setScale(newScale);
     }
 }

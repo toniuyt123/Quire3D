@@ -31,13 +31,13 @@ public class ActionsController {
     public void undo() {
         if(index > 0) {
             index--;
-            actions.get(index).execute(true);
+            actions.get(index).executeUndo();
         }
     }
 
     public void redo() {
         if(index <= actions.size() - 1) {
-            actions.get(index).execute(false);
+            actions.get(index).executeRedo();
             index++;
         }
     }

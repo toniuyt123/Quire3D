@@ -99,12 +99,13 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         return quad;
     }
 
-    public static void addToScene(Geometry geometry, String name, boolean recordAction) {
+    public void addToScene(Geometry geometry, String name, boolean recordAction) {
         Node n = new Node();
         n.setGeometry(geometry);
         n.setName(name);
 
-        ViroActivity.makeNodeSelectable(n);
+        ViroActivity activity = (ViroActivity) getActivity();
+        activity.makeNodeSelectable(n);
         ViroActivity.getScene().getRootNode().addChildNode(n);
 
         if(recordAction) {

@@ -17,6 +17,7 @@ import com.viro.core.Vector;
 
 public class OBJObject extends Object3D {
     private List<Vector> normals = new ArrayList<>();
+    private List<Vector> correctNormals = new ArrayList<>();
     private List<Vector> textureCoords = new ArrayList<>();
     private List<Vector> vertices = new ArrayList<>();
     private List<Integer> triangleIndeces = new ArrayList<>();
@@ -58,6 +59,7 @@ public class OBJObject extends Object3D {
         }
         scanner.close();
 
+        fixNormals();
         Submesh.SubmeshBuilder builder = new Submesh.SubmeshBuilder();
         builder.triangleIndices(triangleIndeces);
         Submesh mesh = builder.build();
@@ -70,9 +72,15 @@ public class OBJObject extends Object3D {
 
         Geometry geometry = gbuilder.build();
         geometry.setVertices(vertices);
-        geometry.setNormals(normals);
+        geometry.setNormals(correctNormals);
 
         setGeometry(geometry);
+    }
+
+    private void fixNormals() {
+        for(int i = 0;i < triangleIndeces.size();i++) {
+            correctNormals.add(triangleIndeces.get(i), normals.get(normalIndeces.get(i)));
+        }
     }
 
     private void addEntryTo(List<Vector> list, String line) {

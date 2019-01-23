@@ -59,7 +59,7 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
         }
     }
 
-    private static Node getNodeByName(String name) {
+    public static Node getNodeByName(String name) {
         for(TextView t: nodes.keySet()){
             if(t.getText().equals(name)) {
                 return nodes.get(t);

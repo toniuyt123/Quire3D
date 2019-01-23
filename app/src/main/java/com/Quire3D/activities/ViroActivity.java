@@ -17,7 +17,6 @@
 package com.Quire3D.activities;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.res.AssetManager;
@@ -29,10 +28,13 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.Quire3D.classes.ScaleHandles;
 import com.Quire3D.fragments.HierarchyFragment;
 import com.Quire3D.fragments.ObjectParamsFragment;
+import com.Quire3D.fragments.PositionalDataFragment;
+import com.Quire3D.fragments.SwitchViewFragment;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
 
@@ -70,7 +72,7 @@ public class ViroActivity extends Activity {
         //getFragmentManager().findFragmentById(R.id.objectParamsFragment);
         FragmentManager fm = getFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.objectViewContainer, new ObjectParamsFragment()).addToBackStack(null);
+        transaction.replace(R.id.objectViewContainer, new PositionalDataFragment()).addToBackStack(null);
         transaction.commit();
     }
 
@@ -102,9 +104,15 @@ public class ViroActivity extends Activity {
         ambient.setColor(Color.GRAY);
         ambient.setIntensity(200);
 
+        DirectionalLight l = new DirectionalLight();
+        l.setDirection(new Vector(0f,0f,0f));
+        l.setColor(Color.WHITE);
+
         Node lightNode = new Node();
+        lightNode.setPosition(new Vector(0f, 3f, 0f));
         lightNode.addLight(spotlight);
         lightNode.addLight(ambient);
+        lightNode.addLight(l);
         Node cameraNode = new Node();
         OrbitCamera camera = new OrbitCamera(cameraNode, mainView);
 
@@ -130,9 +138,10 @@ public class ViroActivity extends Activity {
         view.setScene(scene);
 
         HierarchyFragment.updateHierarchy();
+
     }
 
-    public static void makeNodeSelectable(Node node) {
+    public void makeNodeSelectable(Node node) {
         node.setClickListener(new ClickListener() {
             @Override
             public void onClick(int i, Node node, Vector vector) {
@@ -154,6 +163,9 @@ public class ViroActivity extends Activity {
 
                     }
                     selectedNode = node;
+
+                    ObjectParamsFragment paramFrag = (ObjectParamsFragment) getFragmentManager().findFragmentById(SwitchViewFragment.getCurrentId());
+                    paramFrag.update(selectedNode);
                 }
             }
 

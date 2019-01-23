@@ -23,4 +23,12 @@
     <string name="Materials">Materials</string>
     <string name="Misc">Misc</string>
     <string name="Color">#FFFFFF</string>
+
+    <string-array name="light_model_array">
+        <item>Diffuse</item>
+        <item>Blinn</item>
+        <item>Phong</item>
+        <item>Constant</item>
+    </string-array>
+
 </resources>

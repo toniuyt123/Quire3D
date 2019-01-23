@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import com.Quire3D.virosample.R;
 
 
 public class SwitchViewFragment extends Fragment implements View.OnClickListener {
-    int currentFragmentId;
+    private static int currentFragmentId;
 
     @Nullable
     @Override
@@ -38,7 +37,7 @@ public class SwitchViewFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ObjectParams:
-                replaceFragment(currentFragmentId, new ObjectParamsFragment());
+                replaceFragment(currentFragmentId, new PositionalDataFragment());
                 break;
             case R.id.Materials:
                 replaceFragment(currentFragmentId, new MaterialsFragment());
@@ -54,5 +53,9 @@ public class SwitchViewFragment extends Fragment implements View.OnClickListener
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.replace(oldFragId, newFrag).addToBackStack(null);
         transaction.commit();
+    }
+
+    public static int getCurrentId() {
+        return currentFragmentId;
     }
 }
