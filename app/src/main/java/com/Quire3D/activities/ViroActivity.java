@@ -137,7 +137,8 @@ public class ViroActivity extends Activity {
         view.setPointOfView(cameraNode);
         view.setScene(scene);
 
-        HierarchyFragment.updateHierarchy();
+        HierarchyFragment hierarchy = (HierarchyFragment)getFragmentManager().findFragmentById(R.id.hierarchyFragment);
+        hierarchy.updateHierarchy();
 
     }
 
@@ -145,28 +146,7 @@ public class ViroActivity extends Activity {
         node.setClickListener(new ClickListener() {
             @Override
             public void onClick(int i, Node node, Vector vector) {
-                if(selectedNode != node) {
-                    if(selectedNode != null) {
-                        for(Node n: selectedNode.getChildNodes()) {
-                            if(n.getName().equals("Handles")) {
-                                n.disposeAll(true);
-                                break;
-                            }
-                        }
-                    }
-
-                    if (defaultHandle == 't') {
-                        activeHandles = new TranslateHandles(getView(), node);
-                    } else if(defaultHandle == 's') {
-                        activeHandles = new ScaleHandles(getView(), node);
-                    } else {
-
-                    }
-                    selectedNode = node;
-
-                    ObjectParamsFragment paramFrag = (ObjectParamsFragment) getFragmentManager().findFragmentById(SwitchViewFragment.getCurrentId());
-                    paramFrag.update(selectedNode);
-                }
+                selectNode(node);
             }
 
             @Override
@@ -174,6 +154,31 @@ public class ViroActivity extends Activity {
 
             }
         });
+    }
+
+    public void selectNode(Node node) {
+        if(selectedNode != node) {
+            if(selectedNode != null) {
+                for(Node n: selectedNode.getChildNodes()) {
+                    if(n.getName().equals("Handles")) {
+                        n.disposeAll(true);
+                        break;
+                    }
+                }
+            }
+
+            if (defaultHandle == 't') {
+                activeHandles = new TranslateHandles(getView(), node);
+            } else if(defaultHandle == 's') {
+                activeHandles = new ScaleHandles(getView(), node);
+            } else {
+
+            }
+            selectedNode = node;
+
+            ObjectParamsFragment paramFrag = (ObjectParamsFragment) getFragmentManager().findFragmentById(SwitchViewFragment.getCurrentId());
+            paramFrag.update(selectedNode);
+        }
     }
 
     private Bitmap bitmapFromAsset(String assetName) {

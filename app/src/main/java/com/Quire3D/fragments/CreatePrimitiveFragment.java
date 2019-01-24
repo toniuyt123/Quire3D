@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +64,8 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
                 break;
             case R.id.delete:
                 Node selected = ViroActivity.getSelectedNode();
-                HierarchyFragment.removeFromHierarchy(selected);
+                HierarchyFragment hierarchy = (HierarchyFragment) getActivity().getFragmentManager().findFragmentById(R.id.hierarchyFragment);
+                hierarchy.removeFromHierarchy(selected);
                 if(selected != null) {
                     selected.disposeAll(true);
                     ViroActivity.setActiveHandles(null);
@@ -112,7 +112,8 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
             ActionsController.getInstance().addAction(new CreateAction(n, name));
         }
 
-        HierarchyFragment.addToHierarchy(n, 0);
+        HierarchyFragment hierarchy = (HierarchyFragment) getActivity().getFragmentManager().findFragmentById(R.id.hierarchyFragment);
+        hierarchy.addToHierarchy(n, 0);
     }
 
     public static Material makeDefaultMat() {

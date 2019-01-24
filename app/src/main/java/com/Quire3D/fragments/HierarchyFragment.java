@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class HierarchyFragment extends Fragment implements View.OnClickListener {
     private static final ArrayList<String> hidden = new ArrayList<>(Arrays.asList("Handles", "floor_grid"));
-    private static LinearLayout hierarchy;
+    private LinearLayout hierarchy;
     private static HashMap<TextView, Node> nodes = new HashMap<>();
 
 
@@ -42,13 +42,18 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
+        TextView element = (TextView) view;
+        Node selection = nodes.get(element);
+
+        ViroActivity activity = (ViroActivity) getActivity();
+        activity.selectNode(selection);
     }
 
-    public static void updateHierarchy() {
+    public void updateHierarchy() {
         expandChildren(ViroActivity.getScene().getRootNode(), 0);
     }
 
-    private static void expandChildren(Node node, int level) {
+    private void expandChildren(Node node, int level) {
         for(Node n : node.getChildNodes()){
             if(!hidden.contains(n.getName())) {
                 addToHierarchy(n, level);
@@ -68,8 +73,9 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
         return null;
     }
 
-    public static void addToHierarchy(Node node, int level){
+    public void addToHierarchy(Node node, int level){
         TextView name = new TextView(ViroActivity.getView().getContext());
+        name.setOnClickListener(this);
         String tabs = new String(new char[level]).replace("\0", "->");
 
         name.setText(String.format("%S%s%s", "| ", tabs, node.getName()));
@@ -78,9 +84,8 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
         nodes.put(name, node);
     }
 
-    public static void removeFromHierarchy(Node node) {
+    public void removeFromHierarchy(Node node) {
         for(Map.Entry entry: nodes.entrySet()){
-            Node n = (Node)entry.getValue();
             if(entry.getValue().equals(node)){
                 TextView key = (TextView) entry.getKey();
                 hierarchy.removeView(key);
@@ -90,22 +95,7 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
         }
     }
 
-    public static ArrayList<Node> getExportableObjects(Node root) {
-        /*ArrayList<Node> objects = new ArrayList<Node>();
-        for(Node n : root.getChildNodes()){
-            if(!hidden.contains(n.getName())) {
-
-                if(n.getGeometry() != null){
-                    objects.add(n);
-                }
-                if(n.getChildNodes().size() > 0) {
-                    ArrayList<Node> childs = new ArrayList<Node>(getExportableObjects(n));
-                    objects.addAll(childs);
-                }
-            }
-        }
-
-        return objects;*/
+    public static ArrayList<Node> getExportableObjects() {
         return new ArrayList<>(nodes.values());
     }
 }

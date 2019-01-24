@@ -121,7 +121,7 @@ public class OBJObject extends Object3D {
     }
 
     public static void exportOBJ() {
-        ArrayList<Node> nodes = HierarchyFragment.getExportableObjects(ViroActivity.getScene().getRootNode());
+        /*ArrayList<Node> nodes = HierarchyFragment.getExportableObjects(ViroActivity.getScene().getRootNode());
 
         StringBuilder output = new StringBuilder();
         output.append("#Quire3D v0.1 OBJ File.\n#Powered by ViroCore\n");
@@ -130,6 +130,6 @@ public class OBJObject extends Object3D {
             output.append("o ").append(n.getName());
 
 
-        }
+        }*/
     }
 }

@@ -101,6 +101,7 @@ public class TopMenuFragment extends Fragment implements View.OnClickListener {
         ViroActivity.getScene().getRootNode().addChildNode(imported);
         ViroActivity activity = (ViroActivity) getActivity();
         activity.makeNodeSelectable(imported);
-        HierarchyFragment.addToHierarchy(imported, 0);
+        HierarchyFragment hierarchy = (HierarchyFragment) getActivity().getFragmentManager().findFragmentById(R.id.hierarchyFragment);
+        hierarchy.addToHierarchy(imported, 0);
     }
 }
