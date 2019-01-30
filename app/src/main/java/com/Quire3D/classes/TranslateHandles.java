@@ -1,6 +1,8 @@
 package com.Quire3D.classes;
 
 
+import android.util.Log;
+
 import com.Quire3D.classes.actions.TranslateAction;
 import com.viro.core.ClickListener;
 import com.viro.core.ClickState;
@@ -61,6 +63,9 @@ public class TranslateHandles extends Handles {
                 }else if(clickState.equals(ClickState.CLICK_UP)) {
                     node.setPosition(new Vector(0f, 0f, 0f));
                     ActionsController.getInstance().addAction(new TranslateAction(parent, oldPos, parent.getPositionRealtime()));
+
+                    //OBJObject edited = (OBJObject) node;
+                    //Log.i("importer", edited.getVertices().toString());
                 }
             }
         });

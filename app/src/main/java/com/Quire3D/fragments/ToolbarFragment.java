@@ -51,6 +51,8 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 ViroActivity.changeHandles(new ScaleHandles(viroView, selected)); break;
             case R.id.Rotate:
                 ViroActivity.setDefaultHandle('r'); break;
+            case R.id.Duplicate:
+                 break;
         }
     }
 }

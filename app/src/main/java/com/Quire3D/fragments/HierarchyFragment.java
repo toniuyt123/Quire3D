@@ -1,9 +1,12 @@
 package com.Quire3D.fragments;
 
+import android.content.ClipData;
+import android.content.ClipDescription;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +26,7 @@ import java.util.Map;
 public class HierarchyFragment extends Fragment implements View.OnClickListener {
     private static final ArrayList<String> hidden = new ArrayList<>(Arrays.asList("Handles", "floor_grid"));
     private LinearLayout hierarchy;
+    private DragAndDropListener dragAndDropListener = new DragAndDropListener();
     private static HashMap<TextView, Node> nodes = new HashMap<>();
 
 
@@ -50,6 +54,7 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
     }
 
     public void updateHierarchy() {
+        hierarchy.removeAllViews();
         expandChildren(ViroActivity.getScene().getRootNode(), 0);
     }
 
@@ -76,6 +81,8 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
     public void addToHierarchy(Node node, int level){
         TextView name = new TextView(ViroActivity.getView().getContext());
         name.setOnClickListener(this);
+        name.setOnLongClickListener(dragAndDropListener);
+        name.setOnDragListener(dragAndDropListener);
         String tabs = new String(new char[level]).replace("\0", "->");
 
         name.setText(String.format("%S%s%s", "| ", tabs, node.getName()));
@@ -97,5 +104,45 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
 
     public static ArrayList<Node> getExportableObjects() {
         return new ArrayList<>(nodes.values());
+    }
+
+    private class DragAndDropListener implements View.OnLongClickListener, View.OnDragListener {
+
+        @Override
+        public boolean onLongClick(View view) {
+            ClipData data = ClipData.newPlainText("", "");
+            View.DragShadowBuilder shadow = new View.DragShadowBuilder(view);
+
+            view.startDrag(data, shadow, view,0);
+            view.setVisibility(View.INVISIBLE);
+            return true;
+        }
+
+        @Override
+        public boolean onDrag(View v, DragEvent event) {
+            switch (event.getAction()) {
+                case DragEvent.ACTION_DROP:
+                    TextView target = (TextView) event.getLocalState();
+                    TextView container = (TextView) v;
+                    int newIndex = 0;
+                    int childCount = hierarchy.getChildCount();
+                    for(int i = 0;i < childCount;i++) {
+                        if(container.equals(hierarchy.getChildAt(i))) {
+                            newIndex = i + 1;
+                        }
+                    }
+                    hierarchy.removeView(target);
+                    hierarchy.addView(target, Math.min(newIndex, childCount - 1));
+                    target.setVisibility(View.VISIBLE);
+
+                    Node parent = nodes.get(container);
+                    Node child = nodes.get(target);
+
+                    parent.addChildNode(child);
+
+                    break;
+            }
+            return true;
+        }
     }
 }

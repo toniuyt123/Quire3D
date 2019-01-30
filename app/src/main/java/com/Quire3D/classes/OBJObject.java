@@ -1,5 +1,7 @@
 package com.Quire3D.classes;
 
+import android.util.Log;
+
 import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.fragments.CreatePrimitiveFragment;
 import com.Quire3D.fragments.HierarchyFragment;
@@ -59,7 +61,7 @@ public class OBJObject extends Object3D {
         }
         scanner.close();
 
-        fixNormals();
+        //fixNormals();
         Submesh.SubmeshBuilder builder = new Submesh.SubmeshBuilder();
         builder.triangleIndices(triangleIndeces);
         Submesh mesh = builder.build();
