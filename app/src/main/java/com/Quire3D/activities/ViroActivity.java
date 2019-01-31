@@ -32,6 +32,7 @@ import android.widget.FrameLayout;
 
 import com.Quire3D.classes.ScaleHandles;
 import com.Quire3D.fragments.HierarchyFragment;
+import com.Quire3D.fragments.MaterialsFragment;
 import com.Quire3D.fragments.ObjectParamsFragment;
 import com.Quire3D.fragments.PositionalDataFragment;
 import com.Quire3D.fragments.SwitchViewFragment;
@@ -140,6 +141,8 @@ public class ViroActivity extends Activity {
         HierarchyFragment hierarchy = (HierarchyFragment)getFragmentManager().findFragmentById(R.id.hierarchyFragment);
         hierarchy.updateHierarchy();
 
+
+        cubeNode.getGeometry().setMaterials(Arrays.asList(MaterialsFragment.getMaterials().get(0)));
     }
 
     public void makeNodeSelectable(Node node) {

@@ -6,9 +6,10 @@ import com.viro.core.Vector;
 public class ScaleAction extends Action {
     private Vector prevScale;
     private Vector newScale;
+    private Node node;
 
     public ScaleAction(Node node, Vector prevPosition, Vector newPosition) {
-        super(node);
+        this.node = node;
         this.prevScale = prevPosition;
         this.newScale = newPosition;
     }

@@ -51,7 +51,7 @@ public class SwitchViewFragment extends Fragment implements View.OnClickListener
     private void replaceFragment(int oldFragId, Fragment newFrag){
         FragmentManager fm = getFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(oldFragId, newFrag).addToBackStack(null);
+        transaction.replace(oldFragId, newFrag);
         transaction.commit();
     }
 

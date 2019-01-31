@@ -24,6 +24,8 @@
     <string name="Misc">Misc</string>
     <string name="Color">#FFFFFF</string>
     <string name="Duplicate">Duplicate</string>
+    <string name="Add">Add</string>
+    <string name="Assign">Assign</string>
 
     <string-array name="light_model_array">
         <item>Diffuse</item>

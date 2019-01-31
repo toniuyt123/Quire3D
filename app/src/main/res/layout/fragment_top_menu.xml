@@ -11,26 +11,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/Export"/>
+        android:text="@string/Export"
+        tools:ignore="ButtonStyle" />
 
     <Button
         android:id="@+id/Undo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/Undo"/>
+        android:text="@string/Undo"
+        tools:ignore="ButtonStyle" />
 
     <Button
         android:id="@+id/Redo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/Redo"/>
+        android:text="@string/Redo"
+        tools:ignore="ButtonStyle"/>
 
     <Button
         android:id="@+id/ImportButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/select_file"/>
+        android:text="@string/select_file"
+        tools:ignore="ButtonStyle"/>
 </LinearLayout>

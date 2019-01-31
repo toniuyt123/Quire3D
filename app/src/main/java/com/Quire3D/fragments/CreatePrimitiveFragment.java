@@ -1,5 +1,6 @@
 package com.Quire3D.fragments;
 
+import android.app.FragmentManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -76,30 +77,19 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
     }
 
     public static Geometry createCube() {
-        Geometry cube = new Box(1f,1f,1f);
-        cube.setMaterials(Arrays.asList(makeDefaultMat()));
-
-        return cube;
+        return new Box(1f,1f,1f);
     }
 
     public static Geometry createSphere() {
-        Geometry sphere = new Sphere(1f);
-        sphere.setMaterials(Arrays.asList(makeDefaultMat()));
-
-        return sphere;
+        return new Sphere(1f);
     }
 
     public static Geometry createQuad() {
-        Geometry quad = new Quad(1f, 1f);
-        Material quadMat = makeDefaultMat();
-        quadMat.setCullMode(Material.CullMode.NONE);
-
-        quad.setMaterials(Arrays.asList(quadMat));
-
-        return quad;
+        return new Quad(1f, 1f);
     }
 
     public void addToScene(Geometry geometry, String name, boolean recordAction) {
+        geometry.setMaterials(Arrays.asList(MaterialsFragment.getMaterials().get(0)));
         Node n = new Node();
         n.setGeometry(geometry);
         n.setName(name);
@@ -112,7 +102,8 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
             ActionsController.getInstance().addAction(new CreateAction(n, name));
         }
 
-        HierarchyFragment hierarchy = (HierarchyFragment) getActivity().getFragmentManager().findFragmentById(R.id.hierarchyFragment);
+        FragmentManager fm =  activity.getFragmentManager();
+        HierarchyFragment hierarchy = (HierarchyFragment) fm.findFragmentById(R.id.hierarchyFragment);
         hierarchy.addToHierarchy(n, 0);
     }
 

@@ -6,9 +6,10 @@ import com.viro.core.Vector;
 public class TranslateAction extends Action {
     private Vector prevPosition;
     private Vector newPosition;
+    private Node node;
 
     public TranslateAction(Node node, Vector prevPosition, Vector newPosition) {
-        super(node);
+        this.node = node;
         this.prevPosition = prevPosition;
         this.newPosition = newPosition;
     }

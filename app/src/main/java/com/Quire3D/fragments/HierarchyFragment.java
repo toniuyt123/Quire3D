@@ -1,11 +1,9 @@
 package com.Quire3D.fragments;
 
 import android.content.ClipData;
-import android.content.ClipDescription;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;

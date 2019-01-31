@@ -1,14 +1,19 @@
 package com.Quire3D.fragments;
 
-import android.app.Fragment;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -21,6 +26,8 @@ import com.Quire3D.virosample.R;
 import com.viro.core.Material;
 import com.viro.core.Node;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,7 +38,10 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
     private TextView hexColor;
     private Material.LightingModel[] lightingModels = new Material.LightingModel[]{Material.LightingModel.LAMBERT, Material.LightingModel.BLINN,
                                                                                 Material.LightingModel.PHONG, Material.LightingModel.CONSTANT};
-    private Spinner lightModelSpinner;
+    private Spinner lightModelSpinner, materialsSpinner;
+    private static ArrayList<Material> savedMaterials = new ArrayList<>(Arrays.asList(makeDefaultMat()));
+    private Material selectedMat;
+    private ArrayAdapter<String> materialAdapter;
 
     @Nullable
     @Override
@@ -41,16 +51,29 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
         try {
             TableRow colorPicker = view.findViewById(R.id.ColorPicker);
             colorPicker.setOnClickListener(this);
+            Button addMaterial = view.findViewById(R.id.addMaterial);
+            addMaterial.setOnClickListener(this);
+            Button assignMaterial = view.findViewById(R.id.AssignMaterial);
+            assignMaterial.setOnClickListener(this);
+
             colorView = view.findViewById(R.id.colorView);
             hexColor = view.findViewById(R.id.hexColor);
             lightModelSpinner = view.findViewById(R.id.light_model_spinner);
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),
+            ArrayAdapter<CharSequence> lightModelAdapter = ArrayAdapter.createFromResource(view.getContext(),
                     R.array.light_model_array, android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            lightModelSpinner.setAdapter(adapter);
+            lightModelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            lightModelSpinner.setAdapter(lightModelAdapter);
             lightModelSpinner.setOnItemSelectedListener(this);
 
-            update(ViroActivity.getSelectedNode());
+            materialsSpinner = view.findViewById(R.id.materials_spinner);
+            materialAdapter = new ArrayAdapter<>(view.getContext(),
+                    android.R.layout.simple_spinner_item, new ArrayList<String>());
+            materialAdapter.add("Default");
+            materialAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            materialsSpinner.setAdapter(materialAdapter);
+            materialsSpinner.setOnItemSelectedListener(this);
+
+            update(getMaterials().get(0));
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -64,12 +87,28 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
             case R.id.ColorPicker:
                 popup();
                 break;
+            case R.id.addMaterial:
+                showAddMatDialog(ViroActivity.getView().getContext());
+                break;
+            case R.id.AssignMaterial:
+                try {
+                    Node selected = ViroActivity.getSelectedNode();
+                    selected.getGeometry().setMaterials(Arrays.asList(selectedMat));
+                } catch (NullPointerException e) {
+                    e.getMessage();
+                }
+                break;
         }
     }
 
     @Override
     public void update(Node node) {
         Material mat = node.getGeometry().getMaterials().get(0);
+        update(mat);
+    }
+
+    public void update(Material mat) {
+        selectedMat = mat;
         int color = mat.getDiffuseColor();
         colorView.setBackgroundColor(color);
         hexColor.setText(colorHex(color));
@@ -80,6 +119,39 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
                 lightModelSpinner.setSelection(i);
             }
         }
+
+        String name = mat.getName();
+        for(int i = 0;i < materialAdapter.getCount();i++) {
+            if(name.equals(materialAdapter.getItem(i))) {
+                materialsSpinner.setSelection(i);
+            }
+        }
+    }
+
+    private void showAddMatDialog(Context c) {
+        final EditText editText = new EditText(c);
+        AlertDialog dialog = new AlertDialog.Builder(c)
+                .setTitle("Material name")
+                .setMessage("Enter name")
+                .setView(editText)
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String name = String.valueOf(editText.getText());
+                        addNewMaterial(name);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.show();
+    }
+
+    public void addNewMaterial(String name){
+        Material newMat = makeDefaultMat();
+        newMat.setName(name);
+        materialAdapter.add(name);
+        savedMaterials.add(newMat);
+        update(newMat);
     }
 
     private void popup() {
@@ -96,12 +168,10 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
                     @Override
                     public void onColorPicked(int color) {
                         try {
-                            Node selected = ViroActivity.getSelectedNode();
-                            Material material = selected.getGeometry().getMaterials().get(0);
-                            ActionsController.getInstance().addAction(new ChangeColorAction(selected, material.getDiffuseColor(), color));
+                            ActionsController.getInstance().addAction(new ChangeColorAction(selectedMat.getDiffuseColor(), color, selectedMat));
 
-                            material.setDiffuseColor(color);
-                            update(selected);
+                            selectedMat.setDiffuseColor(color);
+                            update(selectedMat);
                         } catch (NullPointerException e) {
                             e.getMessage();
                         }
@@ -119,20 +189,40 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        try {
-            Node selected = ViroActivity.getSelectedNode();
-            Material material = selected.getGeometry().getMaterials().get(0);
-
-            Material.LightingModel newModel = lightingModels[(int)id];
-            ActionsController.getInstance().addAction(new ChangeLightModelAction(selected, material.getLightingModel(), newModel));
-            material.setLightingModel(newModel);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        switch(parent.getId()){
+            case R.id.light_model_spinner:
+                try {
+                    Material.LightingModel newModel = lightingModels[(int)id];
+                    ActionsController.getInstance().addAction(new ChangeLightModelAction(selectedMat.getLightingModel(), newModel, selectedMat));
+                    selectedMat.setLightingModel(newModel);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.materials_spinner:
+                Material selected = savedMaterials.get((int) id);
+                update(selected);
+                Log.i("heyy", Integer.toString((int)id));
+                break;
         }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    public static Material makeDefaultMat() {
+        Material defaultMat = new Material();
+        defaultMat.setDiffuseColor(Color.WHITE);
+        defaultMat.setLightingModel(Material.LightingModel.LAMBERT);
+        defaultMat.setCullMode(Material.CullMode.NONE);
+        defaultMat.setName("Default");
+
+        return defaultMat;
+    }
+
+    public static List<Material> getMaterials(){
+        return savedMaterials;
     }
 }

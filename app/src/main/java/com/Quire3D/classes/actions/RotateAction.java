@@ -6,9 +6,10 @@ import com.viro.core.Vector;
 public class RotateAction extends Action {
     private Vector prevRotation;
     private Vector newRotation;
+    private Node node;
 
     public RotateAction(Node node, Vector prevPosition, Vector newPosition) {
-        super(node);
+        this.node = node;
         this.prevRotation = prevPosition;
         this.newRotation = newPosition;
     }

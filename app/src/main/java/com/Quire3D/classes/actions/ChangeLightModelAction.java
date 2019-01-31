@@ -8,11 +8,10 @@ public class ChangeLightModelAction extends Action {
     private Material.LightingModel newModel;
     private Material mat;
 
-    public ChangeLightModelAction(Node node, Material.LightingModel prevModel, Material.LightingModel newModel) {
-        super(node);
+    public ChangeLightModelAction(Material.LightingModel prevModel, Material.LightingModel newModel, Material mat) {
         this.prevModel = prevModel;
         this.newModel = newModel;
-        this.mat = node.getGeometry().getMaterials().get(0);
+        this.mat = mat;
     }
 
     @Override
