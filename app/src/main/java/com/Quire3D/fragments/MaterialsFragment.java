@@ -3,7 +3,11 @@ package com.Quire3D.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -14,18 +18,23 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.Quire3D.activities.ViroActivity;
-import com.Quire3D.classes.ActionsController;
-import com.Quire3D.classes.actions.ChangeColorAction;
-import com.Quire3D.classes.actions.ChangeLightModelAction;
+import com.Quire3D.util.actions.ActionsController;
+import com.Quire3D.util.actions.ChangeColorAction;
+import com.Quire3D.util.actions.ChangeLightModelAction;
+import com.Quire3D.util.actions.ChangeTextureAction;
 import com.Quire3D.virosample.R;
 import com.viro.core.Material;
 import com.viro.core.Node;
+import com.viro.core.Texture;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,8 +45,9 @@ import top.defaults.colorpicker.ColorPickerPopup;
 public class MaterialsFragment extends ObjectParamsFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     private View colorView;
     private TextView hexColor;
-    private Material.LightingModel[] lightingModels = new Material.LightingModel[]{Material.LightingModel.LAMBERT, Material.LightingModel.BLINN,
-                                                                                Material.LightingModel.PHONG, Material.LightingModel.CONSTANT};
+    private Material.LightingModel[] lightingModels =
+            new Material.LightingModel[]{Material.LightingModel.LAMBERT, Material.LightingModel.BLINN,
+                                    Material.LightingModel.PHONG, Material.LightingModel.CONSTANT};
     private Spinner lightModelSpinner, materialsSpinner;
     private static ArrayList<Material> savedMaterials = new ArrayList<>(Arrays.asList(makeDefaultMat()));
     private Material selectedMat;
@@ -49,12 +59,14 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
         final View view = inflater.inflate(R.layout.fragment_materials, container, false);
 
         try {
-            TableRow colorPicker = view.findViewById(R.id.ColorPicker);
+            LinearLayout colorPicker = view.findViewById(R.id.ColorPicker);
             colorPicker.setOnClickListener(this);
             Button addMaterial = view.findViewById(R.id.addMaterial);
             addMaterial.setOnClickListener(this);
             Button assignMaterial = view.findViewById(R.id.AssignMaterial);
             assignMaterial.setOnClickListener(this);
+            Button importTexture = view.findViewById(R.id.importTexture);
+            importTexture.setOnClickListener(this);
 
             colorView = view.findViewById(R.id.colorView);
             hexColor = view.findViewById(R.id.hexColor);
@@ -84,7 +96,7 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ColorPicker:
+            case R.id.ColorPicker | R.id.hexColor:
                 popup();
                 break;
             case R.id.addMaterial:
@@ -97,6 +109,9 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
                 } catch (NullPointerException e) {
                     e.getMessage();
                 }
+                break;
+            case R.id.importTexture:
+                chooseFile();
                 break;
         }
     }
@@ -156,7 +171,7 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
 
     private void popup() {
         new ColorPickerPopup.Builder(ViroActivity.getView().getContext())
-                .initialColor(Color.WHITE)
+                .initialColor(selectedMat.getDiffuseColor())
                 .enableAlpha(true)
                 .okTitle("Choose")
                 .cancelTitle("Cancel")
@@ -167,14 +182,11 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
                 .show(new ColorPickerPopup.ColorPickerObserver() {
                     @Override
                     public void onColorPicked(int color) {
-                        try {
-                            ActionsController.getInstance().addAction(new ChangeColorAction(selectedMat.getDiffuseColor(), color, selectedMat));
+                        ActionsController.getInstance().addAction(
+                                new ChangeColorAction(selectedMat.getDiffuseColor(), color, selectedMat));
 
-                            selectedMat.setDiffuseColor(color);
-                            update(selectedMat);
-                        } catch (NullPointerException e) {
-                            e.getMessage();
-                        }
+                        selectedMat.setDiffuseColor(color);
+                        update(selectedMat);
                     }
                 });
     }
@@ -202,7 +214,6 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
             case R.id.materials_spinner:
                 Material selected = savedMaterials.get((int) id);
                 update(selected);
-                Log.i("heyy", Integer.toString((int)id));
                 break;
         }
     }
@@ -224,5 +235,41 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
 
     public static List<Material> getMaterials(){
         return savedMaterials;
+    }
+
+    public void chooseFile() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        try {
+            startActivityForResult(
+                    Intent.createChooser(intent, "Select a File to Upload"),
+                    1);
+
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(ViroActivity.getView().getContext(), "Please install a File Manager.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Uri uri = data.getData();
+
+        if(uri != null) {
+            try {
+                InputStream is = getActivity().getContentResolver().openInputStream(uri);
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                Texture newTexture = new Texture(bitmap, Texture.Format.RGBA8, true, false);
+
+                ActionsController.getInstance().addAction(
+                        new ChangeTextureAction(selectedMat.getDiffuseTexture(), newTexture, selectedMat));
+                selectedMat.setDiffuseTexture(newTexture);
+            }
+            catch (IOException e) {
+                Log.d("importError", "file not found");
+            }
+        }
     }
 }

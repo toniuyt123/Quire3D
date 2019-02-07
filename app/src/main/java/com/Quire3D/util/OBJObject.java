@@ -1,12 +1,7 @@
-package com.Quire3D.classes;
+package com.Quire3D.util;
 
-import android.util.Log;
-
-import com.Quire3D.activities.ViroActivity;
-import com.Quire3D.fragments.CreatePrimitiveFragment;
-import com.Quire3D.fragments.HierarchyFragment;
+import com.Quire3D.fragments.MaterialsFragment;
 import com.viro.core.Geometry;
-import com.viro.core.Node;
 import com.viro.core.Object3D;
 
 import java.util.ArrayList;
@@ -69,7 +64,7 @@ public class OBJObject extends Object3D {
         Geometry.GeometryBuilder gbuilder = new Geometry.GeometryBuilder();
         gbuilder.submeshes(Arrays.asList(mesh));
         gbuilder.materials(Arrays.asList(
-                CreatePrimitiveFragment.makeDefaultMat()
+                MaterialsFragment.getMaterials().get(0)
         ));
 
         Geometry geometry = gbuilder.build();

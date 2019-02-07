@@ -13,8 +13,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.Quire3D.activities.ViroActivity;
-import com.Quire3D.classes.ActionsController;
-import com.Quire3D.classes.OBJObject;
+import com.Quire3D.util.actions.ActionsController;
+import com.Quire3D.util.OBJObject;
 import com.Quire3D.virosample.R;
 
 import java.io.BufferedReader;

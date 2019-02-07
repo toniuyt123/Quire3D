@@ -1,8 +1,6 @@
-package com.Quire3D.classes;
+package com.Quire3D.util;
 
 import android.content.Context;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -43,7 +41,7 @@ public class OrbitCamera {
     }
 
     public OrbitCamera(Node cameraNode, ViroView view) {
-        this.radiusConst = 3f;
+        this.radiusConst = 3.2f;
         this.thetaAngleStart = 45f;
         this.phiAngleStart = 45f;
         this.view = view;
@@ -167,7 +165,7 @@ public class OrbitCamera {
         this.locked = !this.locked;
     }
 
-    class cameraZoomListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+    class cameraZoomListener extends ScaleGestureDetector.SimpleOnScaleGestureListener  {
         private double theta, phi;
         private boolean hasSelected = true;
         private Node activeHandles;

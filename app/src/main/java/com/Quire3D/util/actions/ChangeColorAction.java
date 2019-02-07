@@ -1,8 +1,6 @@
-package com.Quire3D.classes.actions;
+package com.Quire3D.util.actions;
 
 import com.viro.core.Material;
-import com.viro.core.Node;
-import com.viro.core.Vector;
 
 public class ChangeColorAction extends Action {
     private int prevColor;

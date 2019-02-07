@@ -9,8 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.Quire3D.activities.ViroActivity;
-import com.Quire3D.classes.ScaleHandles;
-import com.Quire3D.classes.TranslateHandles;
+import com.Quire3D.util.RotationHandles;
+import com.Quire3D.util.ScaleHandles;
+import com.Quire3D.util.TranslateHandles;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
 import com.viro.core.ViroView;
@@ -50,7 +51,8 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 ViroActivity.setDefaultHandle('s');
                 ViroActivity.changeHandles(new ScaleHandles(viroView, selected)); break;
             case R.id.Rotate:
-                ViroActivity.setDefaultHandle('r'); break;
+                ViroActivity.setDefaultHandle('r');
+                ViroActivity.changeHandles(new RotationHandles(viroView, selected));break;
             case R.id.Duplicate:
                  break;
         }

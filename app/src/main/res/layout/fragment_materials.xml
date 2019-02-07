@@ -1,62 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/materialsLayout"
-    android:background="#666666">
+    android:background="#666666"
+    android:orientation="vertical">
 
-    <TableRow
+    <LinearLayout
         android:id="@+id/ColorPicker"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <View
             android:id="@+id/colorView"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp" />
 
-        <TextView
-            android:id="@+id/hexColor"
-            android:layout_width="wrap_content"
+        <LinearLayout
             android:layout_height="wrap_content"
-            android:text="@string/Color"
-            android:textAlignment="viewStart"
-            android:textSize="20sp" />
+            android:layout_width="wrap_content"
+            android:orientation="vertical">
 
-    </TableRow>
+            <TextView
+                android:id="@+id/hexColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:maxLines="1"
+                android:text="@string/Color"
+                android:textSize="20sp" />
 
-    <Spinner
-        android:id="@+id/light_model_spinner"
-        android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/importTexture"
+                android:layout_width="88dp"
+                android:layout_height="35dp"
+                android:text="@string/Texture"
+                android:layout_gravity="bottom"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="53dp"/>
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <Spinner
+            android:id="@+id/light_model_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-    <Spinner
-        android:id="@+id/materials_spinner"
-        android:layout_width="wrap_content"
+        <Spinner
+            android:id="@+id/materials_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="53dp"
-        android:layout_marginTop="53dp"/>
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/AssignMaterial"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:text="@string/Assign"
+            tools:ignore="ButtonStyle" />
 
-    <Button
-        android:id="@+id/addMaterial"
-        android:layout_width="52dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="106dp"
-        android:layout_marginTop="53dp"
-        android:text="@string/Add" />
+        <Button
+            android:id="@+id/addMaterial"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:text="@string/Add"
+            tools:ignore="ButtonStyle" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/AssignMaterial"
-        android:layout_width="wrap_content"
-        android:layout_height="38dp"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="80dp"
-        android:text="@string/Assign" />
-
-</RelativeLayout>
+</LinearLayout>

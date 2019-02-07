@@ -1,9 +1,8 @@
-package com.Quire3D.classes;
+package com.Quire3D.util;
 
 
-import android.util.Log;
-
-import com.Quire3D.classes.actions.TranslateAction;
+import com.Quire3D.util.actions.ActionsController;
+import com.Quire3D.util.actions.TranslateAction;
 import com.viro.core.ClickListener;
 import com.viro.core.ClickState;
 import com.viro.core.DragListener;

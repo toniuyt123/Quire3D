@@ -1,4 +1,4 @@
-package com.Quire3D.classes.actions;
+package com.Quire3D.util.actions;
 
 import com.viro.core.Node;
 import com.viro.core.Vector;

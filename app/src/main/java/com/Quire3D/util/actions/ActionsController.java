@@ -1,8 +1,4 @@
-package com.Quire3D.classes;
-
-import android.util.Log;
-
-import com.Quire3D.classes.actions.Action;
+package com.Quire3D.util.actions;
 
 import java.util.ArrayList;
 

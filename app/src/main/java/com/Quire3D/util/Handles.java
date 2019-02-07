@@ -1,4 +1,4 @@
-package com.Quire3D.classes;
+package com.Quire3D.util;
 
 import android.net.Uri;
 import android.util.Log;
@@ -33,12 +33,14 @@ public class Handles {
         //this.paramsFrag = (PositionalDataFragment) paramsFrag;
 
         initHandle(xHandle, view, handleAssetPath, new Vector(0f, 0f, -Math.PI / 2), Color.RED);
-        initHandle(yHandle, view, handleAssetPath, new Vector(0f, 0f, 0), Color.GREEN);
-        initHandle(zHandle, view, handleAssetPath, new Vector(-Math.PI / 2, 0, 0), Color.BLUE);
+        initHandle(yHandle, view, handleAssetPath, new Vector(0f, 0f, 0f), Color.GREEN);
+        initHandle(zHandle, view, handleAssetPath, new Vector(Math.PI / 2, 0f, 0f), Color.BLUE);
 
     }
 
     private void initHandle(final Object3D handle, ViroView view, String handleAssetPath, final Vector rotation, final int color) {
+        handleRoot.addChildNode(handle);
+        handle.setRotation(rotation);
         handle.loadModel(view.getViroContext(), Uri.parse(handleAssetPath), Object3D.Type.OBJ, new AsyncObject3DListener() {
             public void onObject3DFailed(String error) {
                 Log.w("viro", "Failed to load the model");
@@ -50,11 +52,8 @@ public class Handles {
                 handleMaterial.setDiffuseColor(color);
 
                 handle.getGeometry().setMaterials(Arrays.asList(handleMaterial));
-                handle.setRotation(rotation);
             }
         });
-
-        handleRoot.addChildNode(handle);
     }
 
 

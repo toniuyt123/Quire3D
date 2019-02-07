@@ -1,7 +1,6 @@
-package com.Quire3D.classes.actions;
+package com.Quire3D.util.actions;
 
 import com.viro.core.Material;
-import com.viro.core.Node;
 
 public class ChangeLightModelAction extends Action {
     private Material.LightingModel prevModel;

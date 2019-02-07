@@ -1,7 +1,6 @@
 package com.Quire3D.fragments;
 
 import android.app.FragmentManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
@@ -11,12 +10,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.Quire3D.activities.ViroActivity;
-import com.Quire3D.classes.ActionsController;
-import com.Quire3D.classes.actions.CreateAction;
+import com.Quire3D.util.actions.ActionsController;
+import com.Quire3D.util.actions.CreateAction;
 import com.Quire3D.virosample.R;
 import com.viro.core.Box;
 import com.viro.core.Geometry;
-import com.viro.core.Material;
 import com.viro.core.Node;
 import com.viro.core.Quad;
 import com.viro.core.Sphere;
@@ -52,15 +50,15 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         String name = "";
         switch (view.getId()) {
             case R.id.createCube:
-                obj = createCube();
+                obj = new Box(1f,1f,1f);
                 name = "cube";
                 break;
             case R.id.createSphere:
-                obj = createSphere();
+                obj = new Sphere(1f);;
                 name = "sphere";
                 break;
             case R.id.createQuad:
-                obj = createQuad();
+                obj = new Quad(1f, 1f);;
                 name = "quad";
                 break;
             case R.id.delete:
@@ -74,18 +72,6 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
                 return;
         }
         addToScene(obj, name, true);
-    }
-
-    public static Geometry createCube() {
-        return new Box(1f,1f,1f);
-    }
-
-    public static Geometry createSphere() {
-        return new Sphere(1f);
-    }
-
-    public static Geometry createQuad() {
-        return new Quad(1f, 1f);
     }
 
     public void addToScene(Geometry geometry, String name, boolean recordAction) {
@@ -105,13 +91,5 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         FragmentManager fm =  activity.getFragmentManager();
         HierarchyFragment hierarchy = (HierarchyFragment) fm.findFragmentById(R.id.hierarchyFragment);
         hierarchy.addToHierarchy(n, 0);
-    }
-
-    public static Material makeDefaultMat() {
-        Material defaultMat = new Material();
-        defaultMat.setDiffuseColor(Color.WHITE);
-        defaultMat.setLightingModel(Material.LightingModel.LAMBERT);
-
-        return defaultMat;
     }
 }

@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,12 +82,17 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
         name.setOnClickListener(this);
         name.setOnLongClickListener(dragAndDropListener);
         name.setOnDragListener(dragAndDropListener);
-        String tabs = new String(new char[level]).replace("\0", "->");
 
-        name.setText(String.format("%S%s%s", "| ", tabs, node.getName()));
+        name.setText(contructName(node, level));
         hierarchy.addView(name);
 
         nodes.put(name, node);
+    }
+
+    private String contructName(Node node, int level){
+        String tabs = new String(new char[level]).replace("\0", "->");
+
+        return String.format("%S%s%s", "| ", tabs, node.getName());
     }
 
     public void removeFromHierarchy(Node node) {
@@ -118,10 +124,12 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
 
         @Override
         public boolean onDrag(View v, DragEvent event) {
+            TextView target = (TextView) event.getLocalState();
             switch (event.getAction()) {
                 case DragEvent.ACTION_DROP:
-                    TextView target = (TextView) event.getLocalState();
                     TextView container = (TextView) v;
+                    Log.i("hoi", "aaa");
+                    Log.i("hoi", container.getText().toString());
                     int newIndex = 0;
                     int childCount = hierarchy.getChildCount();
                     for(int i = 0;i < childCount;i++) {
@@ -131,15 +139,25 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
                     }
                     hierarchy.removeView(target);
                     hierarchy.addView(target, Math.min(newIndex, childCount - 1));
-                    target.setVisibility(View.VISIBLE);
+
+                    String text = container.getText().toString();
+                    String temp = text.replace("->", "");
+                    int level = ((text.length() - temp.length()) / 2) + 1;
 
                     Node parent = nodes.get(container);
                     Node child = nodes.get(target);
 
+                    child.removeFromParentNode();
                     parent.addChildNode(child);
 
+                    target.setText(contructName(child, level));
+                    target.setVisibility(View.VISIBLE);
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    target.setVisibility(View.VISIBLE);
                     break;
             }
+
             return true;
         }
     }

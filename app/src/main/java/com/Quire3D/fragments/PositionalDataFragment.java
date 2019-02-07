@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.Quire3D.activities.ViroActivity;
-import com.Quire3D.classes.ActionsController;
-import com.Quire3D.classes.actions.RotateAction;
-import com.Quire3D.classes.actions.TranslateAction;
-import com.Quire3D.classes.actions.ScaleAction;
+import com.Quire3D.util.actions.ActionsController;
+import com.Quire3D.util.actions.RotateAction;
+import com.Quire3D.util.actions.TranslateAction;
+import com.Quire3D.util.actions.ScaleAction;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
 import com.viro.core.Vector;
@@ -106,7 +106,7 @@ public class PositionalDataFragment extends ObjectParamsFragment{
 
         @Override
         public void afterTextChanged(Editable s) {
-            if(stopWatchers) {
+            if(!stopWatchers) {
                 try {
                     Node selected = ViroActivity.getSelectedNode();
                     Vector pos = selected.getPositionRealtime();
@@ -176,7 +176,12 @@ public class PositionalDataFragment extends ObjectParamsFragment{
                 try {
                     Node selected = ViroActivity.getSelectedNode();
                     Vector rot = selected.getRotationEulerRealtime();
-                    selected.setRotation(getNewValue(rot, Float.parseFloat(s.toString()), axis));
+                    Vector newRot = getNewValue(rot, Float.parseFloat(s.toString()), axis);
+                    newRot.x = (float)Math.toRadians(newRot.x);
+                    newRot.y = (float)Math.toRadians(newRot.y);
+                    newRot.z = (float)Math.toRadians(newRot.z);
+
+                    selected.setRotation(newRot);
 
                     ActionsController.getInstance().addAction(new RotateAction(selected, rot, selected.getRotationEulerRealtime()));
                 } catch (Exception e) {
@@ -188,7 +193,7 @@ public class PositionalDataFragment extends ObjectParamsFragment{
 
     protected Vector getNewValue(Vector old, float value, int[] axis) {
         Vector diff = new Vector((value - old.x) * axis[0], (value - old.y) * axis[1],(value - old.z) * axis[2]);
-
+        Log.i("heck" ,diff.toString());
         return old.add(diff);
     }
 }

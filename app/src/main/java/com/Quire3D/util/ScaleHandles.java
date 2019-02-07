@@ -1,6 +1,5 @@
-package com.Quire3D.classes;
+package com.Quire3D.util;
 
-import android.app.Fragment;
 import android.util.Log;
 
 import com.viro.core.ClickListener;

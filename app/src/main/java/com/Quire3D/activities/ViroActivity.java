@@ -28,9 +28,9 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 
-import com.Quire3D.classes.ScaleHandles;
+import com.Quire3D.util.RotationHandles;
+import com.Quire3D.util.ScaleHandles;
 import com.Quire3D.fragments.HierarchyFragment;
 import com.Quire3D.fragments.MaterialsFragment;
 import com.Quire3D.fragments.ObjectParamsFragment;
@@ -45,9 +45,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import com.Quire3D.classes.OrbitCamera;
-import com.Quire3D.classes.Handles;
-import com.Quire3D.classes.TranslateHandles;
+import com.Quire3D.util.OrbitCamera;
+import com.Quire3D.util.Handles;
+import com.Quire3D.util.TranslateHandles;
 
 public class ViroActivity extends Activity {
     protected static ViroView mainView;
@@ -175,7 +175,7 @@ public class ViroActivity extends Activity {
             } else if(defaultHandle == 's') {
                 activeHandles = new ScaleHandles(getView(), node);
             } else {
-
+                activeHandles = new RotationHandles(getView(), node);
             }
             selectedNode = node;
 
