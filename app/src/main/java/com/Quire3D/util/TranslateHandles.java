@@ -1,6 +1,7 @@
 package com.Quire3D.util;
 
 
+import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.util.actions.ActionsController;
 import com.Quire3D.util.actions.TranslateAction;
 import com.viro.core.ClickListener;
@@ -40,7 +41,7 @@ public class TranslateHandles extends Handles {
                     newPos = new Vector(oldPos.x, oldPos.y, world.z);
                 }
                 parent.setPosition(newPos);
-
+                getHandleRoot().setPosition(newPos);
                 node.setPosition(new Vector(0f, 0f, 0f));
 
                 //paramsFrag.updatePositionText(parent, handle.getName().charAt(0));
@@ -59,12 +60,14 @@ public class TranslateHandles extends Handles {
             public void onClickState(int i, Node node, ClickState clickState, Vector vector) {
                 if(clickState.equals(ClickState.CLICK_DOWN)) {
                     oldPos = parent.getPositionRealtime();
+                    ViroActivity.getCamera().toggleLock();
                 }else if(clickState.equals(ClickState.CLICK_UP)) {
+                    Vector newPos = parent.getPositionRealtime();
+                    getHandleRoot().setPosition(newPos);
                     node.setPosition(new Vector(0f, 0f, 0f));
-                    ActionsController.getInstance().addAction(new TranslateAction(parent, oldPos, parent.getPositionRealtime()));
+                    ActionsController.getInstance().addAction(new TranslateAction(parent, oldPos, newPos));
 
-                    //OBJObject edited = (OBJObject) node;
-                    //Log.i("importer", edited.getVertices().toString());
+                    ViroActivity.getCamera().toggleLock();
                 }
             }
         });

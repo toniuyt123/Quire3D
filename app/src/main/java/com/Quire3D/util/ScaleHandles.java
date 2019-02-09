@@ -12,6 +12,7 @@ import com.viro.core.ViroView;
 import java.util.List;
 
 public class ScaleHandles extends Handles {
+    private float startDistance;
 
     public ScaleHandles(ViroView view, Node parent/*, Fragment paramsFragment*/)  {
         super(view, "file:///android_asset/scale_handle.obj", parent/*, paramsFragment*/);

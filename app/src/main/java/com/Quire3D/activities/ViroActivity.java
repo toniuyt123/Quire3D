@@ -56,6 +56,7 @@ public class ViroActivity extends Activity {
     private static Node selectedNode;
     private static char defaultHandle = 't';
     private static Handles activeHandles;
+    private static OrbitCamera camera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +116,7 @@ public class ViroActivity extends Activity {
         lightNode.addLight(ambient);
         lightNode.addLight(l);
         Node cameraNode = new Node();
-        OrbitCamera camera = new OrbitCamera(cameraNode, mainView);
+        camera = new OrbitCamera(cameraNode, mainView);
 
         Geometry grid = new Quad(5, 5);
         Material gridTexture = new Material();
@@ -266,5 +267,9 @@ public class ViroActivity extends Activity {
 
     public static void setActiveHandles(Handles handles) {
         activeHandles = handles;
+    }
+
+    public static OrbitCamera getCamera() {
+        return camera;
     }
 }

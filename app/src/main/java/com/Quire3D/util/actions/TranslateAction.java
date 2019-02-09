@@ -1,5 +1,6 @@
 package com.Quire3D.util.actions;
 
+import com.Quire3D.activities.ViroActivity;
 import com.viro.core.Node;
 import com.viro.core.Vector;
 
@@ -17,10 +18,16 @@ public class TranslateAction extends Action {
     @Override
     public void executeUndo() {
        node.setPosition(prevPosition);
+       moveHandles(prevPosition);
     }
 
     @Override
     public void executeRedo() {
        node.setPosition(newPosition);
+       moveHandles(newPosition);
+    }
+
+    private void moveHandles(Vector pos){
+        ViroActivity.getActiveHandles().getHandleRoot().setPosition(pos);
     }
 }

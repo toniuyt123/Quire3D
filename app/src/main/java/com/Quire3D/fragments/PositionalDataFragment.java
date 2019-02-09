@@ -109,10 +109,16 @@ public class PositionalDataFragment extends ObjectParamsFragment{
             if(!stopWatchers) {
                 try {
                     Node selected = ViroActivity.getSelectedNode();
-                    Vector pos = selected.getPositionRealtime();
-                    selected.setPosition(getNewValue(pos, Float.parseFloat(s.toString()), axis));
+                    Vector currentPosition = selected.getPositionRealtime();
+                    Vector newPosition = getNewValue(currentPosition, Float.parseFloat(s.toString()), axis);
+                    selected.setPosition(newPosition);
 
-                    ActionsController.getInstance().addAction(new TranslateAction(selected, pos, selected.getPositionRealtime()));
+                    if(ViroActivity.getActiveHandles() != null) {
+                        ViroActivity.getActiveHandles().getHandleRoot().setPosition(newPosition);
+                    }
+
+
+                    ActionsController.getInstance().addAction(new TranslateAction(selected, currentPosition, selected.getPositionRealtime()));
                 } catch (Exception e) {
                     Log.e("parseError", e.getMessage());
                 }

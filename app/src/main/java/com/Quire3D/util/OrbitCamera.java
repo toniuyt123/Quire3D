@@ -1,6 +1,8 @@
 package com.Quire3D.util;
 
 import android.content.Context;
+import android.graphics.PointF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -11,6 +13,7 @@ import com.viro.core.Node;
 import com.viro.core.Quaternion;
 import com.viro.core.Vector;
 import com.viro.core.ViroView;
+import com.almeros.android.multitouch.MoveGestureDetector;
 
 public class OrbitCamera {
     private ViroView view;
@@ -61,6 +64,7 @@ public class OrbitCamera {
     private void setListener() {
         Context context = ViroActivity.getView().getContext();
         final ScaleGestureDetector zoomListener = new ScaleGestureDetector(context, new cameraZoomListener());
+        final MoveGestureDetector panListener = new MoveGestureDetector(context, new cameraPanListener());
 
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -106,6 +110,7 @@ public class OrbitCamera {
                 } else if(pointerCount == 2) {
                     zoomListener.onTouchEvent(event);
                 }
+                panListener.onTouchEvent(event);
             }
 
             return false;
@@ -161,7 +166,7 @@ public class OrbitCamera {
     }
 
 
-    public void lock() {
+    public void toggleLock() {
         this.locked = !this.locked;
     }
 
@@ -197,6 +202,18 @@ public class OrbitCamera {
                 activeHandles.setScale(activeHandles.getScaleRealtime().scale(scaleFactor));
             }
 
+            return true;
+        }
+    }
+
+    class cameraPanListener extends MoveGestureDetector.SimpleOnMoveGestureListener {
+        @Override
+        public boolean onMove(MoveGestureDetector detector) {
+            PointF d = detector.getFocusDelta();
+            float x = d.x;
+            float y = d.y;
+
+            Log.i("hey", Float.toString(x) + " " + Float.toString(y));
             return true;
         }
     }

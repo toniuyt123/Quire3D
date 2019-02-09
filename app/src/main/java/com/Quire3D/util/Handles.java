@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.util.Log;
 import android.graphics.Color;
 
-import com.Quire3D.fragments.PositionalDataFragment;
+import com.Quire3D.activities.ViroActivity;
 import com.viro.core.AsyncObject3DListener;
 import com.viro.core.Material;
 import com.viro.core.Node;
@@ -17,9 +17,8 @@ import java.util.Arrays;
 public class Handles {
     protected Node parent;
     private Node handleRoot;
-    protected PositionalDataFragment paramsFrag;
 
-    public Handles(ViroView view, String handleAssetPath, Node parent/*, Fragment paramsFrag*/) {
+    Handles(ViroView view, String handleAssetPath, Node parent) {
         handleRoot = new Node();
         handleRoot.setName("Handles");
         Object3D xHandle = new Object3D();
@@ -29,12 +28,12 @@ public class Handles {
         Object3D zHandle = new Object3D();
         zHandle.setName("z");
         this.parent = parent;
-        this.parent.addChildNode(handleRoot);
-        //this.paramsFrag = (PositionalDataFragment) paramsFrag;
+        ViroActivity.getScene().getRootNode().addChildNode(handleRoot);
+        handleRoot.setPosition(parent.getPositionRealtime());
 
         initHandle(xHandle, view, handleAssetPath, new Vector(0f, 0f, -Math.PI / 2), Color.RED);
         initHandle(yHandle, view, handleAssetPath, new Vector(0f, 0f, 0f), Color.GREEN);
-        initHandle(zHandle, view, handleAssetPath, new Vector(Math.PI / 2, 0f, 0f), Color.BLUE);
+        initHandle(zHandle, view, handleAssetPath, new Vector(-Math.PI / 2, 0f, 0f), Color.BLUE);
 
     }
 

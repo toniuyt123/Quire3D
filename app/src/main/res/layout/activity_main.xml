@@ -1,55 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/relativeLayout"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/TopMenuGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/HierarchyPrimitiveBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/PrimitiveWitchBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.57" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/SwitchParamsBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.63" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/SideMenuGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
 
     <com.viro.core.ViroViewScene
         android:id="@+id/SceneView"
-        android:layout_width="533dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginEnd="150dp"
-        android:layout_marginBottom="0dp">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/SideMenuGuideline"
+        app:layout_constraintHorizontal_bias="0.345"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/TopMenuGuideline"
+        app:layout_constraintVertical_bias="0.725">
 
     </com.viro.core.ViroViewScene>
 
     <fragment
         android:id="@+id/createPrimitiveFragment"
         android:name="com.Quire3D.fragments.CreatePrimitiveFragment"
-        android:layout_width="150dp"
-        android:layout_height="105dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="107dp"
-        android:layout_marginEnd="0dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/PrimitiveWitchBorder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/SideMenuGuideline"
+        app:layout_constraintTop_toTopOf="@+id/HierarchyPrimitiveBorder"
         tools:layout="@layout/fragment_create_primitive" />
 
     <fragment
         android:id="@+id/topMenuFragment"
         android:name="com.Quire3D.fragments.TopMenuFragment"
-        android:layout_width="533dp"
-        android:layout_height="45dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="150dp"
-        tools:layout="@layout/fragment_top_menu"/>
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/TopMenuGuideline"
+        app:layout_constraintEnd_toStartOf="@+id/SideMenuGuideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout="@layout/fragment_top_menu" />
 
     <fragment
         android:id="@+id/hierarchyFragment"
         android:name="com.Quire3D.fragments.HierarchyFragment"
-        android:layout_width="150dp"
-        android:layout_height="107dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="0dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/HierarchyPrimitiveBorder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/SideMenuGuideline"
+        app:layout_constraintTop_toTopOf="parent"
         tools:layout="@layout/fragment_hierarchy" />
 
     <fragment
@@ -57,30 +94,33 @@
         android:name="com.Quire3D.fragments.ToolbarFragment"
         android:layout_width="120dp"
         android:layout_height="25dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="45dp"
-        android:layout_marginEnd="150dp"
+        app:layout_constraintEnd_toStartOf="@+id/SideMenuGuideline"
+        app:layout_constraintTop_toTopOf="@+id/TopMenuGuideline"
         tools:layout="@layout/fragment_toolbar" />
 
     <fragment
         android:id="@+id/switchViewFragment"
         android:name="com.Quire3D.fragments.SwitchViewFragment"
-        android:layout_width="150dp"
-        android:layout_height="18dp"
-        android:layout_alignBottom="@+id/objectViewContainer"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="130dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/SwitchParamsBorder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/SideMenuGuideline"
+        app:layout_constraintTop_toTopOf="@+id/PrimitiveWitchBorder"
         tools:layout="@layout/fragment_switch_view" />
 
     <FrameLayout
         android:id="@+id/objectViewContainer"
-        android:layout_width="150dp"
-        android:layout_height="185dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="227dp"
-        android:layout_marginEnd="0dp">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#666666"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/SideMenuGuideline"
+        app:layout_constraintTop_toTopOf="@+id/SwitchParamsBorder">
+
     </FrameLayout>
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
