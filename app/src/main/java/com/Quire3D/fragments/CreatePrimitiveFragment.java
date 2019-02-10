@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,9 @@ import com.viro.core.Node;
 import com.viro.core.Quad;
 import com.viro.core.Sphere;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class CreatePrimitiveFragment extends Fragment implements View.OnClickListener {
     @Nullable
@@ -64,9 +67,11 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
             case R.id.delete:
                 Node selected = ViroActivity.getSelectedNode();
                 HierarchyFragment hierarchy = (HierarchyFragment) getActivity().getFragmentManager().findFragmentById(R.id.hierarchyFragment);
-                hierarchy.removeFromHierarchy(selected);
                 if(selected != null) {
-                    selected.disposeAll(true);
+                    hierarchy.removeFromHierarchy(selected);
+
+                    selected.removeFromParentNode();
+                    ViroActivity.getActiveHandles().getHandleRoot().disposeAll(true);
                     ViroActivity.setActiveHandles(null);
                 }
                 return;

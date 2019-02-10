@@ -15,6 +15,8 @@ import com.Quire3D.virosample.R;
 
 public class SwitchViewFragment extends Fragment implements View.OnClickListener {
     private static int currentFragmentId;
+    private MaterialsFragment materialsFragment;
+    private PositionalDataFragment posFragment;
 
     @Nullable
     @Override
@@ -28,7 +30,12 @@ public class SwitchViewFragment extends Fragment implements View.OnClickListener
         ImageButton other = view.findViewById(R.id.Other);
         other.setOnClickListener(this);
 
+        materialsFragment = new MaterialsFragment();
+        posFragment = new PositionalDataFragment();
+
         currentFragmentId = R.id.objectViewContainer;
+
+        replaceFragment(currentFragmentId, posFragment);
 
         return view;
     }
@@ -37,10 +44,10 @@ public class SwitchViewFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ObjectParams:
-                replaceFragment(currentFragmentId, new PositionalDataFragment());
+                replaceFragment(currentFragmentId, posFragment);
                 break;
             case R.id.Materials:
-                replaceFragment(currentFragmentId, new MaterialsFragment());
+                replaceFragment(currentFragmentId, materialsFragment);
                 break;
             case R.id.Other:
 

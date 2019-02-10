@@ -15,10 +15,12 @@ import android.widget.TextView;
 import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
+import com.viro.core.Vector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -96,6 +98,10 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
     }
 
     public void removeFromHierarchy(Node node) {
+        List<Node> children = node.getChildNodes();
+        for(int i = 0;i < children.size();i++) {
+            removeFromHierarchy(children.get(i));
+        }
         for(Map.Entry entry: nodes.entrySet()){
             if(entry.getValue().equals(node)){
                 TextView key = (TextView) entry.getKey();
@@ -111,6 +117,7 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
     }
 
     private class DragAndDropListener implements View.OnLongClickListener, View.OnDragListener {
+        private boolean dropConsumed = false;
 
         @Override
         public boolean onLongClick(View view) {
@@ -124,12 +131,11 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
 
         @Override
         public boolean onDrag(View v, DragEvent event) {
-            TextView target = (TextView) event.getLocalState();
+            final TextView target = (TextView) event.getLocalState();
             switch (event.getAction()) {
                 case DragEvent.ACTION_DROP:
                     TextView container = (TextView) v;
-                    Log.i("hoi", "aaa");
-                    Log.i("hoi", container.getText().toString());
+                    Log.i("dragndrop", "tekst: " + container.getText().toString());
                     int newIndex = 0;
                     int childCount = hierarchy.getChildCount();
                     for(int i = 0;i < childCount;i++) {
@@ -147,14 +153,20 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
                     Node parent = nodes.get(container);
                     Node child = nodes.get(target);
 
+
+                    Vector newPos = parent.convertWorldPositionToLocalSpace(child.getPositionRealtime());
                     child.removeFromParentNode();
                     parent.addChildNode(child);
+                    child.setPosition(newPos
+                    );
 
                     target.setText(contructName(child, level));
-                    target.setVisibility(View.VISIBLE);
-                    break;
-                case DragEvent.ACTION_DRAG_ENDED:
-                    target.setVisibility(View.VISIBLE);
+                    target.post(new Runnable(){
+                        @Override
+                        public void run() {
+                            target.setVisibility(View.VISIBLE);
+                        }
+                    });
                     break;
             }
 

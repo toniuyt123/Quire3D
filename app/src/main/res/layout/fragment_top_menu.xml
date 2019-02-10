@@ -7,14 +7,6 @@
     tools:context="com.Quire3D.fragments.TopMenuFragment">
 
     <Button
-        android:id="@+id/ExportButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/Export"
-        tools:ignore="ButtonStyle" />
-
-    <Button
         android:id="@+id/Undo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,6 +21,14 @@
         android:layout_weight="1"
         android:text="@string/Redo"
         tools:ignore="ButtonStyle"/>
+
+    <Button
+        android:id="@+id/ExportButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/Export"
+        tools:ignore="ButtonStyle" />
 
     <Button
         android:id="@+id/ImportButton"

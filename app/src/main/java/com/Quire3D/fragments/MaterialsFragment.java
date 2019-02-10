@@ -58,9 +58,13 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_materials, container, false);
 
+        Log.i("material", Integer.toString(savedMaterials.size()));
+
         try {
-            LinearLayout colorPicker = view.findViewById(R.id.ColorPicker);
-            colorPicker.setOnClickListener(this);
+            colorView = view.findViewById(R.id.colorView);
+            colorView.setOnClickListener(this);
+            hexColor = view.findViewById(R.id.hexColor);
+            hexColor.setOnClickListener(this);
             Button addMaterial = view.findViewById(R.id.addMaterial);
             addMaterial.setOnClickListener(this);
             Button assignMaterial = view.findViewById(R.id.AssignMaterial);
@@ -68,8 +72,6 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
             Button importTexture = view.findViewById(R.id.importTexture);
             importTexture.setOnClickListener(this);
 
-            colorView = view.findViewById(R.id.colorView);
-            hexColor = view.findViewById(R.id.hexColor);
             lightModelSpinner = view.findViewById(R.id.light_model_spinner);
             ArrayAdapter<CharSequence> lightModelAdapter = ArrayAdapter.createFromResource(view.getContext(),
                     R.array.light_model_array, android.R.layout.simple_spinner_item);
@@ -80,7 +82,11 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
             materialsSpinner = view.findViewById(R.id.materials_spinner);
             materialAdapter = new ArrayAdapter<>(view.getContext(),
                     android.R.layout.simple_spinner_item, new ArrayList<String>());
-            materialAdapter.add("Default");
+
+            for(int i = 0;i < savedMaterials.size();i++) {
+                materialAdapter.add(savedMaterials.get(i).getName());
+            }
+
             materialAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             materialsSpinner.setAdapter(materialAdapter);
             materialsSpinner.setOnItemSelectedListener(this);
@@ -96,7 +102,7 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ColorPicker | R.id.hexColor:
+            case R.id.colorView:
                 popup();
                 break;
             case R.id.addMaterial:
@@ -128,7 +134,7 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
         colorView.setBackgroundColor(color);
         hexColor.setText(colorHex(color));
 
-        Material.LightingModel lightModel = mat.getLightingModel();
+        /*Material.LightingModel lightModel = mat.getLightingModel();
         for(int i = 0;i < lightingModels.length;i++) {
             if(lightModel.equals(lightingModels[i])) {
                 lightModelSpinner.setSelection(i);
@@ -140,7 +146,7 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
             if(name.equals(materialAdapter.getItem(i))) {
                 materialsSpinner.setSelection(i);
             }
-        }
+        }*/
     }
 
     private void showAddMatDialog(Context c) {
@@ -201,6 +207,7 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Log.i("material", "kurec");
         switch(parent.getId()){
             case R.id.light_model_spinner:
                 try {

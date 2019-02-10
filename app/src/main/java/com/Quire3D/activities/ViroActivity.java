@@ -72,10 +72,7 @@ public class ViroActivity extends Activity {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
         //getFragmentManager().findFragmentById(R.id.objectParamsFragment);
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.objectViewContainer, new PositionalDataFragment()).addToBackStack(null);
-        transaction.commit();
+
     }
 
     private void createWorld(ViroView view) {
@@ -163,12 +160,7 @@ public class ViroActivity extends Activity {
     public void selectNode(Node node) {
         if(selectedNode != node) {
             if(selectedNode != null) {
-                for(Node n: selectedNode.getChildNodes()) {
-                    if(n.getName().equals("Handles")) {
-                        n.disposeAll(true);
-                        break;
-                    }
-                }
+                getActiveHandles().getHandleRoot().disposeAll(true);
             }
 
             if (defaultHandle == 't') {

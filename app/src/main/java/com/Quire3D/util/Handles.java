@@ -9,6 +9,7 @@ import com.viro.core.AsyncObject3DListener;
 import com.viro.core.Material;
 import com.viro.core.Node;
 import com.viro.core.Object3D;
+import com.viro.core.Scene;
 import com.viro.core.Vector;
 import com.viro.core.ViroView;
 
@@ -28,8 +29,10 @@ public class Handles {
         Object3D zHandle = new Object3D();
         zHandle.setName("z");
         this.parent = parent;
-        ViroActivity.getScene().getRootNode().addChildNode(handleRoot);
-        handleRoot.setPosition(parent.getPositionRealtime());
+        Node rootNode = ViroActivity.getScene().getRootNode();
+        rootNode.addChildNode(handleRoot);
+        handleRoot.setPosition(parent.getWorldTransformRealTime().extractTranslation());
+
 
         initHandle(xHandle, view, handleAssetPath, new Vector(0f, 0f, -Math.PI / 2), Color.RED);
         initHandle(yHandle, view, handleAssetPath, new Vector(0f, 0f, 0f), Color.GREEN);

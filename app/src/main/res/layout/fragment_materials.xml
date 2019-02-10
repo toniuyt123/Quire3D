@@ -1,82 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/materialsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/materialsLayout"
     android:background="#666666"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/ColorPicker"
-        android:layout_width="match_parent"
+    <android.support.constraint.Guideline
+        android:id="@+id/thirtyPercentVertical"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.41" />
 
-        <View
-            android:id="@+id/colorView"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_margin="5dp" />
-
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/hexColor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:maxLines="1"
-                android:text="@string/Color"
-                android:textSize="20sp" />
-
-            <Button
-                android:id="@+id/importTexture"
-                android:layout_width="88dp"
-                android:layout_height="35dp"
-                android:text="@string/Texture"
-                android:layout_gravity="bottom"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <android.support.constraint.Guideline
+        android:id="@+id/fiftyPercentVertical"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-        <Spinner
-            android:id="@+id/light_model_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
-        <Spinner
-            android:id="@+id/materials_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/AssignMaterial"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:text="@string/Assign"
-            tools:ignore="ButtonStyle" />
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.45" />
 
-        <Button
-            android:id="@+id/addMaterial"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:text="@string/Add"
-            tools:ignore="ButtonStyle" />
-    </LinearLayout>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.75" />
 
-</LinearLayout>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.14" />
+
+    <View
+        android:id="@+id/colorView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/hexColor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:maxLines="1"
+        android:text="@string/Color"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/colorView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/importTexture"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="3dp"
+        android:text="@string/Texture"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.53"
+        app:layout_constraintStart_toEndOf="@+id/colorView"
+        app:layout_constraintTop_toBottomOf="@+id/hexColor" />
+
+    <Spinner
+        android:id="@+id/light_model_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline7"
+        app:layout_constraintEnd_toStartOf="@+id/fiftyPercentVertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/colorView" />
+
+    <Spinner
+        android:id="@+id/materials_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/fiftyPercentVertical"
+        app:layout_constraintTop_toBottomOf="@+id/colorView" />
+
+    <Button
+        android:id="@+id/AssignMaterial"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="@string/Assign"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/thirtyPercentVertical"
+        app:layout_constraintTop_toTopOf="@+id/guideline7"
+        tools:ignore="ButtonStyle" />
+
+    <Button
+        android:id="@+id/addMaterial"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="@string/Add"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/thirtyPercentVertical"
+        app:layout_constraintHorizontal_bias="0.142"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline7"
+        tools:ignore="ButtonStyle" />
+
+</android.support.constraint.ConstraintLayout>

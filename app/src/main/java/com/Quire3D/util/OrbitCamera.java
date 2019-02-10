@@ -207,6 +207,7 @@ public class OrbitCamera {
     }
 
     class cameraPanListener extends MoveGestureDetector.SimpleOnMoveGestureListener {
+
         @Override
         public boolean onMove(MoveGestureDetector detector) {
             PointF d = detector.getFocusDelta();
