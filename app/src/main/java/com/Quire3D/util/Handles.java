@@ -17,7 +17,7 @@ import java.util.Arrays;
 
 public class Handles {
     protected Node parent;
-    private Node handleRoot;
+    protected Node handleRoot;
 
     Handles(ViroView view, String handleAssetPath, Node parent) {
         handleRoot = new Node();

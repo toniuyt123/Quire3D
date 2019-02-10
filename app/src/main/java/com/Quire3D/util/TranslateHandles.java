@@ -31,7 +31,7 @@ public class TranslateHandles extends Handles {
         handle.setDragListener(new DragListener() {
             @Override
             public void onDrag(int i, Node node, Vector local, Vector world) {
-                Vector oldPos = parent.getPositionRealtime();
+                Vector oldPos = handleRoot.getPositionRealtime();
                 Vector newPos;
                 if(lineToDrag.x == 1f) {
                     newPos = new Vector(world.x, oldPos.y, oldPos.z);
@@ -40,8 +40,8 @@ public class TranslateHandles extends Handles {
                 } else {
                     newPos = new Vector(oldPos.x, oldPos.y, world.z);
                 }
-                parent.setPosition(newPos);
-                getHandleRoot().setPosition(newPos);
+                parent.setPosition(parent.getParentNode().convertWorldPositionToLocalSpace(newPos));
+                handleRoot.setPosition(newPos);
                 node.setPosition(new Vector(0f, 0f, 0f));
 
                 //paramsFrag.updatePositionText(parent, handle.getName().charAt(0));
@@ -63,7 +63,7 @@ public class TranslateHandles extends Handles {
                     ViroActivity.getCamera().toggleLock();
                 }else if(clickState.equals(ClickState.CLICK_UP)) {
                     Vector newPos = parent.getPositionRealtime();
-                    getHandleRoot().setPosition(newPos);
+                    getHandleRoot().setPosition(parent.getParentNode().convertLocalPositionToWorldSpace(newPos));
                     node.setPosition(new Vector(0f, 0f, 0f));
                     ActionsController.getInstance().addAction(new TranslateAction(parent, oldPos, newPos));
 

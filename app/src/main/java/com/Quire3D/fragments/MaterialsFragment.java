@@ -207,7 +207,6 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Log.i("material", "kurec");
         switch(parent.getId()){
             case R.id.light_model_spinner:
                 try {
