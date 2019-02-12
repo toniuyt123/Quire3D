@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:contentDescription="@string/Params"
-        android:src="@mipmap/arrow"
+        android:src="@mipmap/cube"
         android:scaleType="fitCenter"
         android:background="#D6D7D7"/>
 
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:contentDescription="@string/Materials"
-        android:src="@mipmap/square"
+        android:src="@mipmap/material"
         android:scaleType="fitCenter"
         android:background="#D6D7D7"/>
 
@@ -34,7 +34,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:contentDescription="@string/Misc"
-        android:src="@mipmap/arc"
         android:scaleType="fitCenter"
         android:background="#D6D7D7"/>
 </LinearLayout>
