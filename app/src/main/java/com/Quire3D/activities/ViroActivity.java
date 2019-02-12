@@ -242,6 +242,10 @@ public class ViroActivity extends Activity {
         return selectedNode;
     }
 
+    public static void setSelectedNode(Node node) {
+        selectedNode = node;
+    }
+
     public static void setDefaultHandle(char defaultHandle) {
         ViroActivity.defaultHandle = defaultHandle;
     }

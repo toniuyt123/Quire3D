@@ -4,15 +4,14 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.Quire3D.activities.ViroActivity;
+import com.Quire3D.util.actions.Action;
 import com.Quire3D.util.actions.ActionsController;
-import com.Quire3D.util.actions.CreateAction;
 import com.Quire3D.virosample.R;
 import com.viro.core.Box;
 import com.viro.core.Geometry;
@@ -20,9 +19,7 @@ import com.viro.core.Node;
 import com.viro.core.Quad;
 import com.viro.core.Sphere;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class CreatePrimitiveFragment extends Fragment implements View.OnClickListener {
     @Nullable
@@ -66,14 +63,8 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
                 break;
             case R.id.delete:
                 Node selected = ViroActivity.getSelectedNode();
-                HierarchyFragment hierarchy = (HierarchyFragment) getActivity().getFragmentManager().findFragmentById(R.id.hierarchyFragment);
-                if(selected != null) {
-                    hierarchy.removeFromHierarchy(selected);
-
-                    selected.removeFromParentNode();
-                    ViroActivity.getActiveHandles().getHandleRoot().disposeAll(true);
-                    ViroActivity.setActiveHandles(null);
-                }
+                ActionsController.getInstance().addAction(new DeleteAction(selected, selected.getParentNode()));
+                deleteNode(selected);
                 return;
         }
         addToScene(obj, name, true);
@@ -90,11 +81,63 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         ViroActivity.getScene().getRootNode().addChildNode(n);
 
         if(recordAction) {
-            ActionsController.getInstance().addAction(new CreateAction(n, name));
+            ActionsController.getInstance().addAction(new CreateAction(n));
         }
 
         FragmentManager fm =  activity.getFragmentManager();
         HierarchyFragment hierarchy = (HierarchyFragment) fm.findFragmentById(R.id.hierarchyFragment);
         hierarchy.addToHierarchy(n, 0);
+    }
+
+    public void deleteNode(Node n) {
+        try {
+            HierarchyFragment hierarchy = (HierarchyFragment) getActivity().getFragmentManager().findFragmentById(R.id.hierarchyFragment);
+            hierarchy.removeFromHierarchy(n);
+
+            n.removeFromParentNode();
+            ViroActivity.getActiveHandles().getHandleRoot().disposeAll(true);
+            ViroActivity.setActiveHandles(null);
+            ViroActivity.setSelectedNode(null);
+        } catch (NullPointerException e){
+            e.getMessage();
+        }
+    }
+
+    public class CreateAction extends Action {
+        private Node node;
+
+        CreateAction(Node node) {
+            this.node = node;
+        }
+
+        @Override
+        public void executeUndo() {
+            deleteNode(node);
+        }
+
+        @Override
+        public void executeRedo() {
+            ViroActivity.getScene().getRootNode().addChildNode(node);
+        }
+    }
+
+    public class DeleteAction extends Action{
+        private Node node;
+        private Node parent;
+
+        DeleteAction(Node node, Node parent){
+            this.node = node;
+            this.parent = parent;
+        }
+
+        @Override
+        public void executeUndo() {
+            parent.addChildNode(node);
+        }
+
+        @Override
+        public void executeRedo() {
+            deleteNode(node);
+        }
     }
 }

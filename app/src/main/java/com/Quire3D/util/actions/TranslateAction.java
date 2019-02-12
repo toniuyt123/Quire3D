@@ -28,6 +28,8 @@ public class TranslateAction extends Action {
     }
 
     private void moveHandles(Vector pos){
-        ViroActivity.getActiveHandles().getHandleRoot().setPosition(pos);
+        if(ViroActivity.getActiveHandles() != null) {
+            ViroActivity.getActiveHandles().getHandleRoot().setPosition(pos);
+        }
     }
 }
