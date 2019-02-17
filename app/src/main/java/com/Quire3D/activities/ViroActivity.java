@@ -17,8 +17,6 @@
 package com.Quire3D.activities;
 
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -29,13 +27,11 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
-import com.Quire3D.util.RotationHandles;
-import com.Quire3D.util.ScaleHandles;
 import com.Quire3D.fragments.HierarchyFragment;
 import com.Quire3D.fragments.MaterialsFragment;
 import com.Quire3D.fragments.ObjectParamsFragment;
-import com.Quire3D.fragments.PositionalDataFragment;
 import com.Quire3D.fragments.SwitchViewFragment;
+import com.Quire3D.util.handles.TranslateHandles;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
 
@@ -46,8 +42,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 import com.Quire3D.util.OrbitCamera;
-import com.Quire3D.util.Handles;
-import com.Quire3D.util.TranslateHandles;
+import com.Quire3D.util.handles.Handles;
 
 public class ViroActivity extends Activity {
     protected static ViroView mainView;
@@ -70,16 +65,13 @@ public class ViroActivity extends Activity {
         mainView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
-
-        //getFragmentManager().findFragmentById(R.id.objectParamsFragment);
-
     }
 
     private void createWorld(ViroView view) {
         scene = new Scene();
         Node rootNode = scene.getRootNode();
 
-        Geometry cube = new Box(1f,1f,1f);
+        Geometry cube = new Box(2f,2f,2f);
         Material boxMaterial = new Material();
         boxMaterial.setDiffuseColor(Color.GRAY);
         boxMaterial.setLightingModel(Material.LightingModel.LAMBERT);
@@ -115,7 +107,7 @@ public class ViroActivity extends Activity {
         Node cameraNode = new Node();
         camera = new OrbitCamera(cameraNode, mainView);
 
-        Geometry grid = new Quad(5, 5);
+        Geometry grid = new Quad(16, 16);
         Material gridTexture = new Material();
         gridTexture.setDiffuseTexture(new Texture(bitmapFromAsset("floor_grid.png"),Texture.Format.RGBA8, true, false));
         gridTexture.setCullMode(Material.CullMode.NONE);
@@ -159,16 +151,10 @@ public class ViroActivity extends Activity {
 
     public void selectNode(Node node) {
         if(selectedNode != node) {
-            if(selectedNode != null) {
-                getActiveHandles().getHandleRoot().disposeAll(true);
-            }
-
-            if (defaultHandle == 't') {
-                activeHandles = new TranslateHandles(getView(), node);
-            } else if(defaultHandle == 's') {
-                activeHandles = new ScaleHandles(getView(), node);
+            if(activeHandles == null) {
+                activeHandles = new TranslateHandles(mainView, node);
             } else {
-                activeHandles = new RotationHandles(getView(), node);
+                activeHandles.setParent(node);
             }
             selectedNode = node;
 
@@ -253,8 +239,8 @@ public class ViroActivity extends Activity {
     public static void changeHandles(Handles newHandles) {
         if(activeHandles != null) {
             activeHandles.getHandleRoot().disposeAll(true);
-            activeHandles = newHandles;
         }
+        activeHandles = newHandles;
     }
 
     public static Handles getActiveHandles() {

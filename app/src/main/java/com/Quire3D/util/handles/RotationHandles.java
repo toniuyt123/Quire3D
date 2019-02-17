@@ -1,6 +1,4 @@
-package com.Quire3D.util;
-
-import android.util.Log;
+package com.Quire3D.util.handles;
 
 import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.util.actions.ActionsController;

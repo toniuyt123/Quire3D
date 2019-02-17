@@ -1,4 +1,4 @@
-package com.Quire3D.util;
+package com.Quire3D.util.handles;
 
 
 import com.Quire3D.activities.ViroActivity;

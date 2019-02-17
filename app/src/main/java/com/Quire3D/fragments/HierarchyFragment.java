@@ -25,7 +25,7 @@ import java.util.Map;
 
 
 public class HierarchyFragment extends Fragment implements View.OnClickListener {
-    private static final ArrayList<String> hidden = new ArrayList<>(Arrays.asList("Handles", "floor_grid"));
+    private static final ArrayList<String> hidden = new ArrayList<>(Arrays.asList("Handles", "floor_grid", "Camera"));
     private LinearLayout hierarchy;
     private DragAndDropListener dragAndDropListener = new DragAndDropListener();
     private static HashMap<TextView, Node> nodes = new HashMap<>();

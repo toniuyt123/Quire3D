@@ -1,9 +1,22 @@
 package com.Quire3D.util;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.util.Log;
+import android.widget.EditText;
+
+import com.Quire3D.fragments.HierarchyFragment;
 import com.Quire3D.fragments.MaterialsFragment;
 import com.viro.core.Geometry;
+import com.viro.core.Matrix;
+import com.viro.core.Node;
 import com.viro.core.Object3D;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,6 +85,7 @@ public class OBJObject extends Object3D {
         geometry.setNormals(correctNormals);
 
         setGeometry(geometry);
+
     }
 
     private void fixNormals() {
@@ -117,16 +131,69 @@ public class OBJObject extends Object3D {
         return triangleIndeces;
     }
 
-    public static void exportOBJ() {
-        /*ArrayList<Node> nodes = HierarchyFragment.getExportableObjects(ViroActivity.getScene().getRootNode());
-
+    public static void exportOBJ(Context c, String fileName) {
         StringBuilder output = new StringBuilder();
-        output.append("#Quire3D v0.1 OBJ File.\n#Powered by ViroCore\n");
+        String ln = System.getProperty("line.separator");
+        output.append("# Quire3D v0.1 OBJ file").append(ln);
 
-        for(Node n: nodes){
-            output.append("o ").append(n.getName());
+        ArrayList<Node> nodes = HierarchyFragment.getExportableObjects();
+        for(int i = 0;i < nodes.size();i++) {
+            Node n = nodes.get(i);
+            output.append("o ").append(n.getName()).append(ln);
 
+            Matrix transformMatrix = n.getWorldTransformRealTime();
+            if(n.getClass().equals(OBJObject.class)){
+                Log.i("exported", "we in");
+                OBJObject obj = (OBJObject) n;
+                for(Vector v: obj.getVertices()){
+                    output.append("v ").append(transformMatrix.multiply(v).toString()).append(ln);
+                }
+                for(Vector vn: obj.getNormals()){
+                    output.append("vn ").append(transformMatrix.multiply(vn).normalize().toString()).append(ln);
+                }
+                for(Vector vt: obj.getTextureCoords()){
+                    output.append("vt ").append(vt.toString()).append(ln);
+                }
 
-        }*/
+            }
+        }
+
+        exportFile(c, fileName, output.toString());
+    }
+
+    public static void showFileNameDialog(final Context c){
+        final EditText editText = new EditText(c);
+        AlertDialog dialog = new AlertDialog.Builder(c)
+                .setTitle("File name")
+                .setMessage("Enter name")
+                .setView(editText)
+                .setPositiveButton("Export", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        exportOBJ(c, String.valueOf(editText.getText()));
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.show();
+    }
+
+    private static void exportFile(Context context, String filename, String body){
+        Log.i("exported", context.getFilesDir().toString());
+        Log.i("exported", body);
+        File file = new File(context.getFilesDir(), filename + ".obj");
+
+        try {
+            file.createNewFile();
+            FileOutputStream outputStream = new FileOutputStream(file);
+            OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+            writer.append(body);
+            writer.close();
+
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
     }
 }

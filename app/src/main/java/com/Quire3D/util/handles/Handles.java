@@ -1,4 +1,4 @@
-package com.Quire3D.util;
+package com.Quire3D.util.handles;
 
 import android.net.Uri;
 import android.util.Log;
@@ -61,5 +61,10 @@ public class Handles {
 
     public Node getHandleRoot() {
         return handleRoot;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = parent;
+        this.handleRoot.setPosition(parent.getPositionRealtime());
     }
 }

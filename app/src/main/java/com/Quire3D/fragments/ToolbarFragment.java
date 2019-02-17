@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.Quire3D.activities.ViroActivity;
-import com.Quire3D.util.RotationHandles;
-import com.Quire3D.util.ScaleHandles;
-import com.Quire3D.util.TranslateHandles;
+import com.Quire3D.util.handles.RotationHandles;
+import com.Quire3D.util.handles.ScaleHandles;
+import com.Quire3D.util.handles.TranslateHandles;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
 import com.viro.core.ViroView;
@@ -42,19 +42,20 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         ViroView viroView = ViroActivity.getView();
         Node selected = ViroActivity.getSelectedNode();
-
-        switch (view.getId()) {
-            case R.id.Translate:
-                ViroActivity.setDefaultHandle('t');
-                ViroActivity.changeHandles(new TranslateHandles(viroView, selected)); break;
-            case R.id.Scale:
-                ViroActivity.setDefaultHandle('s');
-                ViroActivity.changeHandles(new ScaleHandles(viroView, selected)); break;
-            case R.id.Rotate:
-                ViroActivity.setDefaultHandle('r');
-                ViroActivity.changeHandles(new RotationHandles(viroView, selected));break;
-            case R.id.Duplicate:
-                 break;
+        if(selected != null) {
+            switch (view.getId()) {
+                case R.id.Translate:
+                    ViroActivity.setDefaultHandle('t');
+                    ViroActivity.changeHandles(new TranslateHandles(viroView, selected)); break;
+                case R.id.Scale:
+                    ViroActivity.setDefaultHandle('s');
+                    ViroActivity.changeHandles(new ScaleHandles(viroView, selected)); break;
+                case R.id.Rotate:
+                    ViroActivity.setDefaultHandle('r');
+                    ViroActivity.changeHandles(new RotationHandles(viroView, selected));break;
+                case R.id.Duplicate:
+                    break;
+            }
         }
     }
 }

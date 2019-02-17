@@ -47,7 +47,7 @@ public class TopMenuFragment extends Fragment implements View.OnClickListener {
                 chooseFile();
                 break;
             case R.id.ExportButton:
-                OBJObject.exportOBJ();
+                OBJObject.showFileNameDialog(getActivity());
                 break;
             case R.id.Undo:
                 ActionsController.getInstance().undo();
@@ -97,7 +97,6 @@ public class TopMenuFragment extends Fragment implements View.OnClickListener {
             }
         }
         OBJObject imported = new OBJObject(text.toString());
-        //imported.setName();
         ViroActivity.getScene().getRootNode().addChildNode(imported);
         ViroActivity activity = (ViroActivity) getActivity();
         activity.makeNodeSelectable(imported);
