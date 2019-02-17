@@ -3,12 +3,14 @@ package com.Quire3D.util;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.EditText;
 
+import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.fragments.HierarchyFragment;
-import com.Quire3D.fragments.MaterialsFragment;
-import com.viro.core.Geometry;
+import com.viro.core.AsyncObject3DListener;
+import com.viro.core.Material;
 import com.viro.core.Matrix;
 import com.viro.core.Node;
 import com.viro.core.Object3D;
@@ -22,19 +24,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import com.viro.core.Submesh;
 import com.viro.core.Vector;
+import com.viro.core.ViroContext;
 
 public class OBJObject extends Object3D {
     private List<Vector> normals = new ArrayList<>();
-    private List<Vector> correctNormals = new ArrayList<>();
+    //private List<Vector> correctNormals = new ArrayList<>();
     private List<Vector> textureCoords = new ArrayList<>();
     private List<Vector> vertices = new ArrayList<>();
     private List<Integer> triangleIndeces = new ArrayList<>();
-    private List<Integer> normalIndeces = new ArrayList<>();
+    //private List<Integer> normalIndeces = new ArrayList<>();
+    private StringBuilder faces = new StringBuilder();
     //private List<Submesh> submeshes;
 
-    public OBJObject(String textFile) {
+    public OBJObject(ViroContext context, final Uri uri, String textFile) {
         Scanner scanner = new Scanner(textFile);
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
@@ -51,7 +54,7 @@ public class OBJObject extends Object3D {
                     addEntryTo(normals, line);
                     break;
                 case "f ":
-                    String[] faces = line.split("\\s+");
+                    /*String[] faces = line.split("\\s+");
                     for (int i = 1; i <= faces.length - 1; i++) {
                         String[] indeces = faces[i].split("/");
                         triangleIndeces.add(
@@ -59,8 +62,8 @@ public class OBJObject extends Object3D {
 
                         normalIndeces.add(
                                 Integer.parseInt(indeces[indeces.length - 1]) - 1);
-                    }
-
+                    }*/
+                    faces.append(line);
                     break;
                 case "o ":
                     setName(line.substring(2));
@@ -69,7 +72,16 @@ public class OBJObject extends Object3D {
         }
         scanner.close();
 
-        //fixNormals();
+        loadModel(context, uri, Object3D.Type.OBJ, new AsyncObject3DListener() {
+            public void onObject3DFailed(String error) {
+                Log.w("modelLoading", "Failed to load the model" + uri.getEncodedPath());
+            }
+            public void onObject3DLoaded(Object3D object, Object3D.Type type){
+
+            }
+        });
+        ViroActivity.getScene().getRootNode().addChildNode(this);
+        /*//fixNormals();
         Submesh.SubmeshBuilder builder = new Submesh.SubmeshBuilder();
         builder.triangleIndices(triangleIndeces);
         Submesh mesh = builder.build();
@@ -84,15 +96,14 @@ public class OBJObject extends Object3D {
         geometry.setVertices(vertices);
         geometry.setNormals(correctNormals);
 
-        setGeometry(geometry);
-
+        setGeometry(geometry);*/
     }
 
-    private void fixNormals() {
+    /*private void fixNormals() {
         for(int i = 0;i < triangleIndeces.size();i++) {
             correctNormals.add(triangleIndeces.get(i), normals.get(normalIndeces.get(i)));
         }
-    }
+    }*/
 
     private void addEntryTo(List<Vector> list, String line) {
         String[] entry = line.split("\\s+");
@@ -115,26 +126,28 @@ public class OBJObject extends Object3D {
         this.vertices = vertices;
     }
 
-    public List<Vector> getNormals() {
-        return normals;
+    public static void showFileNameDialog(final Context c){
+        final EditText editText = new EditText(c);
+        AlertDialog dialog = new AlertDialog.Builder(c)
+                .setTitle("File name")
+                .setMessage("Enter name")
+                .setView(editText)
+                .setPositiveButton("Export", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        buildText(c, String.valueOf(editText.getText()));
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.show();
     }
 
-    public List<Vector> getTextureCoords() {
-        return textureCoords;
-    }
-
-    public List<Vector> getVertices() {
-        return vertices;
-    }
-
-    public List<Integer> getTriangleIndeces() {
-        return triangleIndeces;
-    }
-
-    public static void exportOBJ(Context c, String fileName) {
+    public static void buildText(Context c, String fileName) {
         StringBuilder output = new StringBuilder();
         String ln = System.getProperty("line.separator");
         output.append("# Quire3D v0.1 OBJ file").append(ln);
+        output.append("mtllib ").append(fileName).append(".mtl").append(ln);
 
         ArrayList<Node> nodes = HierarchyFragment.getExportableObjects();
         for(int i = 0;i < nodes.size();i++) {
@@ -154,28 +167,14 @@ public class OBJObject extends Object3D {
                 for(Vector vt: obj.getTextureCoords()){
                     output.append("vt ").append(vt.toString()).append(ln);
                 }
-
+                output.append("usemtl ").append(obj.getMaterials().get(0).getName()).append(ln);
+                output.append("s off").append(ln);
+                output.append(obj.getFacesText());
+                output.append(ln);
             }
         }
 
         exportFile(c, fileName, output.toString());
-    }
-
-    public static void showFileNameDialog(final Context c){
-        final EditText editText = new EditText(c);
-        AlertDialog dialog = new AlertDialog.Builder(c)
-                .setTitle("File name")
-                .setMessage("Enter name")
-                .setView(editText)
-                .setPositiveButton("Export", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        exportOBJ(c, String.valueOf(editText.getText()));
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .create();
-        dialog.show();
     }
 
     private static void exportFile(Context context, String filename, String body){
@@ -195,5 +194,25 @@ public class OBJObject extends Object3D {
         } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
+    }
+
+    public List<Vector> getNormals() {
+        return normals;
+    }
+
+    public List<Vector> getTextureCoords() {
+        return textureCoords;
+    }
+
+    public List<Vector> getVertices() {
+        return vertices;
+    }
+
+    public List<Integer> getTriangleIndeces() {
+        return triangleIndeces;
+    }
+
+    public String getFacesText(){
+        return faces.toString();
     }
 }

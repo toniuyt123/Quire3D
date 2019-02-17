@@ -1,20 +1,27 @@
 package com.Quire3D.fragments;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.util.handles.RotationHandles;
 import com.Quire3D.util.handles.ScaleHandles;
 import com.Quire3D.util.handles.TranslateHandles;
 import com.Quire3D.virosample.R;
+import com.viro.core.Geometry;
 import com.viro.core.Node;
+import com.viro.core.Vector;
 import com.viro.core.ViroView;
+
+import java.util.ArrayList;
 
 
 public class ToolbarFragment extends Fragment implements View.OnClickListener {
@@ -29,6 +36,8 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         scale.setOnClickListener(this);
         ImageButton rotate = view.findViewById(R.id.Rotate);
         rotate.setOnClickListener(this);
+        TextView duplicate = view.findViewById(R.id.Duplicate);
+        duplicate.setOnClickListener(this);
 
         return view;
     }
@@ -46,16 +55,37 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
             switch (view.getId()) {
                 case R.id.Translate:
                     ViroActivity.setDefaultHandle('t');
-                    ViroActivity.changeHandles(new TranslateHandles(viroView, selected)); break;
+                    ViroActivity.changeHandles(new TranslateHandles(selected)); break;
                 case R.id.Scale:
                     ViroActivity.setDefaultHandle('s');
-                    ViroActivity.changeHandles(new ScaleHandles(viroView, selected)); break;
+                    ViroActivity.changeHandles(new ScaleHandles(selected)); break;
                 case R.id.Rotate:
                     ViroActivity.setDefaultHandle('r');
-                    ViroActivity.changeHandles(new RotationHandles(viroView, selected));break;
+                    ViroActivity.changeHandles(new RotationHandles(selected));break;
                 case R.id.Duplicate:
+                    Log.i("pedal", "aaa");
+                    duplicateNode(selected, selected.getWorldTransformRealTime().extractTranslation());
                     break;
             }
         }
+    }
+
+    public void duplicateNode(Node node, Vector newPosition) {
+        Node.NodeBuilder builder = new Node.NodeBuilder<>();
+        builder.name(node.getName())
+            .geometry(node.getGeometry())
+            .clickListener(node.getClickListener())
+            .children((ArrayList<Node>) node.getChildNodes())
+            .scale(node.getScaleRealtime())
+            .position(node.getWorldTransformRealTime().extractTranslation())
+            .visible(true);
+
+        Node newNode = builder.build();
+        node.getParentNode().addChildNode(newNode);
+        newNode.setPosition(newPosition);
+
+        FragmentManager fm =  getActivity().getFragmentManager();
+        HierarchyFragment hierarchy = (HierarchyFragment) fm.findFragmentById(R.id.hierarchyFragment);
+        hierarchy.addToHierarchy(newNode, hierarchy.getNodeLevel(node));
     }
 }

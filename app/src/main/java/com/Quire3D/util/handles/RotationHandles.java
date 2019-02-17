@@ -15,8 +15,8 @@ import java.util.List;
 public class RotationHandles extends Handles {
     private Vector oldAnglePos;
 
-    public RotationHandles(ViroView view, Node parent/*, Fragment paramsFragment*/)  {
-        super(view, "file:///android_asset/rotate_handle.obj", parent/*, paramsFragment*/);
+    public RotationHandles(Node parent/*, Fragment paramsFragment*/)  {
+        super(ViroActivity.getView(), "file:///android_asset/rotate_handle.obj", parent/*, paramsFragment*/);
         List<Node> handles = getHandleRoot().getChildNodes();
         handles.get(0).setRotation(new Vector(0f, Math.PI / 2, 0f));
         handles.get(1).setRotation(new Vector(Math.PI / 2, 0f, 0f));

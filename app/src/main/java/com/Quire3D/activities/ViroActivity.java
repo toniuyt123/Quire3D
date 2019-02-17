@@ -52,6 +52,7 @@ public class ViroActivity extends Activity {
     private static char defaultHandle = 't';
     private static Handles activeHandles;
     private static OrbitCamera camera;
+    private static Node gridNode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +113,7 @@ public class ViroActivity extends Activity {
         gridTexture.setDiffuseTexture(new Texture(bitmapFromAsset("floor_grid.png"),Texture.Format.RGBA8, true, false));
         gridTexture.setCullMode(Material.CullMode.NONE);
         grid.setMaterials(Arrays.asList(gridTexture));
-        Node gridNode = new Node();
+        gridNode = new Node();
         gridNode.setGeometry(grid);
         gridNode.setRotation(new Quaternion(-(float)Math.PI / 2f, 0f, 0f));
 
@@ -152,7 +153,7 @@ public class ViroActivity extends Activity {
     public void selectNode(Node node) {
         if(selectedNode != node) {
             if(activeHandles == null) {
-                activeHandles = new TranslateHandles(mainView, node);
+                activeHandles = new TranslateHandles(node);
             } else {
                 activeHandles.setParent(node);
             }
@@ -253,5 +254,9 @@ public class ViroActivity extends Activity {
 
     public static OrbitCamera getCamera() {
         return camera;
+    }
+
+    public static Node getGridNode() {
+        return gridNode;
     }
 }

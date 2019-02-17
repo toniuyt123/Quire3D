@@ -80,6 +80,7 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
     }
 
     public void addToHierarchy(Node node, int level){
+        checkName(node);
         TextView name = new TextView(ViroActivity.getView().getContext());
         name.setOnClickListener(this);
         name.setOnLongClickListener(dragAndDropListener);
@@ -146,9 +147,7 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
                     hierarchy.removeView(target);
                     hierarchy.addView(target, Math.min(newIndex, childCount - 1));
 
-                    String text = container.getText().toString();
-                    String temp = text.replace("->", "");
-                    int level = ((text.length() - temp.length()) / 2) + 1;
+                    int level = calcLevel(container.getText().toString()) + 1;
 
                     Node parent = nodes.get(container);
                     Node child = nodes.get(target);
@@ -171,6 +170,39 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
             }
 
             return true;
+        }
+    }
+
+    public int getNodeLevel(Node node) {
+        for(Map.Entry entry: nodes.entrySet()){
+            if(entry.getValue().equals(node)){
+                TextView key = (TextView) entry.getKey();
+                return calcLevel(key.getText().toString());
+            }
+        }
+        return 0;
+    }
+
+    public int calcLevel(String text) {
+        String temp = text.replace("->", "");
+        return ((text.length() - temp.length()) / 2);
+    }
+
+    private void checkName(Node node){
+        String name = node.getName();
+        for(Node n: nodes.values()){
+            if(n.getName().equals(name)){
+                try{
+                    String[] temp = name.split("\\(");
+                    int len = temp.length - 1;
+                    int currentCopy = Integer.parseInt(temp[len].substring(0,len)) + 1;
+                    node.setName(temp[0] + "(" + Integer.toString(currentCopy) + ")");
+                    checkName(node);
+                } catch (NumberFormatException e) {
+                    node.setName(name + "(1)");
+                    checkName(node);
+                }
+            }
         }
     }
 }

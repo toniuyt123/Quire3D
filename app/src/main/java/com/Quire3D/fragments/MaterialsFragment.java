@@ -8,8 +8,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -276,6 +278,26 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
             catch (IOException e) {
                 Log.d("importError", "file not found");
             }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void exportmtl() {
+        StringBuilder output = new StringBuilder();
+        String ln = System.getProperty("line.separator");
+        output.append("# Quire3D mtl file").append(ln);
+        output.append("# Material count: ").append(savedMaterials.size()).append(ln);
+        output.append(ln);
+
+        for(Material material: savedMaterials){
+            output.append("newmtl ").append(material.getName()).append(ln);
+            Color c = Color.valueOf(material.getDiffuseColor());
+            output.append("Ns ").append(material.getShininess());
+            output.append("Kd ").append(c.red() / 255)
+                                .append(c.green() / 255)
+                                .append(c.blue() / 255).append(ln);
+
+            output.append(ln);
         }
     }
 }

@@ -1,26 +1,38 @@
 package com.Quire3D.fragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.util.actions.ActionsController;
 import com.Quire3D.util.OBJObject;
 import com.Quire3D.virosample.R;
+import com.viro.core.ViroMediaRecorder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 
 public class TopMenuFragment extends Fragment implements View.OnClickListener {
     @Nullable
@@ -47,7 +59,7 @@ public class TopMenuFragment extends Fragment implements View.OnClickListener {
                 chooseFile();
                 break;
             case R.id.ExportButton:
-                OBJObject.showFileNameDialog(getActivity());
+                showExportDialog();
                 break;
             case R.id.Undo:
                 ActionsController.getInstance().undo();
@@ -96,11 +108,74 @@ public class TopMenuFragment extends Fragment implements View.OnClickListener {
                 Log.d("importError", "file not found");
             }
         }
-        OBJObject imported = new OBJObject(text.toString());
-        ViroActivity.getScene().getRootNode().addChildNode(imported);
+        OBJObject imported = new OBJObject(ViroActivity.getView().getViroContext(), uri, text.toString());
+       /*ViroActivity.getScene().getRootNode().addChildNode(imported);
         ViroActivity activity = (ViroActivity) getActivity();
         activity.makeNodeSelectable(imported);
         HierarchyFragment hierarchy = (HierarchyFragment) getActivity().getFragmentManager().findFragmentById(R.id.hierarchyFragment);
-        hierarchy.addToHierarchy(imported, 0);
+        hierarchy.addToHierarchy(imported, 0);*/
+    }
+
+    private void showExportDialog() {
+        final Context context = ViroActivity.getView().getContext();
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        String[] formats = new String[]{"Image", ".OBJ" };
+
+        final List<String> formatList = Arrays.asList(formats);
+        builder.setSingleChoiceItems(formats, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ListView lv = ((AlertDialog)dialog).getListView();
+                lv.setTag(new Integer(which));
+            }
+        });
+
+        builder.setCancelable(true);
+        builder.setTitle("Choose format");
+        builder.setPositiveButton("Export", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ListView lv = ((AlertDialog)dialog).getListView();
+                Integer id = (Integer)lv.getTag();
+                switch (id){
+                    case 0:
+                        exportImage(context);
+                        break;
+                    case 1:
+                        OBJObject.showFileNameDialog(context);
+                        break;
+                }
+            }
+        });
+
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void exportImage(final Context context){
+        ViroMediaRecorder recorder = ViroActivity.getView().getRecorder();
+        ViroActivity.getGridNode().setVisible(false);
+        recorder.takeScreenShotAsync("viro_screenshot", true, new ViroMediaRecorder.ScreenshotFinishListener() {
+
+            @Override
+            public void onSuccess(Bitmap bitmap, String s) {
+                Toast.makeText(context, "Image saved", Toast.LENGTH_SHORT).show();
+                ViroActivity.getGridNode().setVisible(true);
+            }
+
+            @Override
+            public void onError(ViroMediaRecorder.Error error) {
+                Toast.makeText(context, "Failed to save image:" + error.toString(), Toast.LENGTH_SHORT).show();
+                Log.i("pedal", error.toString());
+                ViroActivity.getGridNode().setVisible(true);
+            }
+        });
     }
 }
