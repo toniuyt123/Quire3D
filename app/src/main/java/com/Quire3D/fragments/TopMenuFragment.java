@@ -5,14 +5,10 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,12 +21,17 @@ import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.util.actions.ActionsController;
 import com.Quire3D.util.OBJObject;
 import com.Quire3D.virosample.R;
+import com.viro.core.AsyncObject3DListener;
+import com.viro.core.Object3D;
 import com.viro.core.ViroMediaRecorder;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class TopMenuFragment extends Fragment implements View.OnClickListener {
     }
 
     public void chooseFile() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         try {
@@ -88,7 +89,7 @@ public class TopMenuFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Uri uri = data.getData();
+        final Uri uri = data.getData();
         StringBuilder text = new StringBuilder();
 
         if(uri != null) {
@@ -108,7 +109,23 @@ public class TopMenuFragment extends Fragment implements View.OnClickListener {
                 Log.d("importError", "file not found");
             }
         }
-        OBJObject imported = new OBJObject(ViroActivity.getView().getViroContext(), uri, text.toString());
+
+        Object3D model = new Object3D();
+        File modelFile = new File("/storage/emulated/0/Download/untitled.obj");
+        Uri fileUri = Uri.fromFile(modelFile);
+        Log.i("modelLoading", text.toString());
+        Log.i("modelLoading", fileUri.toString());
+        Log.i("modelLoading", uri.toString());
+        Log.i("modelLoading", uri.isAbsolute() ? "true" : "false");
+        model.loadModel(ViroActivity.getView().getViroContext(), fileUri, Object3D.Type.OBJ, new AsyncObject3DListener() {
+            public void onObject3DFailed(String error) {
+                Log.w("modelLoading", "Failed to load the model" + error);
+            }
+            public void onObject3DLoaded(Object3D object, Object3D.Type type){
+
+            }
+        });
+        //OBJObject imported = new OBJObject(ViroActivity.getView().getViroContext(), uri, text.toString());
        /*ViroActivity.getScene().getRootNode().addChildNode(imported);
         ViroActivity activity = (ViroActivity) getActivity();
         activity.makeNodeSelectable(imported);
@@ -177,5 +194,24 @@ public class TopMenuFragment extends Fragment implements View.OnClickListener {
                 ViroActivity.getGridNode().setVisible(true);
             }
         });
+    }
+
+    public static void exportFile(Context context, String filename, String body) {
+        Log.i("exported", context.getFilesDir().toString());
+        Log.i("exported", body);
+        File file = new File(context.getFilesDir(), filename);
+
+        try {
+            file.createNewFile();
+            FileOutputStream outputStream = new FileOutputStream(file);
+            OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+            writer.append(body);
+            writer.close();
+
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
     }
 }

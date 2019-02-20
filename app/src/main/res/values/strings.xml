@@ -7,6 +7,10 @@
     <string name="Cube">Cube</string>
     <string name="Quad">Quad</string>
     <string name="Sphere">Sphere</string>
+    <string name="Cone">Cone</string>
+    <string name="Pyramid">Pyramid</string>
+    <string name="Torus">Torus</string>
+    <string name="Empty">Empty</string>
     <string name="position">Position:</string>
     <string name="scale">Scale:</string>
     <string name="rotation">Rotation:</string>

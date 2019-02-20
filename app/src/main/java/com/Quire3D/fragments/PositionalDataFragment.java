@@ -26,7 +26,7 @@ public class PositionalDataFragment extends ObjectParamsFragment{
     private EditText xPos, yPos, zPos;
     private EditText xScale, yScale, zScale;
     private EditText xRot, yRot, zRot;
-    private boolean stopWatchers = false;
+    private boolean stopWatchers = true;
 
     @Nullable
     @Override
@@ -96,7 +96,6 @@ public class PositionalDataFragment extends ObjectParamsFragment{
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
         }
 
         @Override

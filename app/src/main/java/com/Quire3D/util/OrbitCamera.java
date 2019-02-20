@@ -44,7 +44,7 @@ public class OrbitCamera {
     }
 
     public OrbitCamera(Node cameraNode, ViroView view) {
-        this.radiusConst = 4f;
+        this.radiusConst = 5f;
         this.thetaAngleStart = 45f;
         this.phiAngleStart = 45f;
         this.view = view;

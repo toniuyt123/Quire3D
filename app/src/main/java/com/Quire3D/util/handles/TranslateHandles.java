@@ -1,6 +1,8 @@
 package com.Quire3D.util.handles;
 
 
+import android.util.Log;
+
 import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.util.actions.ActionsController;
 import com.Quire3D.util.actions.TranslateAction;
@@ -21,6 +23,7 @@ public class TranslateHandles extends Handles {
         setDragListeners(handles.get(0), new Vector(0f, 1f, 0f), new Vector(1f, 0f, 0f));
         setDragListeners(handles.get(1), new Vector(0f, 0f, 1f), new Vector(0f, 1f, 0f));
         setDragListeners(handles.get(2), new Vector(0f, 1f, 0f), new Vector(0f, 0f, 1f));
+        handleRoot.setScale(new Vector(1.5f, 1.5f, 1.5f));
     }
 
     private void setDragListeners(final Node handle, Vector planeNormal, final Vector lineToDrag) {

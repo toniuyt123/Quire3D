@@ -10,11 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.virosample.R;
 
 
 public class SwitchViewFragment extends Fragment implements View.OnClickListener {
-    private static int currentFragmentId;
+    private static int containerId;
     private MaterialsFragment materialsFragment;
     private PositionalDataFragment posFragment;
 
@@ -33,9 +34,9 @@ public class SwitchViewFragment extends Fragment implements View.OnClickListener
         materialsFragment = new MaterialsFragment();
         posFragment = new PositionalDataFragment();
 
-        currentFragmentId = R.id.objectViewContainer;
+        containerId = R.id.objectViewContainer;
 
-        replaceFragment(currentFragmentId, posFragment);
+        replaceFragment(containerId, posFragment);
 
         return view;
     }
@@ -44,10 +45,10 @@ public class SwitchViewFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ObjectParams:
-                replaceFragment(currentFragmentId, posFragment);
+                replaceFragment(containerId, posFragment);
                 break;
             case R.id.Materials:
-                replaceFragment(currentFragmentId, materialsFragment);
+                replaceFragment(containerId, materialsFragment);
                 break;
             case R.id.Other:
 
@@ -63,6 +64,6 @@ public class SwitchViewFragment extends Fragment implements View.OnClickListener
     }
 
     public static int getCurrentId() {
-        return currentFragmentId;
+        return containerId;
     }
 }

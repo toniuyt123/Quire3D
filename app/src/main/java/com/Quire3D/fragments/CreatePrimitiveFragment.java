@@ -1,9 +1,11 @@
 package com.Quire3D.fragments;
 
 import android.app.FragmentManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +15,12 @@ import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.util.actions.Action;
 import com.Quire3D.util.actions.ActionsController;
 import com.Quire3D.virosample.R;
+import com.viro.core.AsyncObject3DListener;
 import com.viro.core.Box;
 import com.viro.core.Geometry;
+import com.viro.core.Material;
 import com.viro.core.Node;
+import com.viro.core.Object3D;
 import com.viro.core.Quad;
 import com.viro.core.Sphere;
 
@@ -33,7 +38,13 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         createSphere.setOnClickListener(this);
         Button createQuad = view.findViewById(R.id.createQuad);
         createQuad.setOnClickListener(this);
-        Button deletebutton = view.findViewById(R.id.delete);
+        Button createCone = view.findViewById(R.id.createCone);
+        createCone.setOnClickListener(this);
+        Button createTorus = view.findViewById(R.id.createTorus);
+        createTorus.setOnClickListener(this);
+        Button createPyramid = view.findViewById(R.id.createPyramid);
+        createPyramid.setOnClickListener(this);
+        Button deletebutton = view.findViewById(R.id.Delete);
         deletebutton.setOnClickListener(this);
 
         return view;
@@ -50,7 +61,7 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         String name = "";
         switch (view.getId()) {
             case R.id.createCube:
-                obj = new Box(1f,1f,1f);
+                obj = new Box(2f,2f,2f);
                 name = "cube";
                 break;
             case R.id.createSphere:
@@ -58,10 +69,19 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
                 name = "sphere";
                 break;
             case R.id.createQuad:
-                obj = new Quad(1f, 1f);;
+                obj = new Quad(2f, 2f);;
                 name = "quad";
                 break;
-            case R.id.delete:
+            case R.id.createTorus:
+                loadObject("file:///android_asset/def_torus.obj", "Torus");
+                return;
+            case R.id.createPyramid:
+                loadObject("file:///android_asset/def_pyramid.obj", "Pyramid");
+                return;
+            case R.id.createCone:
+                loadObject("file:///android_asset/def_cone.obj", "Cone");
+                return;
+            case R.id.Delete:
                 Node selected = ViroActivity.getSelectedNode();
                 ActionsController.getInstance().addAction(new DeleteAction(selected, selected.getParentNode()));
                 deleteNode(selected);
@@ -74,8 +94,12 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         geometry.setMaterials(Arrays.asList(MaterialsFragment.getMaterials().get(0)));
         Node n = new Node();
         n.setGeometry(geometry);
-        n.setName(name);
 
+        addToScene(n, name, recordAction);
+    }
+
+    public void addToScene(Node n, String name, boolean recordAction) {
+        n.setName(name);
         ViroActivity activity = (ViroActivity) getActivity();
         activity.makeNodeSelectable(n);
         ViroActivity.getScene().getRootNode().addChildNode(n);
@@ -101,6 +125,18 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         } catch (NullPointerException e){
             e.getMessage();
         }
+    }
+
+    private void loadObject(String assetPath, final String name){
+        Object3D obj = new Object3D();
+        obj.loadModel(ViroActivity.getView().getViroContext(), Uri.parse(assetPath), Object3D.Type.OBJ, new AsyncObject3DListener() {
+            public void onObject3DFailed(String error) {
+            }
+            public void onObject3DLoaded(Object3D object, Object3D.Type type){
+                object.getGeometry().setMaterials(Arrays.asList(MaterialsFragment.getMaterials().get(0)));
+                addToScene(object, name, false);
+            }
+        });
     }
 
     public class CreateAction extends Action {

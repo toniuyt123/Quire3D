@@ -136,7 +136,7 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
         colorView.setBackgroundColor(color);
         hexColor.setText(colorHex(color));
 
-        /*Material.LightingModel lightModel = mat.getLightingModel();
+        Material.LightingModel lightModel = mat.getLightingModel();
         for(int i = 0;i < lightingModels.length;i++) {
             if(lightModel.equals(lightingModels[i])) {
                 lightModelSpinner.setSelection(i);
@@ -148,7 +148,7 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
             if(name.equals(materialAdapter.getItem(i))) {
                 materialsSpinner.setSelection(i);
             }
-        }*/
+        }
     }
 
     private void showAddMatDialog(Context c) {
@@ -282,7 +282,7 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void exportmtl() {
+    public static void exportmtl(Context context, String filename) {
         StringBuilder output = new StringBuilder();
         String ln = System.getProperty("line.separator");
         output.append("# Quire3D mtl file").append(ln);
@@ -299,5 +299,7 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
 
             output.append(ln);
         }
+
+        TopMenuFragment.exportFile(context, filename + ".mtl",output.toString());
     }
 }

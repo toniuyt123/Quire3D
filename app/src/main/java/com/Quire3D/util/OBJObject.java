@@ -9,6 +9,8 @@ import android.widget.EditText;
 
 import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.fragments.HierarchyFragment;
+import com.Quire3D.fragments.MaterialsFragment;
+import com.Quire3D.fragments.TopMenuFragment;
 import com.viro.core.AsyncObject3DListener;
 import com.viro.core.Material;
 import com.viro.core.Matrix;
@@ -72,15 +74,8 @@ public class OBJObject extends Object3D {
         }
         scanner.close();
 
-        loadModel(context, uri, Object3D.Type.OBJ, new AsyncObject3DListener() {
-            public void onObject3DFailed(String error) {
-                Log.w("modelLoading", "Failed to load the model" + uri.getEncodedPath());
-            }
-            public void onObject3DLoaded(Object3D object, Object3D.Type type){
 
-            }
-        });
-        ViroActivity.getScene().getRootNode().addChildNode(this);
+        //ViroActivity.getScene().getRootNode().addChildNode(this);
         /*//fixNormals();
         Submesh.SubmeshBuilder builder = new Submesh.SubmeshBuilder();
         builder.triangleIndices(triangleIndeces);
@@ -174,26 +169,8 @@ public class OBJObject extends Object3D {
             }
         }
 
-        exportFile(c, fileName, output.toString());
-    }
-
-    private static void exportFile(Context context, String filename, String body){
-        Log.i("exported", context.getFilesDir().toString());
-        Log.i("exported", body);
-        File file = new File(context.getFilesDir(), filename + ".obj");
-
-        try {
-            file.createNewFile();
-            FileOutputStream outputStream = new FileOutputStream(file);
-            OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-            writer.append(body);
-            writer.close();
-
-            outputStream.flush();
-            outputStream.close();
-        } catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
-        }
+        TopMenuFragment.exportFile(c, fileName + ".obj", output.toString());
+        MaterialsFragment.exportmtl(c, fileName);
     }
 
     public List<Vector> getNormals() {

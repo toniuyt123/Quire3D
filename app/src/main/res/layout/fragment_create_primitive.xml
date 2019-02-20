@@ -1,4 +1,6 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,40 +9,106 @@
     tools:context="com.Quire3D.fragments.CreatePrimitiveFragment">
 
 
-    <Button
-        android:id="@+id/createCube"
-        android:layout_width="match_parent"
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.25"
-        android:text="@string/Cube"
-        android:textSize="12sp"
-        android:padding="0dp"/>
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
-    <Button
-        android:id="@+id/createSphere"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.25"
-        android:text="@string/Sphere"
-        android:textSize="12sp"
-        android:padding="0dp"/>
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/createQuad"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.25"
-        android:text="@string/Quad"
-        android:textSize="12sp"
-        android:padding="0dp"/>
+        <Button
+                android:id="@+id/createCube"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:text="@string/Cube"
+                android:textSize="12sp"
+                android:padding="0dp" />
 
-    <Button
-        android:id="@+id/delete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.25"
-        android:text="@string/Delete"
-        android:textSize="12sp"
-        android:padding="0dp"/>
+        <Button
+                android:id="@+id/createQuad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:text="@string/Quad"
+                android:textSize="12sp"
+                android:padding="0dp" />
 
-</LinearLayout>
+        <Button
+                android:id="@+id/createPyramid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:text="@string/Pyramid"
+                android:textSize="12sp"
+                android:padding="0dp" />
+
+        <Button
+                android:id="@+id/createEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:text="@string/Empty"
+                android:textSize="12sp"
+                android:padding="0dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+                android:id="@+id/createSphere"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:text="@string/Sphere"
+                android:textSize="12sp"
+                android:padding="0dp" />
+
+        <Button
+            android:id="@+id/createTorus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:padding="0dp"
+            android:text="@string/Torus"
+            android:textSize="12sp" />
+
+        <Button
+                android:id="@+id/createCone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:text="@string/Cone"
+                android:textSize="12sp"
+                android:padding="0dp" />
+
+        <Button
+                android:id="@+id/Delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:text="@string/Delete"
+                android:textSize="12sp"
+                android:padding="0dp" />
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>
