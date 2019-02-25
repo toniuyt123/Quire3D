@@ -1,6 +1,7 @@
 package com.Quire3D.fragments;
 
 import android.content.ClipData;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
@@ -13,6 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.Quire3D.activities.ViroActivity;
+import com.Quire3D.util.OBJObject;
+import com.Quire3D.util.actions.ActionsController;
+import com.Quire3D.util.actions.ChangeParentAction;
 import com.Quire3D.virosample.R;
 import com.viro.core.Node;
 import com.viro.core.Vector;
@@ -125,8 +129,9 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
             ClipData data = ClipData.newPlainText("", "");
             View.DragShadowBuilder shadow = new View.DragShadowBuilder(view);
 
-            view.startDrag(data, shadow, view,0);
-            view.setVisibility(View.INVISIBLE);
+
+            view.startDragAndDrop(data, shadow, view,0);
+            //view.setVisibility(View.INVISIBLE);
             return true;
         }
 
@@ -136,7 +141,6 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
             switch (event.getAction()) {
                 case DragEvent.ACTION_DROP:
                     TextView container = (TextView) v;
-                    Log.i("dragndrop", "tekst: " + container.getText().toString());
                     int newIndex = 0;
                     int childCount = hierarchy.getChildCount();
                     for(int i = 0;i < childCount;i++) {
@@ -151,21 +155,14 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
 
                     Node parent = nodes.get(container);
                     Node child = nodes.get(target);
-
+                    ActionsController.getInstance().addAction(new ChangeParentAction(child, child.getParentNode(), parent));
 
                     Vector newPos = parent.convertWorldPositionToLocalSpace(child.getPositionRealtime());
                     child.removeFromParentNode();
                     parent.addChildNode(child);
-                    child.setPosition(newPos
-                    );
+                    child.setPosition(newPos);
 
                     target.setText(contructName(child, level));
-                    target.post(new Runnable(){
-                        @Override
-                        public void run() {
-                            target.setVisibility(View.VISIBLE);
-                        }
-                    });
                     break;
             }
 

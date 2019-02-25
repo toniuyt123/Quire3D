@@ -110,7 +110,7 @@ public class PositionalDataFragment extends ObjectParamsFragment{
                     Node selected = ViroActivity.getSelectedNode();
                     Vector currentPosition = selected.getPositionRealtime();
                     Vector newPosition = getNewValue(currentPosition, Float.parseFloat(s.toString()), axis);
-                    selected.setPosition(newPosition);
+                    selected.setPosition(selected.getParentNode().convertWorldPositionToLocalSpace(newPosition));
 
                     if(ViroActivity.getActiveHandles() != null) {
                         ViroActivity.getActiveHandles().getHandleRoot().setPosition(newPosition);

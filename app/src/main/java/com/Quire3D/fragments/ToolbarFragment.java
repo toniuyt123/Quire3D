@@ -36,8 +36,8 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         scale.setOnClickListener(this);
         ImageButton rotate = view.findViewById(R.id.Rotate);
         rotate.setOnClickListener(this);
-        TextView duplicate = view.findViewById(R.id.Duplicate);
-        duplicate.setOnClickListener(this);
+        //TextView duplicate = view.findViewById(R.id.Duplicate);
+        //duplicate.setOnClickListener(this);
 
         return view;
     }
@@ -62,10 +62,9 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 case R.id.Rotate:
                     ViroActivity.setDefaultHandle('r');
                     ViroActivity.changeHandles(new RotationHandles(selected));break;
-                case R.id.Duplicate:
-                    Log.i("pedal", "aaa");
+                /*case R.id.Duplicate:
                     duplicateNode(selected, selected.getWorldTransformRealTime().extractTranslation());
-                    break;
+                    break;*/
             }
         }
     }

@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,14 +22,18 @@ import android.widget.Toast;
 import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.util.actions.ActionsController;
 import com.Quire3D.util.OBJObject;
+import com.Quire3D.util.handles.Handles;
 import com.Quire3D.virosample.R;
 import com.viro.core.AsyncObject3DListener;
+import com.viro.core.Node;
 import com.viro.core.Object3D;
 import com.viro.core.ViroMediaRecorder;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -90,15 +96,15 @@ public class TopMenuFragment extends Fragment implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         final Uri uri = data.getData();
+
         StringBuilder text = new StringBuilder();
 
         if(uri != null) {
             try {
                 InputStream is = getActivity().getContentResolver().openInputStream(uri);
                 assert is != null;
-                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                BufferedReader br = new BufferedReader(new InputStreamReader(getContext().getAssets().open("def_torus.obj")));
                 String line;
-
                 while ((line = br.readLine()) != null) {
                     text.append(line);
                     text.append('\n');
@@ -109,6 +115,7 @@ public class TopMenuFragment extends Fragment implements View.OnClickListener {
                 Log.d("importError", "file not found");
             }
         }
+
 
         Object3D model = new Object3D();
         File modelFile = new File("/storage/emulated/0/Download/untitled.obj");
@@ -178,40 +185,60 @@ public class TopMenuFragment extends Fragment implements View.OnClickListener {
 
     private void exportImage(final Context context){
         ViroMediaRecorder recorder = ViroActivity.getView().getRecorder();
-        ViroActivity.getGridNode().setVisible(false);
+        toogleUnwantedNodesForScreenshot(false);
         recorder.takeScreenShotAsync("viro_screenshot", true, new ViroMediaRecorder.ScreenshotFinishListener() {
 
             @Override
             public void onSuccess(Bitmap bitmap, String s) {
-                Toast.makeText(context, "Image saved", Toast.LENGTH_SHORT).show();
-                ViroActivity.getGridNode().setVisible(true);
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getActivity().getBaseContext(), "Image saved", Toast.LENGTH_LONG).show();
+                    }
+                });
+                toogleUnwantedNodesForScreenshot(true);
             }
 
             @Override
             public void onError(ViroMediaRecorder.Error error) {
-                Toast.makeText(context, "Failed to save image:" + error.toString(), Toast.LENGTH_SHORT).show();
-                Log.i("pedal", error.toString());
-                ViroActivity.getGridNode().setVisible(true);
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getActivity().getBaseContext(), "Failed to save image", Toast.LENGTH_LONG).show();
+                    }
+                });
+                toogleUnwantedNodesForScreenshot(true);
             }
         });
     }
 
-    public static void exportFile(Context context, String filename, String body) {
-        Log.i("exported", context.getFilesDir().toString());
-        Log.i("exported", body);
-        File file = new File(context.getFilesDir(), filename);
+    private void toogleUnwantedNodesForScreenshot(boolean areActive) {
+        ViroActivity.getGridNode().setVisible(areActive);
+        if(ViroActivity.getActiveHandles() != null){
+            ViroActivity.getActiveHandles().getHandleRoot().setVisible(areActive);
+        }
+    }
 
+    public static void exportFile(Context context, String filename, String body) {
+        String state = Environment.getExternalStorageState();
+        //external storage availability check
+        if (!Environment.MEDIA_MOUNTED.equals(state)) {
+            return;
+        }
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOCUMENTS), filename);
+
+        FileOutputStream outputStream = null;
         try {
             file.createNewFile();
-            FileOutputStream outputStream = new FileOutputStream(file);
-            OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-            writer.append(body);
-            writer.close();
+            //second argument of FileOutputStream constructor indicates whether to append or create new file if one exists
+            outputStream = new FileOutputStream(file, true);
 
+            outputStream.write(body.getBytes());
             outputStream.flush();
             outputStream.close();
-        } catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
+            Toast.makeText(context, "Created", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 }

@@ -132,7 +132,6 @@ public class ViroActivity extends Activity {
         HierarchyFragment hierarchy = (HierarchyFragment)getFragmentManager().findFragmentById(R.id.hierarchyFragment);
         hierarchy.updateHierarchy();
 
-
         cubeNode.getGeometry().setMaterials(Arrays.asList(MaterialsFragment.getMaterials().get(0)));
     }
 

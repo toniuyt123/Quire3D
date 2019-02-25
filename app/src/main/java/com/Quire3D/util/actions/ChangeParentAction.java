@@ -7,7 +7,7 @@ public class ChangeParentAction extends Action {
     private Node newParent;
     private Node node;
 
-    public ChangeParentAction(Node prevParent, Node newParent, Node node) {
+    public ChangeParentAction(Node node, Node prevParent, Node newParent) {
         this.prevParent = prevParent;
         this.newParent = newParent;
         this.node = node;

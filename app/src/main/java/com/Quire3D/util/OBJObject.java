@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.EditText;
 
 import com.Quire3D.activities.ViroActivity;
+import com.Quire3D.fragments.CreatePrimitiveFragment;
 import com.Quire3D.fragments.HierarchyFragment;
 import com.Quire3D.fragments.MaterialsFragment;
 import com.Quire3D.fragments.TopMenuFragment;
@@ -38,8 +39,9 @@ public class OBJObject extends Object3D {
     //private List<Integer> normalIndeces = new ArrayList<>();
     private StringBuilder faces = new StringBuilder();
     //private List<Submesh> submeshes;
+    private static String ln = System.getProperty("line.separator");
 
-    public OBJObject(ViroContext context, final Uri uri, String textFile) {
+    public OBJObject(final ViroContext context, final Uri uri, String textFile, final CreatePrimitiveFragment temp) {
         Scanner scanner = new Scanner(textFile);
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
@@ -65,7 +67,7 @@ public class OBJObject extends Object3D {
                         normalIndeces.add(
                                 Integer.parseInt(indeces[indeces.length - 1]) - 1);
                     }*/
-                    faces.append(line);
+                    faces.append(line).append(ln);
                     break;
                 case "o ":
                     setName(line.substring(2));
@@ -74,8 +76,20 @@ public class OBJObject extends Object3D {
         }
         scanner.close();
 
+        loadModel(context, uri, Type.OBJ, new AsyncObject3DListener(){
 
-        //ViroActivity.getScene().getRootNode().addChildNode(this);
+            @Override
+            public void onObject3DLoaded(Object3D object3D, Type type) {
+                Log.i("yeet", "yeet");
+                temp.addToScene(OBJObject.this, getName(), true);
+            }
+
+            @Override
+            public void onObject3DFailed(String s) {
+                Log.i("yeet", s);
+            }
+        });
+
         /*//fixNormals();
         Submesh.SubmeshBuilder builder = new Submesh.SubmeshBuilder();
         builder.triangleIndices(triangleIndeces);
@@ -140,24 +154,24 @@ public class OBJObject extends Object3D {
 
     public static void buildText(Context c, String fileName) {
         StringBuilder output = new StringBuilder();
-        String ln = System.getProperty("line.separator");
         output.append("# Quire3D v0.1 OBJ file").append(ln);
         output.append("mtllib ").append(fileName).append(".mtl").append(ln);
 
         ArrayList<Node> nodes = HierarchyFragment.getExportableObjects();
         for(int i = 0;i < nodes.size();i++) {
             Node n = nodes.get(i);
-            output.append("o ").append(n.getName()).append(ln);
 
             Matrix transformMatrix = n.getWorldTransformRealTime();
             if(n.getClass().equals(OBJObject.class)){
-                Log.i("exported", "we in");
                 OBJObject obj = (OBJObject) n;
+                output.append("o ").append(obj.getName()).append(ln);
                 for(Vector v: obj.getVertices()){
-                    output.append("v ").append(transformMatrix.multiply(v).toString()).append(ln);
+                    String vectorText = transformMatrix.multiply(v).toString().replace(",", "");
+                    output.append("v ").append(vectorText.substring(1, vectorText.length()-1)).append(ln);
                 }
                 for(Vector vn: obj.getNormals()){
-                    output.append("vn ").append(transformMatrix.multiply(vn).normalize().toString()).append(ln);
+                    String vectorText = transformMatrix.multiply(vn).toString().replace(",", "");
+                    output.append("vn ").append(vectorText.substring(1, vectorText.length()-1)).append(ln);
                 }
                 for(Vector vt: obj.getTextureCoords()){
                     output.append("vt ").append(vt.toString()).append(ln);

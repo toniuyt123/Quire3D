@@ -37,6 +37,7 @@ public class Handles {
         initHandle(xHandle, view, handleAssetPath, new Vector(0f, 0f, -Math.PI / 2), Color.RED);
         initHandle(yHandle, view, handleAssetPath, new Vector(0f, 0f, 0f), Color.GREEN);
         initHandle(zHandle, view, handleAssetPath, new Vector(-Math.PI / 2, 0f, 0f), Color.BLUE);
+        handleRoot.setScale(new Vector(1.5f, 1.5f, 1.5f));
 
     }
 
@@ -65,6 +66,6 @@ public class Handles {
 
     public void setParent(Node parent) {
         this.parent = parent;
-        this.handleRoot.setPosition(parent.getPositionRealtime());
+        this.handleRoot.setPosition(parent.getWorldTransformRealTime().extractTranslation());
     }
 }

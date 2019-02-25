@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.Quire3D.activities.ViroActivity;
+import com.Quire3D.util.OBJObject;
 import com.Quire3D.util.actions.Action;
 import com.Quire3D.util.actions.ActionsController;
 import com.Quire3D.virosample.R;
@@ -24,6 +25,9 @@ import com.viro.core.Object3D;
 import com.viro.core.Quad;
 import com.viro.core.Sphere;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 
 public class CreatePrimitiveFragment extends Fragment implements View.OnClickListener {
@@ -73,13 +77,13 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
                 name = "quad";
                 break;
             case R.id.createTorus:
-                loadObject("file:///android_asset/def_torus.obj", "Torus");
+                loadObject("file:///android_asset/def_torus.obj");
                 return;
             case R.id.createPyramid:
-                loadObject("file:///android_asset/def_pyramid.obj", "Pyramid");
+                loadObject("file:///android_asset/def_pyramid.obj");
                 return;
             case R.id.createCone:
-                loadObject("file:///android_asset/def_cone.obj", "Cone");
+                loadObject("file:///android_asset/def_cone.obj");
                 return;
             case R.id.Delete:
                 Node selected = ViroActivity.getSelectedNode();
@@ -91,7 +95,6 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
     }
 
     public void addToScene(Geometry geometry, String name, boolean recordAction) {
-        geometry.setMaterials(Arrays.asList(MaterialsFragment.getMaterials().get(0)));
         Node n = new Node();
         n.setGeometry(geometry);
 
@@ -99,6 +102,7 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
     }
 
     public void addToScene(Node n, String name, boolean recordAction) {
+        n.getGeometry().setMaterials((Arrays.asList(MaterialsFragment.getMaterials().get(0))));
         n.setName(name);
         ViroActivity activity = (ViroActivity) getActivity();
         activity.makeNodeSelectable(n);
@@ -127,16 +131,32 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         }
     }
 
-    private void loadObject(String assetPath, final String name){
-        Object3D obj = new Object3D();
-        obj.loadModel(ViroActivity.getView().getViroContext(), Uri.parse(assetPath), Object3D.Type.OBJ, new AsyncObject3DListener() {
-            public void onObject3DFailed(String error) {
+    private void loadObject(String asset){
+        String[] bits = asset.split("/");
+        String fileName = bits[bits.length-1];
+        String text = readFromAsset(fileName);
+        Uri uri = Uri.parse(asset);
+        OBJObject created = new OBJObject(ViroActivity.getView().getViroContext(), uri, text, this);
+    }
+
+    public String readFromAsset(String assetName){
+        StringBuilder text = new StringBuilder();
+
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(getContext().getAssets().open(assetName)));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
             }
-            public void onObject3DLoaded(Object3D object, Object3D.Type type){
-                object.getGeometry().setMaterials(Arrays.asList(MaterialsFragment.getMaterials().get(0)));
-                addToScene(object, name, false);
-            }
-        });
+            br.close();
+        }
+        catch (IOException e) {
+            Log.d("importError", "file not found");
+        }
+
+        return text.toString();
     }
 
     public class CreateAction extends Action {

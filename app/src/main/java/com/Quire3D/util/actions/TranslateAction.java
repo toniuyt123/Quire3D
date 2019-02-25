@@ -17,13 +17,13 @@ public class TranslateAction extends Action {
 
     @Override
     public void executeUndo() {
-       node.setPosition(prevPosition);
+       node.setPosition(node.getParentNode().convertWorldPositionToLocalSpace(prevPosition));
        moveHandles(prevPosition);
     }
 
     @Override
     public void executeRedo() {
-       node.setPosition(newPosition);
+       node.setPosition(node.getParentNode().convertWorldPositionToLocalSpace(newPosition));
        moveHandles(newPosition);
     }
 
