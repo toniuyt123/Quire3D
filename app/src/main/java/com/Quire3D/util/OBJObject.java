@@ -58,15 +58,6 @@ public class OBJObject extends Object3D {
                     addEntryTo(normals, line);
                     break;
                 case "f ":
-                    /*String[] faces = line.split("\\s+");
-                    for (int i = 1; i <= faces.length - 1; i++) {
-                        String[] indeces = faces[i].split("/");
-                        triangleIndeces.add(
-                                Integer.parseInt(indeces[0]) - 1);
-
-                        normalIndeces.add(
-                                Integer.parseInt(indeces[indeces.length - 1]) - 1);
-                    }*/
                     faces.append(line).append(ln);
                     break;
                 case "o ":
@@ -80,33 +71,17 @@ public class OBJObject extends Object3D {
 
             @Override
             public void onObject3DLoaded(Object3D object3D, Type type) {
-                Log.i("yeet", "yeet");
+                Log.i("filepathget", "yeet");
                 temp.addToScene(OBJObject.this, getName(), true);
             }
 
             @Override
             public void onObject3DFailed(String s) {
-                Log.i("yeet", s);
+                Log.i("filepathget", s);
             }
         });
-
-        /*//fixNormals();
-        Submesh.SubmeshBuilder builder = new Submesh.SubmeshBuilder();
-        builder.triangleIndices(triangleIndeces);
-        Submesh mesh = builder.build();
-
-        Geometry.GeometryBuilder gbuilder = new Geometry.GeometryBuilder();
-        gbuilder.submeshes(Arrays.asList(mesh));
-        gbuilder.materials(Arrays.asList(
-                MaterialsFragment.getMaterials().get(0)
-        ));
-
-        Geometry geometry = gbuilder.build();
-        geometry.setVertices(vertices);
-        geometry.setNormals(correctNormals);
-
-        setGeometry(geometry);*/
     }
+
 
     /*private void fixNormals() {
         for(int i = 0;i < triangleIndeces.size();i++) {

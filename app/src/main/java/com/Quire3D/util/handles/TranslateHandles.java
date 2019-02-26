@@ -53,7 +53,6 @@ public class TranslateHandles extends Handles {
 
         handle.setClickListener(new ClickListener() {
             private Vector oldPos;
-            private boolean lockStarted = false;
 
             @Override
             public void onClick(int i, Node node, Vector vector) {
@@ -64,18 +63,13 @@ public class TranslateHandles extends Handles {
             public void onClickState(int i, Node node, ClickState clickState, Vector vector) {
                 if(clickState.equals(ClickState.CLICK_DOWN)) {
                     oldPos = parent.getWorldTransformRealTime().extractTranslation();
-                    ViroActivity.getCamera().toggleLock();
-                    lockStarted = true;
+                    ViroActivity.getCamera().setLock(true);
                 }else if(clickState.equals(ClickState.CLICK_UP)) {
                     Vector newPos = parent.getWorldTransformRealTime().extractTranslation();
                     getHandleRoot().setPosition(newPos);
                     node.setPosition(new Vector(0f, 0f, 0f));
                     ActionsController.getInstance().addAction(new TranslateAction(parent, oldPos, newPos));
-
-                    if(lockStarted) {
-                        ViroActivity.getCamera().toggleLock();
-                        lockStarted = false;
-                    }
+                     ViroActivity.getCamera().setLock(false);
                 }
             }
         });

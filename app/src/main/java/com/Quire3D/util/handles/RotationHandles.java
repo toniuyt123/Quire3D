@@ -63,12 +63,12 @@ public class RotationHandles extends Handles {
                 if(clickState.equals(ClickState.CLICK_DOWN)){
                     oldAnglePos = vector;
                     oldPos = parent.getRotationEulerRealtime();
-                    ViroActivity.getCamera().toggleLock();
+                    ViroActivity.getCamera().setLock(true);
                 }else if(clickState.equals(ClickState.CLICK_UP)) {
                     node.setPosition(new Vector(0f, 0f, 0f));
 
                     ActionsController.getInstance().addAction(new RotateAction(parent, oldPos, parent.getRotationEulerRealtime()));
-                    ViroActivity.getCamera().toggleLock();
+                    ViroActivity.getCamera().setLock(false);
                 }
             }
         });

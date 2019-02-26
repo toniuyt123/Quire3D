@@ -44,6 +44,8 @@ import java.util.Locale;
 
 import top.defaults.colorpicker.ColorPickerPopup;
 
+import static android.app.Activity.RESULT_OK;
+
 public class MaterialsFragment extends ObjectParamsFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     private View colorView;
     private TextView hexColor;
@@ -263,20 +265,22 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Uri uri = data.getData();
+        if(resultCode == RESULT_OK) {
+            Uri uri = data.getData();
 
-        if(uri != null) {
-            try {
-                InputStream is = getActivity().getContentResolver().openInputStream(uri);
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-                Texture newTexture = new Texture(bitmap, Texture.Format.RGBA8, true, false);
+            if(uri != null) {
+                try {
+                    InputStream is = getActivity().getContentResolver().openInputStream(uri);
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    Texture newTexture = new Texture(bitmap, Texture.Format.RGBA8, true, false);
 
-                ActionsController.getInstance().addAction(
-                        new ChangeTextureAction(selectedMat.getDiffuseTexture(), newTexture, selectedMat));
-                selectedMat.setDiffuseTexture(newTexture);
-            }
-            catch (IOException e) {
-                Log.d("importError", "file not found");
+                    ActionsController.getInstance().addAction(
+                            new ChangeTextureAction(selectedMat.getDiffuseTexture(), newTexture, selectedMat));
+                    selectedMat.setDiffuseTexture(newTexture);
+                }
+                catch (IOException e) {
+                    Log.d("importError", "file not found");
+                }
             }
         }
     }

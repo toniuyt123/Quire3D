@@ -11,6 +11,7 @@ import com.Quire3D.activities.ViroActivity;
 import com.viro.core.Camera;
 import com.viro.core.Node;
 import com.viro.core.Quaternion;
+import com.viro.core.Sphere;
 import com.viro.core.Vector;
 import com.viro.core.ViroView;
 import com.almeros.android.multitouch.MoveGestureDetector;
@@ -26,6 +27,7 @@ public class OrbitCamera {
     private int[] mOldTouchPos;
     private Vector lookAt;
     private boolean locked;
+    private Node test;
 
     public OrbitCamera(Node cameraNode, ViroView view, float radiusConst, float thetaAngleStart, float phiAngleStart) {
         this.radiusConst = radiusConst;
@@ -59,6 +61,11 @@ public class OrbitCamera {
         setCameraPosition(startPos, lookAt);
 
         setListener();
+
+        this.test = new Node();
+        test.setGeometry(new Sphere(0.2f));
+        test.setName("Camera");
+        ViroActivity.getScene().getRootNode().addChildNode(test);
     }
 
     private void setListener() {
@@ -110,7 +117,7 @@ public class OrbitCamera {
                 } else if(pointerCount == 2) {
                     zoomListener.onTouchEvent(event);
                 }
-                panListener.onTouchEvent(event);
+                 //panListener.onTouchEvent(event);
             }
 
             return false;
@@ -166,8 +173,8 @@ public class OrbitCamera {
     }
 
 
-    public void toggleLock() {
-        this.locked = !this.locked;
+    public void setLock(boolean locked) {
+        this.locked = locked;
     }
 
     class cameraZoomListener extends ScaleGestureDetector.SimpleOnScaleGestureListener  {
@@ -211,10 +218,14 @@ public class OrbitCamera {
         @Override
         public boolean onMove(MoveGestureDetector detector) {
             PointF d = detector.getFocusDelta();
-            float x = d.x;
-            float y = d.y;
-
-            Log.i("hey", Float.toString(x) + " " + Float.toString(y));
+            float x = -d.x * 0.01f;
+            float y = d.y * 0.01f;
+            Vector oldPos = cameraNode.getPositionRealtime();
+            Vector newPos = new Vector(x, y, 0f);
+            cameraNode.setPosition(cameraNode.convertLocalPositionToWorldSpace(newPos));
+            lookAt = lookAt.add(cameraNode.getPositionRealtime().subtract(oldPos));
+            test.setPosition(lookAt);
+            Log.i("hey", lookAt.toString());
             return true;
         }
     }

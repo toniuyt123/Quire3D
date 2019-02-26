@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,24 +21,19 @@ import android.widget.Toast;
 import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.util.actions.ActionsController;
 import com.Quire3D.util.OBJObject;
-import com.Quire3D.util.handles.Handles;
 import com.Quire3D.virosample.R;
-import com.viro.core.AsyncObject3DListener;
-import com.viro.core.Node;
-import com.viro.core.Object3D;
 import com.viro.core.ViroMediaRecorder;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 public class TopMenuFragment extends Fragment implements View.OnClickListener {
     @Nullable
@@ -95,50 +89,40 @@ public class TopMenuFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        final Uri uri = data.getData();
+        if(resultCode == RESULT_OK) {
+            Uri uri = data.getData();
+            StringBuilder text = new StringBuilder();
 
-        StringBuilder text = new StringBuilder();
-
-        if(uri != null) {
-            try {
-                InputStream is = getActivity().getContentResolver().openInputStream(uri);
-                assert is != null;
-                BufferedReader br = new BufferedReader(new InputStreamReader(getContext().getAssets().open("def_torus.obj")));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    text.append(line);
-                    text.append('\n');
+            if(uri != null) {
+                try {
+                    InputStream is = getActivity().getContentResolver().openInputStream(uri);
+                    assert is != null;
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        text.append(line);
+                        text.append('\n');
+                    }
+                    br.close();
                 }
-                br.close();
-            }
-            catch (IOException e) {
-                Log.d("importError", "file not found");
+                catch (IOException e) {
+                    Log.d("importError", "file not found");
+                }
+
+                Uri correct = Uri.fromFile(new File(uri.getLastPathSegment().substring(4)));
+                /*Log.d("filepath", uri.toString());
+                Uri fileUri = Uri.fromFile(new File(uri.getPath()));
+                Log.d("filepath", fileUri.getLastPathSegment());
+                Log.d("filepath", fileUri.toString());
+                Log.d("filepath", correct.getPath());
+                Log.d("filepath", correct.toString());*/
+                CreatePrimitiveFragment frag = (CreatePrimitiveFragment) getFragmentManager().findFragmentById(R.id.createPrimitiveFragment);
+                OBJObject model = new OBJObject(ViroActivity.getView().getViroContext(), correct, text.toString(), frag);
             }
         }
-
-
-        Object3D model = new Object3D();
-        File modelFile = new File("/storage/emulated/0/Download/untitled.obj");
-        Uri fileUri = Uri.fromFile(modelFile);
-        Log.i("modelLoading", text.toString());
-        Log.i("modelLoading", fileUri.toString());
-        Log.i("modelLoading", uri.toString());
-        Log.i("modelLoading", uri.isAbsolute() ? "true" : "false");
-        model.loadModel(ViroActivity.getView().getViroContext(), fileUri, Object3D.Type.OBJ, new AsyncObject3DListener() {
-            public void onObject3DFailed(String error) {
-                Log.w("modelLoading", "Failed to load the model" + error);
-            }
-            public void onObject3DLoaded(Object3D object, Object3D.Type type){
-
-            }
-        });
-        //OBJObject imported = new OBJObject(ViroActivity.getView().getViroContext(), uri, text.toString());
-       /*ViroActivity.getScene().getRootNode().addChildNode(imported);
-        ViroActivity activity = (ViroActivity) getActivity();
-        activity.makeNodeSelectable(imported);
-        HierarchyFragment hierarchy = (HierarchyFragment) getActivity().getFragmentManager().findFragmentById(R.id.hierarchyFragment);
-        hierarchy.addToHierarchy(imported, 0);*/
     }
+
+
 
     private void showExportDialog() {
         final Context context = ViroActivity.getView().getContext();
@@ -229,7 +213,6 @@ public class TopMenuFragment extends Fragment implements View.OnClickListener {
         FileOutputStream outputStream = null;
         try {
             file.createNewFile();
-            //second argument of FileOutputStream constructor indicates whether to append or create new file if one exists
             outputStream = new FileOutputStream(file, true);
 
             outputStream.write(body.getBytes());
