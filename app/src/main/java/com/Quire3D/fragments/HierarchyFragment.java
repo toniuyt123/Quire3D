@@ -7,7 +7,9 @@ import android.app.Fragment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -28,12 +30,11 @@ import java.util.List;
 import java.util.Map;
 
 
-public class HierarchyFragment extends Fragment implements View.OnClickListener {
+public class HierarchyFragment extends Fragment implements View.OnClickListener{
     private static final ArrayList<String> hidden = new ArrayList<>(Arrays.asList("Handles", "floor_grid", "Camera"));
     private LinearLayout hierarchy;
     private DragAndDropListener dragAndDropListener = new DragAndDropListener();
     private static HashMap<TextView, Node> nodes = new HashMap<>();
-
 
     @Nullable
     @Override
@@ -98,7 +99,6 @@ public class HierarchyFragment extends Fragment implements View.OnClickListener 
 
     private String contructName(Node node, int level){
         String tabs = new String(new char[level]).replace("\0", "->");
-
         return String.format("%S%s%s", "| ", tabs, node.getName());
     }
 

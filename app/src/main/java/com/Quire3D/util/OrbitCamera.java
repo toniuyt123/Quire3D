@@ -2,7 +2,6 @@ package com.Quire3D.util;
 
 import android.content.Context;
 import android.graphics.PointF;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -11,7 +10,6 @@ import com.Quire3D.activities.ViroActivity;
 import com.viro.core.Camera;
 import com.viro.core.Node;
 import com.viro.core.Quaternion;
-import com.viro.core.Sphere;
 import com.viro.core.Vector;
 import com.viro.core.ViroView;
 import com.almeros.android.multitouch.MoveGestureDetector;
@@ -27,7 +25,7 @@ public class OrbitCamera {
     private int[] mOldTouchPos;
     private Vector lookAt;
     private boolean locked;
-    private Node test;
+    private float[] panChange = {0f, 0f};
 
     public OrbitCamera(Node cameraNode, ViroView view, float radiusConst, float thetaAngleStart, float phiAngleStart) {
         this.radiusConst = radiusConst;
@@ -61,11 +59,6 @@ public class OrbitCamera {
         setCameraPosition(startPos, lookAt);
 
         setListener();
-
-        this.test = new Node();
-        test.setGeometry(new Sphere(0.2f));
-        test.setName("Camera");
-        ViroActivity.getScene().getRootNode().addChildNode(test);
     }
 
     private void setListener() {
@@ -79,10 +72,11 @@ public class OrbitCamera {
             if(!locked)
             {
                 int pointerCount = event.getPointerCount();
+                int x = (int)event.getX(0);
+                int y = (int)event.getY(0);
+                int[] newTouchPos = {x, y};
+                panListener.onTouchEvent(event);
                 if(pointerCount == 1) {
-                    int x = (int)event.getX();
-                    int y = (int)event.getY();
-                    int[] newTouchPos = {x, y};
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
                             mOldTouchPos = newTouchPos;
@@ -116,8 +110,8 @@ public class OrbitCamera {
                     }
                 } else if(pointerCount == 2) {
                     zoomListener.onTouchEvent(event);
+                    panCamera(panChange[0], panChange[1]);
                 }
-                 //panListener.onTouchEvent(event);
             }
 
             return false;
@@ -152,8 +146,7 @@ public class OrbitCamera {
         double camZ = radiusConst * Math.cos(Math.toRadians(theta)) * Math.sin(Math.toRadians(phi));
         double camX = radiusConst * Math.sin(Math.toRadians(theta)) * Math.sin(Math.toRadians(phi));
         double camY = radiusConst * Math.cos(Math.toRadians(phi));
-
-        return new Vector(camX, camY, camZ);
+        return new Vector(camX, camY, camZ).add(lookAt);
     }
 
     // Determine if values should be clamped and clamp them.
@@ -175,6 +168,14 @@ public class OrbitCamera {
 
     public void setLock(boolean locked) {
         this.locked = locked;
+    }
+
+    public void panCamera(float x, float y){
+        Vector oldPos = cameraNode.getPositionRealtime();
+        Vector newPos = new Vector(x, y, 0f);
+        Vector cameraPos = cameraNode.convertLocalPositionToWorldSpace(newPos);
+        lookAt = lookAt.add(cameraPos.subtract(oldPos));
+        setCameraPosition(cameraPos, lookAt);
     }
 
     class cameraZoomListener extends ScaleGestureDetector.SimpleOnScaleGestureListener  {
@@ -200,16 +201,20 @@ public class OrbitCamera {
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-            float scaleFactor = 2 - detector.getScaleFactor();
-            radiusConst *= scaleFactor;
-            Vector newPos = getPositionFromAngles(theta, phi);
-            setCameraPosition(newPos, lookAt);
+            float size = Math.abs(1 - detector.getScaleFactor());
+            if(size > 0.01) {
+                float scaleFactor = 2 - detector.getScaleFactor();
+                radiusConst *= scaleFactor;
+                Vector newPos = getPositionFromAngles(theta, phi);
+                setCameraPosition(newPos, lookAt);
 
-            if(hasSelected) {
-                activeHandles.setScale(activeHandles.getScaleRealtime().scale(scaleFactor));
+                if(hasSelected) {
+                    activeHandles.setScale(activeHandles.getScaleRealtime().scale(scaleFactor));
+                }
+
+                return true;
             }
-
-            return true;
+            return false;
         }
     }
 
@@ -218,14 +223,8 @@ public class OrbitCamera {
         @Override
         public boolean onMove(MoveGestureDetector detector) {
             PointF d = detector.getFocusDelta();
-            float x = -d.x * 0.01f;
-            float y = d.y * 0.01f;
-            Vector oldPos = cameraNode.getPositionRealtime();
-            Vector newPos = new Vector(x, y, 0f);
-            cameraNode.setPosition(cameraNode.convertLocalPositionToWorldSpace(newPos));
-            lookAt = lookAt.add(cameraNode.getPositionRealtime().subtract(oldPos));
-            test.setPosition(lookAt);
-            Log.i("hey", lookAt.toString());
+            panChange[0] = -d.x * 0.01f;
+            panChange[1] = d.y * 0.01f;
             return true;
         }
     }

@@ -71,13 +71,13 @@ public class OBJObject extends Object3D {
 
             @Override
             public void onObject3DLoaded(Object3D object3D, Type type) {
-                Log.i("filepathget", "yeet");
+                Log.i("import", "Success");
                 temp.addToScene(OBJObject.this, getName(), true);
             }
 
             @Override
             public void onObject3DFailed(String s) {
-                Log.i("filepathget", s);
+                Log.i("import", s);
             }
         });
     }
