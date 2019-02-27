@@ -48,17 +48,18 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         ViroView viroView = ViroActivity.getView();
         Node selected = ViroActivity.getSelectedNode();
+        ObjectParamsFragment paramFrag = (ObjectParamsFragment) getFragmentManager().findFragmentById(SwitchViewFragment.getCurrentId());
         if(selected != null) {
             switch (view.getId()) {
                 case R.id.Translate:
                     ViroActivity.setDefaultHandle('t');
-                    ViroActivity.changeHandles(new TranslateHandles(selected)); break;
+                    ViroActivity.changeHandles(new TranslateHandles(selected, paramFrag)); break;
                 case R.id.Scale:
                     ViroActivity.setDefaultHandle('s');
-                    ViroActivity.changeHandles(new ScaleHandles(selected)); break;
+                    ViroActivity.changeHandles(new ScaleHandles(selected, paramFrag)); break;
                 case R.id.Rotate:
                     ViroActivity.setDefaultHandle('r');
-                    ViroActivity.changeHandles(new RotationHandles(selected));break;
+                    ViroActivity.changeHandles(new RotationHandles(selected, paramFrag));break;
                 /*case R.id.Duplicate:
                     duplicateNode(selected, selected.getWorldTransformRealTime().extractTranslation());
                     break;*/

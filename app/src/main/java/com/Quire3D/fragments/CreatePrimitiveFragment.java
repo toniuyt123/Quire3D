@@ -51,30 +51,28 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         Button deletebutton = view.findViewById(R.id.Delete);
         deletebutton.setOnClickListener(this);
 
+
+
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        //loadObject("file:///android_asset/def_cube.obj");
     }
 
     @Override
     public void onClick(View view) {
-        Geometry obj = new Geometry();
-        String name = "";
         switch (view.getId()) {
             case R.id.createCube:
-                obj = new Box(2f,2f,2f);
-                name = "cube";
+                loadObject("file:///android_asset/def_cube.obj");
                 break;
             case R.id.createSphere:
-                obj = new Sphere(1f);;
-                name = "sphere";
+                loadObject("file:///android_asset/def_sphere.obj");
                 break;
             case R.id.createQuad:
-                obj = new Quad(2f, 2f);;
-                name = "quad";
+                loadObject("file:///android_asset/def_plane.obj");
                 break;
             case R.id.createTorus:
                 loadObject("file:///android_asset/def_torus.obj");
@@ -85,13 +83,20 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
             case R.id.createCone:
                 loadObject("file:///android_asset/def_cone.obj");
                 return;
+            case R.id.createEmpty:
+                Node empty = new Node();
+                empty.setName("Empty");
+                ViroActivity.getScene().getRootNode().addChildNode(empty);
+                HierarchyFragment hierarchy = (HierarchyFragment) getActivity().getFragmentManager().findFragmentById(R.id.hierarchyFragment);
+                hierarchy.addToHierarchy(empty, 0);
+                return;
             case R.id.Delete:
                 Node selected = ViroActivity.getSelectedNode();
                 ActionsController.getInstance().addAction(new DeleteAction(selected, selected.getParentNode()));
                 deleteNode(selected);
-                return;
+                break;
         }
-        addToScene(obj, name, true);
+        //addToScene(obj, name, true);
     }
 
     public void addToScene(Geometry geometry, String name, boolean recordAction) {
@@ -131,7 +136,7 @@ public class CreatePrimitiveFragment extends Fragment implements View.OnClickLis
         }
     }
 
-    private void loadObject(String asset){
+    public void loadObject(String asset){
         String[] bits = asset.split("/");
         String fileName = bits[bits.length-1];
         String text = readFromAsset(fileName);

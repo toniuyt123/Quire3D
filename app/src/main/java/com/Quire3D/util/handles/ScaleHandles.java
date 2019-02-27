@@ -3,6 +3,7 @@ package com.Quire3D.util.handles;
 import android.util.Log;
 
 import com.Quire3D.activities.ViroActivity;
+import com.Quire3D.fragments.ObjectParamsFragment;
 import com.viro.core.ClickListener;
 import com.viro.core.ClickState;
 import com.viro.core.DragListener;
@@ -15,8 +16,8 @@ import java.util.List;
 public class ScaleHandles extends Handles {
     private float startDistance;
 
-    public ScaleHandles(Node parent/*, Fragment paramsFragment*/)  {
-        super(ViroActivity.getView(), "file:///android_asset/scale_handle.obj", parent/*, paramsFragment*/);
+    public ScaleHandles(Node parent, ObjectParamsFragment paramsFragment)  {
+        super(ViroActivity.getView(), "file:///android_asset/scale_handle.obj", parent, paramsFragment);
         List<Node> handles = getHandleRoot().getChildNodes();
         setDragListeners(handles.get(0), new Vector(0f, 1f, 0f), new Vector(1f, 0f, 0f));
         setDragListeners(handles.get(1), new Vector(0f, 0f, 1f), new Vector(0f, 1f, 0f));
@@ -33,9 +34,9 @@ public class ScaleHandles extends Handles {
             @Override
             public void onDrag(int i, Node node, Vector local, Vector world) {
                 Vector oldScale = parent.getScaleRealtime();
-                Log.i("scalee", oldScale.toString());
+                Log.i("scaling", oldScale.toString());
                 float newScale = world.x - oldScale.x;
-                Log.i("scalee", "a" + newScale);
+                Log.i("scaling", "a" + newScale);
             }
         });
 

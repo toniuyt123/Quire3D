@@ -1,6 +1,7 @@
 package com.Quire3D.util.handles;
 
 import com.Quire3D.activities.ViroActivity;
+import com.Quire3D.fragments.ObjectParamsFragment;
 import com.Quire3D.util.actions.ActionsController;
 import com.Quire3D.util.actions.RotateAction;
 import com.viro.core.ClickListener;
@@ -15,8 +16,8 @@ import java.util.List;
 public class RotationHandles extends Handles {
     private Vector oldAnglePos;
 
-    public RotationHandles(Node parent/*, Fragment paramsFragment*/)  {
-        super(ViroActivity.getView(), "file:///android_asset/rotate_handle.obj", parent/*, paramsFragment*/);
+    public RotationHandles(Node parent, ObjectParamsFragment paramsFragment)  {
+        super(ViroActivity.getView(), "file:///android_asset/rotate_handle.obj", parent, paramsFragment);
         List<Node> handles = getHandleRoot().getChildNodes();
         handles.get(0).setRotation(new Vector(0f, Math.PI / 2, 0f));
         handles.get(1).setRotation(new Vector(Math.PI / 2, 0f, 0f));
@@ -69,6 +70,8 @@ public class RotationHandles extends Handles {
 
                     ActionsController.getInstance().addAction(new RotateAction(parent, oldPos, parent.getRotationEulerRealtime()));
                     ViroActivity.getCamera().setLock(false);
+
+                    paramsFrag.update(parent);
                 }
             }
         });

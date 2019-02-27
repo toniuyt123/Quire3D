@@ -62,8 +62,6 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_materials, container, false);
 
-        Log.i("material", Integer.toString(savedMaterials.size()));
-
         try {
             colorView = view.findViewById(R.id.colorView);
             colorView.setOnClickListener(this);

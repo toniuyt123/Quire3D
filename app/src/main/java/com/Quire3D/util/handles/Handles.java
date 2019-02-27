@@ -3,8 +3,10 @@ package com.Quire3D.util.handles;
 import android.net.Uri;
 import android.util.Log;
 import android.graphics.Color;
+import android.view.View;
 
 import com.Quire3D.activities.ViroActivity;
+import com.Quire3D.fragments.ObjectParamsFragment;
 import com.viro.core.AsyncObject3DListener;
 import com.viro.core.Material;
 import com.viro.core.Node;
@@ -18,8 +20,10 @@ import java.util.Arrays;
 public class Handles {
     protected Node parent;
     protected Node handleRoot;
+    protected ObjectParamsFragment paramsFrag;
 
-    Handles(ViroView view, String handleAssetPath, Node parent) {
+    Handles(ViroView view, String handleAssetPath, Node parent, ObjectParamsFragment paramsFrag) {
+        this.paramsFrag = paramsFrag;
         handleRoot = new Node();
         handleRoot.setName("Handles");
         Object3D xHandle = new Object3D();
@@ -32,7 +36,6 @@ public class Handles {
         Node rootNode = ViroActivity.getScene().getRootNode();
         rootNode.addChildNode(handleRoot);
         handleRoot.setPosition(parent.getWorldTransformRealTime().extractTranslation());
-
 
         initHandle(xHandle, view, handleAssetPath, new Vector(0f, 0f, -Math.PI / 2), Color.RED);
         initHandle(yHandle, view, handleAssetPath, new Vector(0f, 0f, 0f), Color.GREEN);

@@ -198,7 +198,6 @@ public class PositionalDataFragment extends ObjectParamsFragment{
 
     protected Vector getNewValue(Vector old, float value, int[] axis) {
         Vector diff = new Vector((value - old.x) * axis[0], (value - old.y) * axis[1],(value - old.z) * axis[2]);
-        Log.i("heck" ,diff.toString());
         return old.add(diff);
     }
 }

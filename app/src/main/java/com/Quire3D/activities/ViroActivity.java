@@ -151,14 +151,14 @@ public class ViroActivity extends Activity {
 
     public void selectNode(Node node) {
         if(selectedNode != node) {
+            ObjectParamsFragment paramFrag = (ObjectParamsFragment) getFragmentManager().findFragmentById(SwitchViewFragment.getCurrentId());
             if(activeHandles == null) {
-                activeHandles = new TranslateHandles(node);
+                activeHandles = new TranslateHandles(node, paramFrag);
             } else {
                 activeHandles.setParent(node);
             }
             selectedNode = node;
 
-            ObjectParamsFragment paramFrag = (ObjectParamsFragment) getFragmentManager().findFragmentById(SwitchViewFragment.getCurrentId());
             paramFrag.update(selectedNode);
         }
     }
