@@ -98,7 +98,6 @@ public class OBJObject extends Object3D {
         ));
     }
 
-
     public OBJObject(List<Vector> normals, List<Vector> textureCoords, List<Vector> vertices) {
         this.normals = normals;
         this.textureCoords = textureCoords;
@@ -151,7 +150,7 @@ public class OBJObject extends Object3D {
                 for(Vector vt: obj.getTextureCoords()){
                     output.append("vt ").append(vt.toString()).append(ln);
                 }
-                output.append("usemtl ").append(obj.getMaterials().get(0).getName()).append(ln);
+                output.append("usemtl Default").append(ln);
                 output.append("s off").append(ln);
                 output.append(obj.getFacesText());
                 output.append(ln);

@@ -2,6 +2,7 @@ package com.Quire3D.util;
 
 import android.content.Context;
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -174,6 +175,8 @@ public class OrbitCamera {
         Vector oldPos = cameraNode.getPositionRealtime();
         Vector newPos = new Vector(x, y, 0f);
         Vector cameraPos = cameraNode.convertLocalPositionToWorldSpace(newPos);
+        Vector diff = cameraPos.subtract(oldPos);
+        Log.i("camera", Float.toString(diff.magnitude()));
         lookAt = lookAt.add(cameraPos.subtract(oldPos));
         setCameraPosition(cameraPos, lookAt);
     }

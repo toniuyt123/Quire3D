@@ -1,5 +1,7 @@
 package com.Quire3D.util.handles;
 
+import android.util.Log;
+
 import com.Quire3D.activities.ViroActivity;
 import com.Quire3D.fragments.ObjectParamsFragment;
 import com.Quire3D.util.actions.ActionsController;
@@ -37,16 +39,17 @@ public class RotationHandles extends Handles {
             public void onDrag(int i, Node node, Vector local, Vector world) {
                 Vector diff;
                 if(planeNormal.x == 1) {
-                    diff = new Vector(Math.atan2(oldAnglePos.y, oldAnglePos.z) - Math.atan2(world.y, world.z), 0f, 0f);
+                    diff = new Vector(Math.atan2(oldAnglePos.y, oldAnglePos.z) - Math.atan2(local.y, local.z), 0f, 0f);
                 } else if(planeNormal.y == 1) {
-                    diff = new Vector(0f, Math.atan2(oldAnglePos.z, oldAnglePos.x) - Math.atan2(world.z, world.x), 0f);
+                    diff = new Vector(0f, Math.atan2(oldAnglePos.z, oldAnglePos.y) - Math.atan2(local.z, local.y), 0f);
                 } else {
-                    diff = new Vector(0f,  0f, Math.atan2(oldAnglePos.x, oldAnglePos.y) - Math.atan2(world.x, world.y));
+                    diff = new Vector(0f,  0f, Math.atan2(oldAnglePos.x, oldAnglePos.y) - Math.atan2(local.x, local.y));
                 }
-
+                Log.i("Rotation", Double.toString(Math.atan2(local.z, local.y)));
+                Log.i("Rotation", diff.toString());
                 Vector rot = parent.getRotationEulerRealtime();
                 parent.setRotation(diff.add(rot));
-                oldAnglePos = world;
+                oldAnglePos = local;
                 node.setPosition(new Vector(0f, 0f, 0f));
             }
         });

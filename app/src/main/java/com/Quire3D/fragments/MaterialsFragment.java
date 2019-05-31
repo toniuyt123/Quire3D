@@ -295,9 +295,9 @@ public class MaterialsFragment extends ObjectParamsFragment implements View.OnCl
             output.append("newmtl ").append(material.getName()).append(ln);
             Color c = Color.valueOf(material.getDiffuseColor());
             output.append("Ns ").append(material.getShininess()).append(ln);;
-            output.append("Kd ").append(c.red() / 255).append(" ")
-                                .append(c.green() / 255).append(" ")
-                                .append(c.blue() / 255).append(ln);
+            output.append("Kd ").append(c.red()).append(" ")
+                                .append(c.green()).append(" ")
+                                .append(c.blue()).append(ln);
 
             output.append(ln);
         }

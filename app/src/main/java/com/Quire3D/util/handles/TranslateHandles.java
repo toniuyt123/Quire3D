@@ -38,7 +38,7 @@ public class TranslateHandles extends Handles {
             public void onDrag(int i, Node node, Vector local, Vector world) {
                 Vector oldPos = handleRoot.getPositionRealtime();
                 Vector newPos;
-                if(lineToDrag.x == 1f) {
+                if(lineToDrag.x == 1) {
                     newPos = new Vector(world.x, oldPos.y, oldPos.z);
                 } else if(lineToDrag.y == 1f) {
                     newPos = new Vector(oldPos.x, world.y, oldPos.z);
